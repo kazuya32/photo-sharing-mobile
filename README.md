@@ -20,7 +20,7 @@ then, in new terminal tab
 
 ### useful blog
 
-<https://qiita.com/YutamaKotaro/items/dac047715896dc11e555#react-native-photo-view-425>
+<https://qiita.com/YutamaKotaro/items/dac047715896dc11e555>
 
 ### Cross Platform React Native UI Toolkit
 

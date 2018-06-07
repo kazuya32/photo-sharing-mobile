@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 
 class SendButton extends React.Component {
-
   render() {
     const { onPress } = this.props;
 
