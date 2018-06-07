@@ -1,5 +1,15 @@
 # Photo Sharing
 
+## Getting Started
+
+    $ npm install
+
+    $ exp start
+
+then, in new terminal tab
+
+    $ exp ios --offline
+
 ## React Native Document
 
 <https://facebook.github.io/react-native/>
@@ -7,14 +17,6 @@
 ## Font Awesome
 
 <https://fontawesome.com/v4.7.0/>
-
-## Test by Expo
-
-    $ exp start --offline
-
-then, in new terminal tab
-
-    $ exp ios --offline
 
 ## cheetsheet
 
