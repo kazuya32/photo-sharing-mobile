@@ -18,6 +18,10 @@ then, in new terminal tab
 
 ## cheetsheet
 
+### useful blog
+
+<https://qiita.com/YutamaKotaro/items/dac047715896dc11e555#react-native-photo-view-425>
+
 ### Cross Platform React Native UI Toolkit
 
     $ npm install --save react-native-elements
