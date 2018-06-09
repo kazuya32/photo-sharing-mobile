@@ -1,13 +1,15 @@
-import { createStackNavigator, createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-navigation';
+import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import Login from './src/screens/Login.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
 import MyPageFun from './src/screens/MyPageFun.js';
 import Signature from './src/screens/Signature.js';
+import PhotoPicker from './src/screens/PhotoPicker.js';
 
 const HomeStack = createStackNavigator({
   MyPageFun: { screen: MyPageFun },
   PhotoDetail: { screen: PhotoDetail },
+  Signature: { screen: Signature },
   Login: { screen: Login },
 }, {
   navigationOptions: {
@@ -27,6 +29,7 @@ const HomeStack = createStackNavigator({
 const GameStack = createStackNavigator({
   PhotoDetail: { screen: PhotoDetail },
   MyPageFun: { screen: MyPageFun },
+  Signature: { screen: Signature },
 }, {
   navigationOptions: {
     headerTitle: 'FLEGO',
@@ -43,6 +46,8 @@ const GameStack = createStackNavigator({
 
 const TeamStack = createStackNavigator({
   Signature: { screen: Signature },
+  MyPageFun: { screen: MyPageFun },
+  PhotoDetail: { screen: PhotoDetail },
 }, {
   navigationOptions: {
     headerTitle: 'FLEGO',
@@ -59,7 +64,7 @@ const TeamStack = createStackNavigator({
 
 const App = createBottomTabNavigator({
   Home: HomeStack,
-  Game: GameStack,
+  PhotoPicker: { screen: PhotoPicker },
   Sign: TeamStack,
 }, {
   tabBarOptions: {

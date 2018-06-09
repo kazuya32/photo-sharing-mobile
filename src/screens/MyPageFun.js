@@ -17,11 +17,11 @@ class MyPageFun extends React.Component {
     userDesc: 'サッカーしようぜ！',
     photo: require('../../assets/image/athlete/naoya_kondo.jpg'),
     data: [
-      {source: require('../../assets/image/athlete/naoya_kondo.jpg')},
-      {source: require('../../assets/image/athlete/naoya_kondo.jpg')},
-      {source: require('../../assets/image/athlete/naoya_kondo.jpg')},
-      {source: require('../../assets/image/athlete/naoya_kondo.jpg')},
-      {source: require('../../assets/image/athlete/naoya_kondo.jpg')},
+      {key:1, source: require('../../assets/image/athlete/naoya_kondo.jpg')},
+      {key:2, source: require('../../assets/image/athlete/naoya_kondo.jpg')},
+      {key:3, source: require('../../assets/image/athlete/naoya_kondo.jpg')},
+      {key:4, source: require('../../assets/image/athlete/naoya_kondo.jpg')},
+      {key:5, source: require('../../assets/image/athlete/naoya_kondo.jpg')},
     ],
   }
 
@@ -31,7 +31,7 @@ class MyPageFun extends React.Component {
 
   _renderItem({ item }) {
     return (
-      <TouchableOpacity onPress={() => { this.props.navigation.navigate('PhotoDetail'); }}>
+      <TouchableOpacity onPress={() => { navigation.navigate('PhotoDetail'); }}>
         <Image
           style={styles.photoItem}
           source={item.source}
@@ -45,15 +45,16 @@ class MyPageFun extends React.Component {
 
   render() {
     return (
-      <View style={styles.container} navigation={this.props.navigation}>
+      <View style={styles.container}>
         <Profile
-          onPress={this.onPressTest}
+          onPress={() => { this.props.navigation.navigate('PhotoDetail'); }}
           userName={this.state.userName}
           userDesc={this.state.userDesc}
         />
         <FlatList
+          navigation={this.props.navigation}
           data={this.state.data}
-          renderItem={this._renderItem}
+          renderItem={this._renderItem.bind(this)}
           numColumns={3}
           // horizontal={true}
           // keyExtractor={this._keyExtractor}
