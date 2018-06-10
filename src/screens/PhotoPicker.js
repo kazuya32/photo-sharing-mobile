@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import Appbar from '../components/Appbar.js';
+import PhotoHeader from '../components/PhotoHeader.js';
 
 class PhotoPicker extends React.Component {
   constructor(props) {
@@ -79,8 +79,22 @@ class PhotoPicker extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Appbar onPress={this.onPressTest} imageUri={this.state.selectedImageUri} />
+      <View
+        style={styles.container}
+        imageUri={this.state.selectedImageUri}
+      >
+        <PhotoHeader
+          onPressRight={() => {
+            this.props.navigation.navigate({
+              routeName: 'PhotoUploader',
+              params: { imageUri: this.state.selectedImageUri },
+            });
+          }}
+          onPressLeft={() => { this.props.navigation.goBack(); }}
+          headerTitle="Camera Roll"
+          rightButtonTitle="Next"
+          // imageUri={this.state.selectedImageUri}
+        />
         <View style={styles.cameraRoll}>
           <Image
             style={styles.mainImage}
@@ -103,7 +117,6 @@ class PhotoPicker extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
   },
   cameraRoll: {
     flex: 1,

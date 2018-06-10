@@ -3,24 +3,31 @@ import { StyleSheet, View, Text, Button, TouchableHighlight } from 'react-native
 
 class Appbar extends React.Component {
   render() {
-    const { onPress } = this.props;
+    const {
+      onPressLeft,
+      onPressRight,
+      headerTitle,
+      rightButtonTitle,
+    } = this.props;
 
     return (
       <View style={styles.container}>
-        <TouchableHighlight style={styles.leftButton} onPress={onPress} underlayColor="transparent">
+        <TouchableHighlight style={styles.leftButton} onPress={onPressLeft} underlayColor="transparent">
           <Text style={styles.leftButtonText}>
             Cancel
           </Text>
         </TouchableHighlight>
         <View style={styles.appbar}>
           <View>
-            <Text style={styles.appbarTitle}>Camera Roll</Text>
+            <Text style={styles.appbarTitle}>
+              {headerTitle}
+            </Text>
           </View>
         </View>
         <View style={styles.rightButton}>
           <Button
-            onPress={onPress}
-            title="Next"
+            onPress={onPressRight}
+            title={rightButtonTitle}
           />
         </View>
       </View>
@@ -42,8 +49,8 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
     zIndex: 10,
   },
   appbar: {

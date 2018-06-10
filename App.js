@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import Login from './src/screens/Login.js';
@@ -5,6 +6,7 @@ import PhotoDetail from './src/screens/PhotoDetail.js';
 import MyPageFun from './src/screens/MyPageFun.js';
 import Signature from './src/screens/Signature.js';
 import PhotoPicker from './src/screens/PhotoPicker.js';
+import PhotoUploader from './src/screens/PhotoUploader.js';
 
 const HomeStack = createStackNavigator({
   MyPageFun: { screen: MyPageFun },
@@ -16,6 +18,10 @@ const HomeStack = createStackNavigator({
     headerTitle: 'FLEGO',
     headerStyle: {
       backgroundColor: '#FCFCFC',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.3,
+      shadowRadius: 1,
     },
     headerTitleStyle: {
       color: '#000000',
@@ -25,6 +31,12 @@ const HomeStack = createStackNavigator({
   },
 });
 
+const UploadStack = createStackNavigator({
+  PhotoPicker: { screen: PhotoPicker },
+  PhotoUploader: { screen: PhotoUploader },
+}, {
+  headerMode: 'none',
+});
 
 const GameStack = createStackNavigator({
   PhotoDetail: { screen: PhotoDetail },
@@ -35,6 +47,10 @@ const GameStack = createStackNavigator({
     headerTitle: 'FLEGO',
     headerStyle: {
       backgroundColor: '#FCFCFC',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.3,
+      shadowRadius: 1,
     },
     headerTitleStyle: {
       color: '#000000',
@@ -53,6 +69,10 @@ const TeamStack = createStackNavigator({
     headerTitle: 'FLEGO',
     headerStyle: {
       backgroundColor: '#FCFCFC',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.3,
+      shadowRadius: 1,
     },
     headerTitleStyle: {
       color: '#000000',
@@ -64,7 +84,8 @@ const TeamStack = createStackNavigator({
 
 const App = createBottomTabNavigator({
   Home: HomeStack,
-  PhotoPicker: { screen: PhotoPicker },
+  Game: GameStack,
+  Upload: UploadStack,
   Sign: TeamStack,
 }, {
   tabBarOptions: {
@@ -76,5 +97,16 @@ const App = createBottomTabNavigator({
     },
   },
 });
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#FCFCFC',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+  },
+});
+
 
 export default App;
