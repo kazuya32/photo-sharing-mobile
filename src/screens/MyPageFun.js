@@ -16,17 +16,19 @@ class MyPageFun extends React.Component {
     userName: 'YoSasaki',
     userDesc: 'サッカーしようぜ！',
     data: [
-      { key: 1, likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/naoya_kondo.jpg') },
-      { key: 2, likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/masaki_yamamoto.jpg') },
-      { key: 3, likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/takayuki_funayama.jpg') },
-      { key: 4, likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yuya_sato.jpg') },
-      { key: 5, likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yushi_mizobuchi.jpg') },
+      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/naoya_kondo.jpg') },
+      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/masaki_yamamoto.jpg') },
+      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/takayuki_funayama.jpg') },
+      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yuya_sato.jpg') },
+      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yushi_mizobuchi.jpg') },
     ],
   }
 
   onPressTest() {
     Alert.alert('button pressed')
   }
+
+  keyExtractor = (item, index) => index.toString();
 
   renderItem({ item }) {
     return (
@@ -47,8 +49,6 @@ class MyPageFun extends React.Component {
     );
   }
 
-  // _keyExtractor = (item, index) => item.source;
-
   render() {
     return (
       <View style={styles.container}>
@@ -63,7 +63,7 @@ class MyPageFun extends React.Component {
           renderItem={this.renderItem.bind(this)}
           numColumns={3}
           // horizontal={true}
-          // keyExtractor={this._keyExtractor}
+          keyExtractor={this.keyExtractor}
         />
       </View>
     );

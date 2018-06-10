@@ -50,7 +50,7 @@ class PhotoUploader extends React.Component {
           />
           <SelectItem
             onPress={this.onPressTest}
-            title="Add Match"
+            title="Add Game"
           />
         </View>
       </View>

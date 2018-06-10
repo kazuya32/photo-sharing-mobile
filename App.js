@@ -7,6 +7,9 @@ import MyPageFun from './src/screens/MyPageFun.js';
 import Signature from './src/screens/Signature.js';
 import PhotoPicker from './src/screens/PhotoPicker.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
+import Schedule from './src/screens/Schedule.js';
+import Game from './src/screens/Game.js';
+import Team from './src/screens/Team.js';
 
 const HomeStack = createStackNavigator({
   Home: { screen: Home },
@@ -35,14 +38,15 @@ const HomeStack = createStackNavigator({
 const UploadStack = createStackNavigator({
   PhotoPicker: { screen: PhotoPicker },
   PhotoUploader: { screen: PhotoUploader },
+  Signature: { screen: Signature },
 }, {
   headerMode: 'none',
 });
 
 const GameStack = createStackNavigator({
-  MyPageFun: { screen: MyPageFun },
-  PhotoDetail: { screen: PhotoDetail },
-  Signature: { screen: Signature },
+  Schedule: { screen: Schedule },
+  Game: { screen: Game },
+  Home: { screen: Home },
 }, {
   navigationOptions: {
     headerTitle: 'FLEGO',
@@ -62,9 +66,8 @@ const GameStack = createStackNavigator({
 });
 
 const TeamStack = createStackNavigator({
-  Signature: { screen: Signature },
-  MyPageFun: { screen: MyPageFun },
-  PhotoDetail: { screen: PhotoDetail },
+  Team: { screen: Team },
+  Home: { screen: Home },
 }, {
   navigationOptions: {
     headerTitle: 'FLEGO',
@@ -83,11 +86,18 @@ const TeamStack = createStackNavigator({
   },
 });
 
+const SignatureStack = createStackNavigator({
+  Signature: { screen: Signature },
+}, {
+  headerMode: 'none',
+});
+
 const App = createBottomTabNavigator({
   Home: HomeStack,
   Game: GameStack,
   Upload: UploadStack,
-  Sign: TeamStack,
+  Team: TeamStack,
+  Sign: SignatureStack,
 }, {
   tabBarOptions: {
     labelStyle: {
