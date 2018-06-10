@@ -4,23 +4,22 @@ import {
   View,
   Text,
   TextInput,
-  TouchableHighlight,
-  Image,
+  ScrollView,
   Alert,
+  Dimensions,
   KeyboardAvoidingView,
 } from 'react-native';
 
 import { Avatar } from 'react-native-elements';
 
 import SendButton from '../elements/SendButton';
-import HeartIcon from '../../assets/icon/valentines-heart-white.png';
+import PhotoTile from '../components/PhotoTile';
 
 class LoginScreen extends React.Component {
   state = {
-    photo: require('../../assets/image/athlete/sample3.jpg'),
     likes: 1919,
     userName: 'YoSasaki',
-    comment: ''
+    comment: '',
   }
 
   onPressTest() {
@@ -29,33 +28,14 @@ class LoginScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Image
-          style={styles.photo}
-          source={this.state.photo}
-          resizeMode="cover"
+      <ScrollView style={styles.container}>
+        <PhotoTile
+          photo={this.props.navigation.state.params.source}
+          likes={this.state.likes}
+          userName={this.state.userName}
+          onPressUser={this.onPressTest}
+          photoStyle={styles.photo}
         />
-        <View style={styles.bar}>
-          <View style={styles.likes}>
-            <Image
-              style={styles.heart}
-              source={HeartIcon}
-            />
-            <Text style={styles.likesNumber}>
-              {this.state.likes}
-            </Text>
-          </View>
-          <View style={styles.userItem}>
-            <Text style={styles.userBy}>
-              by
-            </Text>
-            <TouchableHighlight onPress={this.onPressTest} underlayColor="transparent">
-              <Text style={styles.userName}>
-                {this.state.userName}
-              </Text>
-            </TouchableHighlight>
-          </View>
-        </View>
         <View style={styles.inputBar}>
           <Avatar
             size="small"
@@ -66,8 +46,8 @@ class LoginScreen extends React.Component {
           />
           <TextInput
             style={styles.input}
-            value={ this.state.comment }
-            onChangeText={(text) => { this.setState({ pass: text }); }}
+            value={this.state.comment}
+            onChangeText={(text) => { this.setState({ comment: text }); }}
             autoCapitalize="none"
             autoCorrect={false}
             placeholder="コメントを書く"
@@ -93,7 +73,7 @@ class LoginScreen extends React.Component {
             </Text>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -104,34 +84,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   photo: {
-    alignSelf: 'center',
-    height: '60%',
     marginTop: 12,
-  },
-  bar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 12,
-  },
-  likes: {
-    flexDirection: 'row',
-    alignContent: 'center',
-  },
-  likesNumber: {
-    paddingLeft: 12,
-    paddingRight: 12,
-  },
-  heart: {
-  },
-  userItem: {
-    flexDirection: 'row',
-    alignContent: 'center',
-  },
-  userBy: {
-    marginRight: 4,  
-  },
-  userName: {
-    color: '#DB4D5E',
+    height: Dimensions.get('window').height * 0.6,
   },
   inputBar: {
     flexDirection: 'row',

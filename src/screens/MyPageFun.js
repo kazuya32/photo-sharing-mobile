@@ -15,13 +15,12 @@ class MyPageFun extends React.Component {
   state = {
     userName: 'YoSasaki',
     userDesc: 'サッカーしようぜ！',
-    photo: require('../../assets/image/athlete/naoya_kondo.jpg'),
     data: [
-      {key:1, source: require('../../assets/image/athlete/naoya_kondo.jpg')},
-      {key:2, source: require('../../assets/image/athlete/naoya_kondo.jpg')},
-      {key:3, source: require('../../assets/image/athlete/naoya_kondo.jpg')},
-      {key:4, source: require('../../assets/image/athlete/naoya_kondo.jpg')},
-      {key:5, source: require('../../assets/image/athlete/naoya_kondo.jpg')},
+      { key: 1, likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/naoya_kondo.jpg') },
+      { key: 2, likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/masaki_yamamoto.jpg') },
+      { key: 3, likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/takayuki_funayama.jpg') },
+      { key: 4, likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yuya_sato.jpg') },
+      { key: 5, likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yushi_mizobuchi.jpg') },
     ],
   }
 
@@ -29,9 +28,16 @@ class MyPageFun extends React.Component {
     Alert.alert('button pressed')
   }
 
-  _renderItem({ item }) {
+  renderItem({ item }) {
     return (
-      <TouchableOpacity onPress={() => { navigation.navigate('PhotoDetail'); }}>
+      <TouchableOpacity
+        onPress={() => {
+          this.props.navigation.navigate({
+            routeName: 'PhotoDetail',
+            params: item,
+          });
+        }}
+      >
         <Image
           style={styles.photoItem}
           source={item.source}
@@ -47,14 +53,14 @@ class MyPageFun extends React.Component {
     return (
       <View style={styles.container}>
         <Profile
-          onPress={() => { this.props.navigation.navigate('PhotoDetail'); }}
+          onPress={this.onPressTest}
           userName={this.state.userName}
           userDesc={this.state.userDesc}
         />
         <FlatList
           navigation={this.props.navigation}
           data={this.state.data}
-          renderItem={this._renderItem.bind(this)}
+          renderItem={this.renderItem.bind(this)}
           numColumns={3}
           // horizontal={true}
           // keyExtractor={this._keyExtractor}

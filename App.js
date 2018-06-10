@@ -1,7 +1,7 @@
-import { StyleSheet } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import Login from './src/screens/Login.js';
+import Home from './src/screens/Home.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
 import MyPageFun from './src/screens/MyPageFun.js';
 import Signature from './src/screens/Signature.js';
@@ -9,6 +9,7 @@ import PhotoPicker from './src/screens/PhotoPicker.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
 
 const HomeStack = createStackNavigator({
+  Home: { screen: Home },
   MyPageFun: { screen: MyPageFun },
   PhotoDetail: { screen: PhotoDetail },
   Signature: { screen: Signature },
@@ -39,8 +40,8 @@ const UploadStack = createStackNavigator({
 });
 
 const GameStack = createStackNavigator({
-  PhotoDetail: { screen: PhotoDetail },
   MyPageFun: { screen: MyPageFun },
+  PhotoDetail: { screen: PhotoDetail },
   Signature: { screen: Signature },
 }, {
   navigationOptions: {
@@ -97,16 +98,5 @@ const App = createBottomTabNavigator({
     },
   },
 });
-
-const styles = StyleSheet.create({
-  header: {
-    backgroundColor: '#FCFCFC',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 1,
-  },
-});
-
 
 export default App;
