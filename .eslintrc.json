@@ -12,7 +12,8 @@
     "import/extensions": 0,
     "no-trailing-spaces": 0,
     "react/jsx-no-bind": 0,
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "key-spacing": 0
   },
   "parser": "babel-eslint"
 }

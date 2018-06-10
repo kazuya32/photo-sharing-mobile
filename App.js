@@ -1,4 +1,5 @@
 import React from 'react';
+import firebase from 'firebase';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 // import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,6 +17,19 @@ import PhotoUploader from './src/screens/PhotoUploader.js';
 import Schedule from './src/screens/Schedule.js';
 import Game from './src/screens/Game.js';
 import Team from './src/screens/Team.js';
+
+import ENV from './env.json';
+
+// eslint-disable-next-line
+const config = {
+  apiKey:            ENV.FIREBASE_API_KEY,
+  authDomain:        ENV.FIREBASE_AUTH_DOMAIN,
+  databaseURL:       ENV.FIREBASE_DB_URL,
+  projectId:         ENV.FIREBASE_PROJECT_ID,
+  storageBucket:     ENV.FIREBASE_STORAGE,
+  messagingSenderId: ENV.FIREBASE_SENDER_ID,
+};
+firebase.initializeApp(config);
 
 const HomeStack = createStackNavigator({
   Home: { screen: Home },

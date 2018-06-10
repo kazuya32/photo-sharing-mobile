@@ -26,6 +26,10 @@ then, in new terminal tab
 
 <https://qiita.com/YutamaKotaro/items/dac047715896dc11e555>
 
+### Firebase
+
+    $ npm install --save firebase@4.6.2
+
 ### Cross Platform React Native UI Toolkit
 
     $ npm install react-native-vector-icons --save
