@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
+import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
 class SelectItem extends React.Component {
   render() {
@@ -13,7 +14,7 @@ class SelectItem extends React.Component {
               {title}
             </Text>
             <Text style={styles.button}>
-              &gt;
+              <IoniconsIcon name="ios-arrow-forward-outline" size={24} />
             </Text>
           </View>
         </TouchableHighlight>
@@ -43,8 +44,6 @@ const styles = StyleSheet.create({
   },
   button: {
     color: '#EBEBEB',
-    fontWeight: '700',
-    fontSize: 24,
   },
 });
 

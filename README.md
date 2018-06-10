@@ -14,7 +14,9 @@ then, in new terminal tab
 
 <https://facebook.github.io/react-native/>
 
-## Font Awesome
+## Icon, Fonts
+
+<https://oblador.github.io/react-native-vector-icons/>
 
 <https://fontawesome.com/v4.7.0/>
 
@@ -25,6 +27,8 @@ then, in new terminal tab
 <https://qiita.com/YutamaKotaro/items/dac047715896dc11e555>
 
 ### Cross Platform React Native UI Toolkit
+
+    $ npm install react-native-vector-icons --save
 
     $ npm install --save react-native-elements
 

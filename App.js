@@ -1,4 +1,10 @@
+import React from 'react';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+// import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import Login from './src/screens/Login.js';
 import Home from './src/screens/Home.js';
@@ -26,12 +32,16 @@ const HomeStack = createStackNavigator({
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: 0.3,
       shadowRadius: 1,
+      paddingRight: 14,
+      paddingLeft: 14,
     },
     headerTitleStyle: {
       color: '#000000',
     },
     headerTintColor: '#fff',
-    headerBackTitle: null,
+    headerBackTitle: '<',
+    headerLeft: <MaterialIcon name="search" size={24} />,
+    headerRight: <MaterialCommunityIcon name="bell-outline" size={24} />,
   },
 });
 
@@ -56,12 +66,16 @@ const GameStack = createStackNavigator({
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: 0.3,
       shadowRadius: 1,
+      paddingRight: 14,
+      paddingLeft: 14,
     },
     headerTitleStyle: {
       color: '#000000',
     },
     headerTintColor: '#fff',
     headerBackTitle: '<',
+    headerLeft: <MaterialIcon name="search" size={24} />,
+    headerRight: <MaterialCommunityIcon name="bell-outline" size={24} />,
   },
 });
 
@@ -77,12 +91,16 @@ const TeamStack = createStackNavigator({
       shadowOffset: { width: 0, height: 0 },
       shadowOpacity: 0.3,
       shadowRadius: 1,
+      paddingRight: 14,
+      paddingLeft: 14,
     },
     headerTitleStyle: {
       color: '#000000',
     },
     headerTintColor: '#fff',
     headerBackTitle: '<',
+    headerLeft: <MaterialIcon name="search" size={24} />,
+    headerRight: <MaterialCommunityIcon name="bell-outline" size={24} />,
   },
 });
 
@@ -93,11 +111,37 @@ const SignatureStack = createStackNavigator({
 });
 
 const App = createBottomTabNavigator({
-  Home: HomeStack,
-  Game: GameStack,
-  Upload: UploadStack,
-  Team: TeamStack,
-  Sign: SignatureStack,
+  Home: {
+    screen: HomeStack,
+    navigationOptions: {
+      tabBarIcon: <MaterialCommunityIcon name="home" size={30} />,
+      activeTintColor: '#e91e63',
+    },
+  },
+  Game: {
+    screen: GameStack,
+    navigationOptions: {
+      tabBarIcon: <EntypoIcon name="calendar" size={24} />,
+    },
+  },
+  Upload: {
+    screen: UploadStack,
+    navigationOptions: {
+      tabBarIcon: <FeatherIcon name="plus-circle" size={30} />,
+    },
+  },
+  Team: {
+    screen: TeamStack,
+    navigationOptions: {
+      tabBarIcon: <MaterialIcon name="people" size={30} />,
+    },
+  },
+  Sign: {
+    screen: SignatureStack,
+    navigationOptions: {
+      tabBarIcon: <MaterialCommunityIcon name="face-profile" size={30} />,
+    },
+  },
 }, {
   tabBarOptions: {
     labelStyle: {
@@ -106,7 +150,13 @@ const App = createBottomTabNavigator({
     style: {
       backgroundColor: '#FCFCFC',
     },
+    showLabel: false,
+    activeTintColor: '#e91e63',
+    tabStyle: {
+      // alignself: 'center',
+    },
   },
 });
+
 
 export default App;
