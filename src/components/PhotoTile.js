@@ -7,7 +7,7 @@ import {
   Image,
 } from 'react-native';
 
-import HeartIcon from '../../assets/icon/valentines-heart-white.png';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class PhotoTile extends React.Component {
   render() {
@@ -30,10 +30,7 @@ class PhotoTile extends React.Component {
         </View>
         <View style={styles.bar}>
           <View style={styles.likes}>
-            <Image
-              style={styles.heart}
-              source={HeartIcon}
-            />
+            <MaterialCommunityIcon name="heart" size={26} color="#D0364C" />
             <Text style={styles.likesNumber}>
               {likes}
             </Text>
@@ -62,10 +59,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderColor: '#EBEBEB',
     borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
   },
   bar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingTop: 20,
     paddingLeft: 12,
     paddingRight: 12,
@@ -76,10 +78,11 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   likesNumber: {
-    paddingLeft: 12,
+    paddingLeft: 8,
     paddingRight: 12,
-  },
-  heart: {
+    fontSize: 18,
+    paddingBottom: 4,
+    alignSelf: 'center',
   },
   userItem: {
     flexDirection: 'row',
@@ -87,9 +90,11 @@ const styles = StyleSheet.create({
   },
   userBy: {
     marginRight: 4,
+    alignSelf: 'center',
   },
   userName: {
     color: '#DB4D5E',
+    alignSelf: 'center',
   },
 });
 

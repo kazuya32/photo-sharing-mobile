@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
-    marginTop: 64,
+    marginTop: 70,
   },
   bodyItem: {
     borderColor: '#EBEBEB',

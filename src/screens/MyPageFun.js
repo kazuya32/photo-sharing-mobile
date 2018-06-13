@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import Profile from '../components/Profile.js';
+import Header from '../components/Header.js';
 
 class MyPageFun extends React.Component {
   state = {
@@ -52,6 +53,11 @@ class MyPageFun extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Header
+          onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+          headerTitle="FLEGO"
+        />
         <Profile
           onPress={this.onPressTest}
           userName={this.state.userName}
@@ -74,6 +80,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: 70,
   },
   photoItem: {
     width: Dimensions.get('window').width / 3,

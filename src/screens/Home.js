@@ -2,12 +2,14 @@ import React from 'react';
 import {
   StyleSheet,
   View,
+  ScrollView,
   TouchableHighlight,
   Alert,
   FlatList,
 } from 'react-native';
 
 import PhotoTile from '../components/PhotoTile.js';
+import Header from '../components/Header.js';
 
 class Home extends React.Component {
   state = {
@@ -51,13 +53,18 @@ class Home extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.feedArea}>
+        <Header
+          onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+          headerTitle="FLEGO"
+        />
+        <ScrollView style={styles.feedArea}>
           <FlatList
             data={this.state.data}
             renderItem={this.renderItem.bind(this)}
             keyExtractor={this.keyExtractor}
           />
-        </View>
+        </ScrollView>
       </View>
     );
   }
@@ -69,8 +76,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   feedArea: {
-    marginTop: 12,
-    marginBottom: 12,
+    marginTop: 70,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
   photoItem: {
     // width: Dimensions.get('window').width / 3,

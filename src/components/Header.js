@@ -1,22 +1,22 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
-class Appbar extends React.Component {
+import HeaderLeftButton from '../elements/HeaderLeftButton.js';
+import HeaderRightButton from '../elements/HeaderRightButton.js';
+
+class Header extends React.Component {
   render() {
     const {
       onPressLeft,
       onPressRight,
       headerTitle,
-      rightButtonTitle,
     } = this.props;
 
     return (
       <View style={styles.container}>
-        <TouchableHighlight style={styles.leftButton} onPress={onPressLeft} underlayColor="transparent">
-          <Text style={styles.leftButtonText}>
-            Cancel
-          </Text>
-        </TouchableHighlight>
+        <View style={styles.button}>
+          <HeaderLeftButton onPress={onPressLeft} />
+        </View>
         <View style={styles.appbar}>
           <View>
             <Text style={styles.appbarTitle}>
@@ -24,11 +24,8 @@ class Appbar extends React.Component {
             </Text>
           </View>
         </View>
-        <View style={styles.rightButton}>
-          <Button
-            onPress={onPressRight}
-            title={rightButtonTitle}
-          />
+        <View style={styles.button}>
+          <HeaderRightButton onPress={onPressRight} />
         </View>
       </View>
     );
@@ -50,31 +47,24 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.5,
     shadowRadius: 1,
-    zIndex: 10,
     borderBottomWidth: 0.3,
     borderBottomColor: '#808080',
+    zIndex: 10,
   },
   appbar: {
 
   },
   appbarTitle: {
     color: '#000000',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
   },
-  rightButton: {
-    paddingRight: 10,
-    bottom: 6,
-  },
-  leftButton: {
-    paddingLeft: 16,
-  },
-  leftButtonText: {
-    fontSize: 16,
-    color: '#000000',
+  button: {
+    paddingLeft: 14,
+    paddingRight: 14,
   },
 });
 
-export default Appbar;
+export default Header;

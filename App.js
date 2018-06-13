@@ -1,14 +1,16 @@
 import React from 'react';
+import { TouchableHighlight } from 'react-native';
 import firebase from 'firebase';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 // import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 import Login from './src/screens/Login.js';
 import Home from './src/screens/Home.js';
+import Nortification from './src/screens/Nortification.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
 import MyPageFun from './src/screens/MyPageFun.js';
 import Signature from './src/screens/Signature.js';
@@ -19,6 +21,8 @@ import Game from './src/screens/Game.js';
 import Team from './src/screens/Team.js';
 
 import ENV from './env.json';
+
+console.ignoredYellowBox = ['Remote debugger'];
 
 // eslint-disable-next-line
 const config = {
@@ -31,38 +35,42 @@ const config = {
 };
 firebase.initializeApp(config);
 
+
 const HomeStack = createStackNavigator({
   Home: { screen: Home },
+  Nortification: { screen: Nortification },
   MyPageFun: { screen: MyPageFun },
   PhotoDetail: { screen: PhotoDetail },
   Signature: { screen: Signature },
   Login: { screen: Login },
 }, {
-  navigationOptions: {
-    headerTitle: 'FLEGO',
-    headerStyle: {
-      backgroundColor: '#FCFCFC',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.3,
-      shadowRadius: 1,
-      paddingRight: 14,
-      paddingLeft: 14,
-    },
-    headerTitleStyle: {
-      color: '#000000',
-    },
-    headerTintColor: '#fff',
-    headerBackTitle: '<',
-    headerLeft: <MaterialIcon name="search" size={24} />,
-    headerRight: <MaterialCommunityIcon name="bell-outline" size={24} />,
-  },
+  headerMode: 'none',
+  // navigationOptions: {
+  //   headerTitle: 'FLEGO',
+  //   headerStyle: {
+  //     backgroundColor: '#FCFCFC',
+  //     shadowColor: '#000',
+  //     shadowOffset: { width: 0, height: 0 },
+  //     shadowOpacity: 0.3,
+  //     shadowRadius: 1,
+  //     paddingRight: 14,
+  //     paddingLeft: 14,
+  //   },
+  //   headerTitleStyle: {
+  //     color: '#000000',
+  //   },
+  //   headerTintColor: '#fff',
+  //   headerBackTitle: '<',
+  //   headerLeft: <FontAwesomeIcon name="user-circle-o" size={24} />,
+  //   headerRight: <MaterialCommunityIcon name="bell-outline" size={24} />,
+  // },
 });
 
 const UploadStack = createStackNavigator({
   PhotoPicker: { screen: PhotoPicker },
   PhotoUploader: { screen: PhotoUploader },
-  Signature: { screen: Signature },
+  MyPageFun: { screen: MyPageFun },
+  Nortification: { screen: Nortification },
 }, {
   headerMode: 'none',
 });
@@ -71,55 +79,25 @@ const GameStack = createStackNavigator({
   Schedule: { screen: Schedule },
   Game: { screen: Game },
   Home: { screen: Home },
+  MyPageFun: { screen: MyPageFun },
+  Nortification: { screen: Nortification },
 }, {
-  navigationOptions: {
-    headerTitle: 'FLEGO',
-    headerStyle: {
-      backgroundColor: '#FCFCFC',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.3,
-      shadowRadius: 1,
-      paddingRight: 14,
-      paddingLeft: 14,
-    },
-    headerTitleStyle: {
-      color: '#000000',
-    },
-    headerTintColor: '#fff',
-    headerBackTitle: '<',
-    headerLeft: <MaterialIcon name="search" size={24} />,
-    headerRight: <MaterialCommunityIcon name="bell-outline" size={24} />,
-  },
+  headerMode: 'none',
 });
 
 const TeamStack = createStackNavigator({
   Team: { screen: Team },
   Home: { screen: Home },
+  MyPageFun: { screen: MyPageFun },
+  Nortification: { screen: Nortification },
 }, {
-  navigationOptions: {
-    headerTitle: 'FLEGO',
-    headerStyle: {
-      backgroundColor: '#FCFCFC',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.3,
-      shadowRadius: 1,
-      paddingRight: 14,
-      paddingLeft: 14,
-    },
-    headerTitleStyle: {
-      color: '#000000',
-    },
-    headerTintColor: '#fff',
-    headerBackTitle: '<',
-    headerLeft: <MaterialIcon name="search" size={24} />,
-    headerRight: <MaterialCommunityIcon name="bell-outline" size={24} />,
-  },
+  headerMode: 'none',
 });
 
-const SignatureStack = createStackNavigator({
+const PlayerStack = createStackNavigator({
   Signature: { screen: Signature },
+  MyPageFun: { screen: MyPageFun },
+  Nortification: { screen: Nortification },
 }, {
   headerMode: 'none',
 });
@@ -138,22 +116,22 @@ const App = createBottomTabNavigator({
       tabBarIcon: <EntypoIcon name="calendar" size={24} />,
     },
   },
-  Upload: {
-    screen: UploadStack,
+  Player: {
+    screen: PlayerStack,
     navigationOptions: {
-      tabBarIcon: <FeatherIcon name="plus-circle" size={30} />,
+      tabBarIcon: <EntypoIcon name="users" size={24} />,
     },
   },
   Team: {
     screen: TeamStack,
     navigationOptions: {
-      tabBarIcon: <MaterialIcon name="people" size={30} />,
+      tabBarIcon: <EntypoIcon name="sports-club" size={24} />,
     },
   },
-  Sign: {
-    screen: SignatureStack,
+  Upload: {
+    screen: UploadStack,
     navigationOptions: {
-      tabBarIcon: <MaterialCommunityIcon name="face-profile" size={30} />,
+      tabBarIcon: <FeatherIcon name="plus-circle" size={30} />,
     },
   },
 }, {

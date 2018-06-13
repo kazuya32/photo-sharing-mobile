@@ -93,7 +93,6 @@ class PhotoPicker extends React.Component {
           onPressLeft={() => { this.props.navigation.goBack(); }}
           headerTitle="Camera Roll"
           rightButtonTitle="Next"
-          // imageUri={this.state.selectedImageUri}
         />
         <View style={styles.cameraRoll}>
           <Image
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
   },
   cameraRoll: {
     flex: 1,
-    marginTop: 64,
+    marginTop: 70,
   },
   imageItem: {
     width: Dimensions.get('window').width / 4,

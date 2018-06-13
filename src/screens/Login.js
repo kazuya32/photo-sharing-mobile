@@ -66,7 +66,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '70%',
     alignSelf: 'center',
-  },buttonTitle: {
+  },
+  buttonTitle: {
     color: '#fff',
     fontSize: 18,
   },

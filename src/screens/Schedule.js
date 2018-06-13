@@ -2,10 +2,14 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  TouchableHighlight,
-  Text,
   FlatList,
+  Dimensions,
+  Image,
 } from 'react-native';
+
+import ListItem from '../components/ListItem.js';
+import BackgroundImage from '../../assets/image/stadium/sample3.jpg';
+import Header from '../components/Header.js';
 
 class Schedule extends React.Component {
   state = {
@@ -22,25 +26,32 @@ class Schedule extends React.Component {
 
   renderItem({ item }) {
     return (
-      <TouchableHighlight
+      <ListItem
         onPress={() => {
           this.props.navigation.navigate({
             routeName: 'Game',
             params: item,
           });
         }}
-        underlayColor="transparent"
-      >
-        <Text style={styles.scheduleItem}>
-          {item.date}
-        </Text>
-      </TouchableHighlight>
+        text={item.date}
+      />
     );
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <Header
+          onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+          headerTitle="FLEGO"
+        />
+        <Image
+          style={styles.bgImage}
+          // source={this.state.backgroundImage}
+          source={BackgroundImage}
+          resizeMode="cover"
+        />
         <View style={styles.feedArea}>
           <FlatList
             data={this.state.data}
@@ -56,17 +67,18 @@ class Schedule extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    paddingTop: 70,
+  },
+  bgImage: {
+    opacity: 0.8,
+    position: 'absolute',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
+    justifyContent: 'center',
   },
   feedArea: {
     marginTop: 12,
     marginBottom: 12,
-  },
-  scheduleItem: {
-    margin: 12,
-    borderColor: '#EBEBEB',
-    borderBottomWidth: 3,
-    borderRadius: 21,
   },
 });
 

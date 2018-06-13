@@ -9,11 +9,11 @@ import {
   Dimensions,
   KeyboardAvoidingView,
 } from 'react-native';
-
 import { Avatar } from 'react-native-elements';
 
 import SendButton from '../elements/SendButton';
 import PhotoTile from '../components/PhotoTile';
+import Header from '../components/Header.js';
 
 class LoginScreen extends React.Component {
   state = {
@@ -28,52 +28,59 @@ class LoginScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <PhotoTile
-          photo={this.props.navigation.state.params.source}
-          likes={this.state.likes}
-          userName={this.state.userName}
-          onPressUser={this.onPressTest}
-          photoStyle={styles.photo}
+      <View style={styles.container}>
+        <Header
+          onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+          headerTitle="FLEGO"
         />
-        <View style={styles.inputBar}>
-          <Avatar
-            size="small"
-            rounded
-            title="YS"
-            onPress={this.onPressTest}
-            activeOpacity={0.7}
+        <ScrollView>
+          <PhotoTile
+            photo={this.props.navigation.state.params.source}
+            likes={this.state.likes}
+            userName={this.state.userName}
+            onPressUser={this.onPressTest}
+            photoStyle={styles.photo}
           />
-          <TextInput
-            style={styles.input}
-            value={this.state.comment}
-            onChangeText={(text) => { this.setState({ comment: text }); }}
-            autoCapitalize="none"
-            autoCorrect={false}
-            placeholder="コメントを書く"
-            returnKeyType="send"
-            multiline={false}
-            numberOfLines={2}
-          />
-          <SendButton onPress={this.onPressTest}>
-            投稿
-          </SendButton>
-        </View>
-        <View style={styles.commentItem}>
-          <Avatar
-            size="small"
-            rounded
-            title="DO"
-            onPress={this.onPressTest}
-            activeOpacity={0.7}
-          />
-          <View style={styles.commentBox}>
-            <Text style={styles.commentText}>
-              いい写真ですね！サインしますので僕に送ってください！
-            </Text>
+          <View style={styles.inputBar}>
+            <Avatar
+              size="small"
+              rounded
+              title="YS"
+              onPress={this.onPressTest}
+              activeOpacity={0.7}
+            />
+            <TextInput
+              style={styles.input}
+              value={this.state.comment}
+              onChangeText={(text) => { this.setState({ comment: text }); }}
+              autoCapitalize="none"
+              autoCorrect={false}
+              placeholder="コメントを書く"
+              returnKeyType="send"
+              multiline={false}
+              numberOfLines={2}
+            />
+            <SendButton onPress={this.onPressTest}>
+              投稿
+            </SendButton>
           </View>
-        </View>
-      </ScrollView>
+          <View style={styles.commentItem}>
+            <Avatar
+              size="small"
+              rounded
+              title="DO"
+              onPress={this.onPressTest}
+              activeOpacity={0.7}
+            />
+            <View style={styles.commentBox}>
+              <Text style={styles.commentText}>
+                いい写真ですね！サインしますので僕に送ってください！
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -82,6 +89,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: 70,
   },
   photo: {
     marginTop: 12,
