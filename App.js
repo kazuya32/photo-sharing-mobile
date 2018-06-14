@@ -1,12 +1,10 @@
 import React from 'react';
-import { TouchableHighlight } from 'react-native';
 import firebase from 'firebase';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 // import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 import Login from './src/screens/Login.js';
 import Home from './src/screens/Home.js';
@@ -19,6 +17,7 @@ import PhotoUploader from './src/screens/PhotoUploader.js';
 import Schedule from './src/screens/Schedule.js';
 import Game from './src/screens/Game.js';
 import Team from './src/screens/Team.js';
+import UserSearch from './src/screens/UserSearch.js';
 
 import ENV from './env.json';
 
@@ -69,6 +68,7 @@ const HomeStack = createStackNavigator({
 const UploadStack = createStackNavigator({
   PhotoPicker: { screen: PhotoPicker },
   PhotoUploader: { screen: PhotoUploader },
+  Signature: { screen: Signature },
   MyPageFun: { screen: MyPageFun },
   Nortification: { screen: Nortification },
 }, {
@@ -95,7 +95,7 @@ const TeamStack = createStackNavigator({
 });
 
 const PlayerStack = createStackNavigator({
-  Signature: { screen: Signature },
+  UserSearch: { screen: UserSearch },
   MyPageFun: { screen: MyPageFun },
   Nortification: { screen: Nortification },
 }, {

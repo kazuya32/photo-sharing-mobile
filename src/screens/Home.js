@@ -54,7 +54,7 @@ class Home extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="FLEGO"
         />

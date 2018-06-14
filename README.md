@@ -26,6 +26,8 @@ then, in new terminal tab
 
 <https://qiita.com/YutamaKotaro/items/dac047715896dc11e555>
 
+<https://qiita.com/YutamaKotaro/items/052768ca01a6369a8ad5>
+
 ### Firebase
 
     $ npm install --save firebase@4.6.2

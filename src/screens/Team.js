@@ -9,7 +9,7 @@ import {
 
 import Header from '../components/Header.js';
 import ListItem from '../components/ListItem.js';
-import BackgroundImage from '../../assets/image/stadium/sample5.jpg';
+import BackgroundImage from '../../assets/image/background/sample7.jpg';
 
 class Team extends React.Component {
   state = {
@@ -43,7 +43,7 @@ class Team extends React.Component {
         <Header
           onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
-          headerTitle="FLEGO"
+          headerTitle="Team"
         />
         <Image
           style={styles.bgImage}
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     paddingTop: 70,
   },
   bgImage: {
-    opacity: 0.8,
+    opacity: 0.9,
     position: 'absolute',
     height: Dimensions.get('window').height,
     width: Dimensions.get('window').width,

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import ListItem from '../components/ListItem.js';
-import BackgroundImage from '../../assets/image/stadium/sample3.jpg';
+import BackgroundImage from '../../assets/image/background/sample3.jpg';
 import Header from '../components/Header.js';
 
 class Schedule extends React.Component {
@@ -44,7 +44,7 @@ class Schedule extends React.Component {
         <Header
           onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
-          headerTitle="FLEGO"
+          headerTitle="Match Schedule"
         />
         <Image
           style={styles.bgImage}

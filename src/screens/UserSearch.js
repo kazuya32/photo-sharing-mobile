@@ -2,30 +2,37 @@ import React from 'react';
 import {
   StyleSheet,
   View,
+  Dimensions,
   Image,
   FlatList,
-  Dimensions,
 } from 'react-native';
+import { SearchBar } from 'react-native-elements';
 
 import Header from '../components/Header.js';
 import ListItem from '../components/ListItem.js';
-import BackgroundImage from '../../assets/image/background/sample1.jpg';
+import BackgroundImage from '../../assets/image/background/sample5.jpg';
 
-class Game extends React.Component {
+class UserSearch extends React.Component {
   state = {
+    searchText: '',
     data: [
-      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/naoya_kondo.jpg') },
-      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/masaki_yamamoto.jpg') },
-      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/takayuki_funayama.jpg') },
-      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yuya_sato.jpg') },
-      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yushi_mizobuchi.jpg') },
+      { user: 'Athelete 1' },
+      { user: 'Athelete 2' },
+      { user: 'Athelete 3' },
+      { user: 'Athelete 4' },
+      { user: 'Athelete 5' },
     ],
+  }
+
+  onPressTest(text) {
+    // Alert.alert('button pressed')
+    console.log({ text });
   }
 
   keyExtractor = (item, index) => index.toString();
 
   renderItem({ item }) {
-    const text = item.home + ' vs ' + item.away;
+    const text = item.user;
 
     return (
       <ListItem
@@ -43,15 +50,25 @@ class Game extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
-          headerTitle="Match"
+          headerTitle="Find Users"
         />
         <Image
           style={styles.bgImage}
           // source={this.state.backgroundImage}
           source={BackgroundImage}
           resizeMode="cover"
+        />
+        <SearchBar
+          lightTheme
+          onChangeText={(searchText) => this.setState({ searchText })}
+          onClear={(searchText) => this.onPressTest({ searchText })}
+          placeholder="Search"
+          value={this.state.searchText}
+          showLoading
+          containerStyle={styles.searchBar}
+          inputContainerStyle={styles.inputArea}
         />
         <View style={styles.feedArea}>
           <FlatList
@@ -68,19 +85,28 @@ class Game extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     paddingTop: 70,
   },
   bgImage: {
-    opacity: 0.8,
+    opacity: 0.9,
     position: 'absolute',
     height: Dimensions.get('window').height,
     width: Dimensions.get('window').width,
     justifyContent: 'center',
   },
   feedArea: {
-    marginTop: 12,
-    marginBottom: 12,
+    paddingTop: 12,
+    paddingBottom: 12,
+  },
+  searchBar: {
+    backgroundColor: '#EBEBEB',
+    borderWidth: 0,
+    borderColor: '#fff',
+  },
+  inputArea: {
+    // backgroundColor: '#fff',
   },
 });
 
-export default Game;
+export default UserSearch;
