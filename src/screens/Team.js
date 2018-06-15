@@ -6,6 +6,7 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
+import firebase from 'firebase';
 
 import Header from '../components/Header.js';
 import ListItem from '../components/ListItem.js';
@@ -13,13 +14,25 @@ import BackgroundImage from '../../assets/image/background/sample7.jpg';
 
 class Team extends React.Component {
   state = {
-    data: [
-      { name: 'ジェフ千葉' },
-      { name: 'ガンバ大阪' },
-      { name: 'FC東京' },
-      { name: 'レノファ山口' },
-      { name: '名古屋グランパス' },
-    ],
+    teams: [],
+  }
+
+  componentDidMount() {
+    this.fetchTeams();
+  }
+
+  fetchTeams = () => {
+    const db = firebase.firestore();
+    // const teams = { this.state.teams };
+    const teams = [];
+    db.collection('teams').get().then((querySnapshot) => {
+      // console.log(querySnapshot);
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.data().name);
+        teams.push(doc.data());
+      });
+      this.setState({ teams });
+    });
   }
 
   keyExtractor = (item, index) => index.toString();
@@ -41,7 +54,7 @@ class Team extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="Team"
         />
@@ -53,7 +66,7 @@ class Team extends React.Component {
         />
         <View style={styles.feedArea}>
           <FlatList
-            data={this.state.data}
+            data={this.state.teams}
             renderItem={this.renderItem.bind(this)}
             keyExtractor={this.keyExtractor}
           />

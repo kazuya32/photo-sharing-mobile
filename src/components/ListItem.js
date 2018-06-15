@@ -19,7 +19,10 @@ class ListItem extends React.Component {
 
 const styles = StyleSheet.create({
   item: {
-    margin: 12,
+    marginTop: 12,
+    marginBottom: 12,
+    marginLeft: 20,
+    marginRight: 20,
     padding: 12,
     backgroundColor: '#fff',
     borderRadius: 5,
@@ -30,6 +33,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginLeft: 8,
+    marginRight: 8,
     // borderColor: '#EBEBEB',
     // borderWidth: 2,
   },

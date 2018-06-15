@@ -15,12 +15,15 @@ import Signature from './src/screens/Signature.js';
 import PhotoPicker from './src/screens/PhotoPicker.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
 import Schedule from './src/screens/Schedule.js';
-import Game from './src/screens/Game.js';
+import Match from './src/screens/Match.js';
 import Team from './src/screens/Team.js';
 import UserSearch from './src/screens/UserSearch.js';
 
 import ENV from './env.json';
 
+// eslint-disable-next-line
+require('firebase/firestore');
+// eslint-disable-next-line
 console.ignoredYellowBox = ['Remote debugger'];
 
 // eslint-disable-next-line
@@ -34,6 +37,7 @@ const config = {
 };
 firebase.initializeApp(config);
 
+// const db = firebase.firestore();
 
 const HomeStack = createStackNavigator({
   Home: { screen: Home },
@@ -75,9 +79,9 @@ const UploadStack = createStackNavigator({
   headerMode: 'none',
 });
 
-const GameStack = createStackNavigator({
+const MatchStack = createStackNavigator({
   Schedule: { screen: Schedule },
-  Game: { screen: Game },
+  Match: { screen: Match },
   Home: { screen: Home },
   MyPageFun: { screen: MyPageFun },
   Nortification: { screen: Nortification },
@@ -110,8 +114,8 @@ const App = createBottomTabNavigator({
       activeTintColor: '#e91e63',
     },
   },
-  Game: {
-    screen: GameStack,
+  Match: {
+    screen: MatchStack,
     navigationOptions: {
       tabBarIcon: <EntypoIcon name="calendar" size={24} />,
     },

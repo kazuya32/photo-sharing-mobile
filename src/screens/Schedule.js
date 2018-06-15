@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
+import firebase from 'firebase';
 
 import ListItem from '../components/ListItem.js';
 import BackgroundImage from '../../assets/image/background/sample3.jpg';
@@ -13,13 +14,26 @@ import Header from '../components/Header.js';
 
 class Schedule extends React.Component {
   state = {
-    data: [
-      { date: Date() },
-      { date: Date() },
-      { date: Date() },
-      { date: Date() },
-      { date: Date() },
-    ],
+    schedules: [],
+  }
+
+  componentDidMount() {
+    this.fetchSchedules();
+  }
+
+  fetchSchedules = () => {
+    const db = firebase.firestore();
+    // const teams = { this.state.teams };
+    const schedules = [];
+    db.collection('matchSchedules').get().then((querySnapshot) => {
+      // console.log(querySnapshot);
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.data().name);
+        schedules.push(doc.data());
+      });
+      console.log(schedules);
+      this.setState({ schedules });
+    });
   }
 
   keyExtractor = (item, index) => index.toString();
@@ -29,11 +43,11 @@ class Schedule extends React.Component {
       <ListItem
         onPress={() => {
           this.props.navigation.navigate({
-            routeName: 'Game',
+            routeName: 'Match',
             params: item,
           });
         }}
-        text={item.date}
+        text={item.date.toString()}
       />
     );
   }
@@ -42,7 +56,7 @@ class Schedule extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="Match Schedule"
         />
@@ -54,7 +68,7 @@ class Schedule extends React.Component {
         />
         <View style={styles.feedArea}>
           <FlatList
-            data={this.state.data}
+            data={this.state.schedules}
             renderItem={this.renderItem.bind(this)}
             keyExtractor={this.keyExtractor}
           />
