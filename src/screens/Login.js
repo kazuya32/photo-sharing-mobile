@@ -5,18 +5,6 @@ import firebase from 'firebase';
 import { SocialIcon } from 'react-native-elements';
 
 import BackgroundImage from '../../assets/splash.png';
-import ENV from '../../env.json';
-
-// eslint-disable-next-line
-const config = {
-  apiKey:            ENV.FIREBASE_API_KEY,
-  authDomain:        ENV.FIREBASE_AUTH_DOMAIN,
-  databaseURL:       ENV.FIREBASE_DB_URL,
-  projectId:         ENV.FIREBASE_PROJECT_ID,
-  storageBucket:     ENV.FIREBASE_STORAGE,
-  messagingSenderId: ENV.FIREBASE_SENDER_ID,
-};
-firebase.initializeApp(config);
 
 // const provider = new firebase.auth.FacebookAuthProvider();
 
@@ -45,13 +33,13 @@ class Login extends React.Component {
     Alert.alert('現在は使用できません');
   }
 
-  logInTest() {
-    const email = 'testuser@example.com'
-    const password = 'testuser'
+  logInTest = () => {
+    const testEmail = 'testuser@example.com'
+    const testPassword = 'testuser'
 
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    firebase.auth().signInWithEmailAndPassword(testEmail, testPassword)
       .then((user) => {
-        this.props.navigation.navigate('Home', { currentUser: user });
+        this.props.navigation.navigate('Home');
       })
       .catch(function(error) {
         var errorCode = error.code;
@@ -78,18 +66,19 @@ class Login extends React.Component {
             raised
             onPress={this.logInTest}
           />
-          <SocialIcon
-            title="Facebookでログイン"
-            button
-            type="facebook"
-            raised
-            onPress={this.onPress}
-          />
         </View>
       </View>
     );
   }
 }
+
+// <SocialIcon
+//   title="Facebookでログイン"
+//   button
+//   type="facebook"
+//   raised
+//   onPress={this.onPress}
+// />
 
 const styles = StyleSheet.create({
   container: {
@@ -104,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   upperArea: {
-    flex: 3,
+    flex: 2,
     alignContent:'center',
     justifyContent: 'center',
   },

@@ -8,14 +8,17 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
+import firebase from 'firebase';
 
 import Profile from '../components/Profile.js';
 import Header from '../components/Header.js';
 
 class MyPageFun extends React.Component {
+
   state = {
-    userName: 'YoSasaki',
-    userDesc: 'サッカーしようぜ！',
+    user: null,
+    name: '',
+    desc: '',
     data: [
       { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/naoya_kondo.jpg') },
       { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/masaki_yamamoto.jpg') },
@@ -23,6 +26,33 @@ class MyPageFun extends React.Component {
       { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yuya_sato.jpg') },
       { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yushi_mizobuchi.jpg') },
     ],
+  }
+
+  componentDidMount() {
+    this.getUser();
+  }
+
+  getUser = () => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const name = 'name'
+        const desc = 'desc'
+        this.setState({ user });
+        this.fetchUser();
+      } else {
+        this.props.navigation.navigate({ routeName: 'Login' });
+      }
+    });
+  }
+
+  fetchUser = () => {
+    const db = firebase.firestore();
+    db.collection('users').doc(`${this.state.user.uid}`).get()
+      .then((doc) => {
+        name = doc.data().name;
+        desc = doc.data().desc;
+        this.setState({ name, desc });
+      });
   }
 
   onPressTest() {
@@ -51,6 +81,8 @@ class MyPageFun extends React.Component {
   }
 
   render() {
+    // const { currentUser } = this.props.navigation.state.params;
+
     return (
       <View style={styles.container}>
         <Header
@@ -60,8 +92,8 @@ class MyPageFun extends React.Component {
         />
         <Profile
           onPress={this.onPressTest}
-          userName={this.state.userName}
-          userDesc={this.state.userDesc}
+          userName={this.state.name}
+          userDesc={this.state.desc}
         />
         <FlatList
           navigation={this.props.navigation}

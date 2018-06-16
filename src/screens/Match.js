@@ -18,21 +18,17 @@ class Match extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchMatches();
-    console.log(this.props.navigation.state.params);
+    this.fetchMatches();  
   }
 
   fetchMatches = () => {
     const { id, data } = this.props.navigation.state.params;
     const db = firebase.firestore();
     const matches = [];
-    // const matchesRef = db.collection('matchSchedules').where('date', '==', date);
-    // console.log(matchesRef);
     db.collection(`matchSchedules/${id}/matches`).get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          // console.log(doc.data().name);
-          matches.push(doc.data());
+          matches.push({ id: doc.id, data: doc.data() });
         });
         this.setState({ matches });
       });
@@ -41,8 +37,6 @@ class Match extends React.Component {
   keyExtractor = (item, index) => index.toString();
 
   renderItem({ item }) {
-    const text = item.home + ' vs ' + item.away;
-
     return (
       <ListItem
         onPress={() => {
@@ -50,7 +44,7 @@ class Match extends React.Component {
             routeName: 'Home',
           });
         }}
-        text={text}
+        text={`${item.data.home} vs ${item.data.away}`}
       />
     );
   }

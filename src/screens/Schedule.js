@@ -48,7 +48,7 @@ class Schedule extends React.Component {
             params: item,
           });
         }}
-        text={item.date.toString()}
+        text={item.data.date.toString()}
       />
     );
   }
