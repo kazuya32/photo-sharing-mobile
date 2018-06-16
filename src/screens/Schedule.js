@@ -29,9 +29,10 @@ class Schedule extends React.Component {
       // console.log(querySnapshot);
       querySnapshot.forEach((doc) => {
         // console.log(doc.data().name);
-        schedules.push(doc.data());
+        schedules.push({ id: doc.id, data: doc.data() });
       });
       console.log(schedules);
+      console.log(schedules[0].id);
       this.setState({ schedules });
     });
   }

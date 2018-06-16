@@ -26,26 +26,24 @@ require('firebase/firestore');
 // eslint-disable-next-line
 console.ignoredYellowBox = ['Remote debugger'];
 
-// eslint-disable-next-line
-const config = {
-  apiKey:            ENV.FIREBASE_API_KEY,
-  authDomain:        ENV.FIREBASE_AUTH_DOMAIN,
-  databaseURL:       ENV.FIREBASE_DB_URL,
-  projectId:         ENV.FIREBASE_PROJECT_ID,
-  storageBucket:     ENV.FIREBASE_STORAGE,
-  messagingSenderId: ENV.FIREBASE_SENDER_ID,
-};
-firebase.initializeApp(config);
-
-// const db = firebase.firestore();
+// // eslint-disable-next-line
+// const config = {
+//   apiKey:            ENV.FIREBASE_API_KEY,
+//   authDomain:        ENV.FIREBASE_AUTH_DOMAIN,
+//   databaseURL:       ENV.FIREBASE_DB_URL,
+//   projectId:         ENV.FIREBASE_PROJECT_ID,
+//   storageBucket:     ENV.FIREBASE_STORAGE,
+//   messagingSenderId: ENV.FIREBASE_SENDER_ID,
+// };
+// firebase.initializeApp(config);
 
 const HomeStack = createStackNavigator({
+  Login: { screen: Login },
   Home: { screen: Home },
   Nortification: { screen: Nortification },
   MyPageFun: { screen: MyPageFun },
   PhotoDetail: { screen: PhotoDetail },
   Signature: { screen: Signature },
-  Login: { screen: Login },
 }, {
   headerMode: 'none',
   // navigationOptions: {

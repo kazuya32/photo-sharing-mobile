@@ -23,15 +23,12 @@ class Match extends React.Component {
   }
 
   fetchMatches = () => {
-    const { date } = this.props.navigation.state.params;
-    // console.log(this.schedule)
-    // const date = schedule;
-
+    const { id, data } = this.props.navigation.state.params;
     const db = firebase.firestore();
     const matches = [];
     // const matchesRef = db.collection('matchSchedules').where('date', '==', date);
     // console.log(matchesRef);
-    db.collection('matchSchedules').doc('20180707').collection('matches').get()
+    db.collection(`matchSchedules/${id}/matches`).get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           // console.log(doc.data().name);
