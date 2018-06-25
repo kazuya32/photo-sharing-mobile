@@ -37,7 +37,9 @@ class PhotoPicker extends React.Component {
       base64: true,
     });
 
-    // console.log(result);
+    console.log(result);
+    console.log(result.width);
+    console.log(result.height);
 
     if (result.cancelled) {
       this.props.navigation.navigate({ routeName: 'Home' });

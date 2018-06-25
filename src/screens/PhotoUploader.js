@@ -20,6 +20,14 @@ class PhotoUploader extends React.Component {
   }
 
   componentDidMount() {
+    this.setAuth();
+  }
+
+  onPress = () => {
+    this.uploadToStorage();
+  }
+
+  setAuth = () => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         const {
@@ -46,11 +54,6 @@ class PhotoUploader extends React.Component {
         console.log('User is signed out.');
       }
     });
-  }
-
-  onPress = () => {
-    this.uploadToStorage();
-    Alert.alert('');
   }
 
   uploadToStorage = () => {
@@ -85,6 +88,9 @@ class PhotoUploader extends React.Component {
       people: this.mapArray(this.state.people),
       matchId: this.state.matchId,
       teamId: this.state.teamId,
+      width: this.props.navigation.state.params.image.width,
+      height: this.props.navigation.state.params.image.height,
+      likes: 0,
     })
       .then(() => {
         this.props.navigation.navigate({ routeName: 'MyPageFun' });

@@ -35,8 +35,6 @@ class MyPageFun extends React.Component {
   getUser = () => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        const name = 'name'
-        const desc = 'desc'
         this.setState({ user });
         this.fetchUser();
       } else {
@@ -49,8 +47,8 @@ class MyPageFun extends React.Component {
     const db = firebase.firestore();
     db.collection('users').doc(`${this.state.user.uid}`).get()
       .then((doc) => {
-        name = doc.data().name;
-        desc = doc.data().desc;
+        const { name } = doc.data();
+        const { desc } = doc.data();
         this.setState({ name, desc });
       });
   }
