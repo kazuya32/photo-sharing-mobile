@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   sendButtonTitle: {
-    color: '#fff'
+    color: '#fff',
   },
 });
 

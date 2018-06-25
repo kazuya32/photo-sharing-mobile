@@ -4,7 +4,7 @@ import {
   View,
   Image,
   CameraRoll,
-  Alert,
+  // Alert,
   Dimensions,
   FlatList,
   TouchableOpacity,
@@ -34,15 +34,15 @@ class PhotoPicker extends React.Component {
       });
   }
 
-  onPress(item) {
+  onPress = (item) => {
     this.setState({ selectedImageUri: item.uri });
   }
 
-  onPressTest() {
-    Alert.alert('button pressed');
+  onPressTest = () => {
+    // Alert.alert('button pressed');
   }
 
-  loadImages() {
+  loadImages = () => {
     const endCursor = this.state.EndCursor;
     CameraRoll.getPhotos({
       after: endCursor,
@@ -54,28 +54,28 @@ class PhotoPicker extends React.Component {
       });
   }
 
-  storeImages(edges) {
+  storeImages = (edges) => {
+    console.log(edges);
     // const images = this.state.images;
     // edges.forEach((edge) => {
     //   images.push(edge.node.image);
     // })
-    const images = edges.map((asset) => asset.node.image )
+    const images = edges.map(asset => asset.node.image);
+    console.log(images);
     this.setState({ images });
   }
 
-  keyExtractor = (item, index) => item.uri;
+  keyExtractor = index => index.toString();
 
-  renderItem({ item }) {
-    return (
-      <TouchableOpacity onPress={() => this.onPress(item)} >
-        <Image
-          style={styles.imageItem}
-          source={{ uri: item.uri }}
-          resizeMode="cover"
-        />
-      </TouchableOpacity>
-    );
-  }
+  renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => this.onPress(item)} >
+      <Image
+        style={styles.imageItem}
+        source={{ uri: item.uri }}
+        resizeMode="cover"
+      />
+    </TouchableOpacity>
+  )
 
   render() {
     return (
@@ -102,7 +102,7 @@ class PhotoPicker extends React.Component {
           />
           <FlatList
             data={this.state.images}
-            renderItem={this.renderItem.bind(this)}
+            renderItem={this.renderItem}
             numColumns={4}
             keyExtractor={this.keyExtractor}
             onEndReached={this.onPressTest}
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   cameraRoll: {
     flex: 1,
-    marginTop: 70,
+    marginTop: 80,
   },
   imageItem: {
     width: Dimensions.get('window').width / 4,
@@ -131,6 +131,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '60%',
   },
-})
+});
 
 export default PhotoPicker;

@@ -12,7 +12,7 @@ import Nortification from './src/screens/Nortification.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
 import MyPageFun from './src/screens/MyPageFun.js';
 import Signature from './src/screens/Signature.js';
-import PhotoPicker from './src/screens/PhotoPicker.js';
+import PhotoPicker from './src/screens/PhotoPickerExpo.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
 import Schedule from './src/screens/Schedule.js';
 import Match from './src/screens/Match.js';
