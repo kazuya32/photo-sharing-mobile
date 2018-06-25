@@ -51,22 +51,22 @@ class PhotoUploader extends React.Component {
         });
       // eslint-disable-next-line
       } else {
-        console.log('User is signed out.');
+        this.props.navigation.navigate({ routeName: 'Login' });
       }
     });
   }
 
-  uploadToStorage = () => {
-    const file = this.props.navigation.state.params.image.base64;
-    console.log(file);
+  uploadToStorage = async () => {
+    // eslint-disable-next-line
+    const res = await fetch(this.props.navigation.state.params.image.uri);
+    const file = await res.blob();
 
-    const path = `photos/${this.state.uid}/${Date.now().toString()}`;
+    const path = `photos/${this.state.uid}/${Date.now().toString()}.jpg`;
     const storageRef = firebase.storage().ref();
     const imageRef = storageRef.child(path);
 
-    imageRef.putString(file).then((snapshot) => {
-      console.log(snapshot);
-
+    imageRef.put(file).then((snapshot) => {
+      // console.log(snapshot);
       if (snapshot.state) {
         const createdAt = Date.now();
         this.indexToDatabase(path, snapshot.downloadURL, createdAt);
@@ -112,15 +112,6 @@ class PhotoUploader extends React.Component {
     }
     return array;
   }
-
-  // mapArray = (array) => {
-  //   let map = new Map();
-  //   array.forEach((item) => {
-  //     map.set(item, true);
-  //   });
-  //   console.log(map);
-  //   return map;
-  // }
 
   render() {
     return (

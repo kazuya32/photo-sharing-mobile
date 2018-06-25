@@ -50,7 +50,7 @@ class Home extends React.Component {
         this.fetchPhotos();
       // eslint-disable-next-line
       } else {
-        console.log('User is signed out.');
+        this.props.navigation.navigate({ routeName: 'Login' });
       }
     });
   }

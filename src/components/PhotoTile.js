@@ -36,9 +36,6 @@ class PhotoTile extends React.Component {
       photo,
     } = this.props;
 
-    console.log(photo);
-    console.log(photo.data.downloadURL);
-
     if (!this.state.user) {
       return (
         <View style={{ flex: 1, padding: 20 }}>
@@ -91,8 +88,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     flex: 1,
     alignSelf: 'center',
-    borderColor: '#EBEBEB',
-    borderWidth: 1,
+    // borderColor: '#EBEBEB',
+    // borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,

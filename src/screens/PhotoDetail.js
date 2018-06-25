@@ -17,30 +17,27 @@ import Header from '../components/Header.js';
 
 class LoginScreen extends React.Component {
   state = {
-    likes: 1919,
-    userName: 'YoSasaki',
     comment: '',
   }
 
-  onPressTest() {
-    Alert.alert('button pressed')
+  onPressTest = () => {
+    Alert.alert('投稿ボタンはデザイン画にあったためにつけていますが、実装しない予定です。');
   }
 
   render() {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() =>  { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="FLEGO"
         />
         <ScrollView>
           <PhotoTile
-            photo={this.props.navigation.state.params.source}
-            likes={this.state.likes}
-            userName={this.state.userName}
+            photo={this.props.navigation.state.params.photo}
             onPressUser={this.onPressTest}
             photoStyle={styles.photo}
+            uid={this.props.navigation.state.params.uid}
           />
           <View style={styles.inputBar}>
             <Avatar
