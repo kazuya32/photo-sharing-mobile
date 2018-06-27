@@ -42,6 +42,9 @@ const styles = StyleSheet.create({
   itemTitle: {
     fontSize: 18,
   },
+  selected: {
+    fontSize: 18,
+  },
   button: {
     color: '#EBEBEB',
   },

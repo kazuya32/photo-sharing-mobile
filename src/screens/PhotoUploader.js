@@ -15,18 +15,19 @@ class PhotoUploader extends React.Component {
   state = {
     tags: null,
     people: null,
-    matchId: null,
-    teamId: null,
+    match: null,
+    team: null,
   }
 
   componentDidMount() {
     this.setAuth();
   }
 
-  onPress = () => {
-    this.uploadToStorage();
+  onPressAlert = () => {
+    Alert.alert('この機能はまだ利用できません。');
   }
 
+  // eslint-disable-next-line
   setAuth = () => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -56,7 +57,60 @@ class PhotoUploader extends React.Component {
     });
   }
 
-  uploadToStorage = async () => {
+  onPress = (tagType, item) => {
+    switch (tagType) {
+      case 'teams':
+        this.setState({ team: item });
+        this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+        break;
+      case 'matchSchedules':
+        this.props.navigation.navigate({
+          routeName: 'SearchMatch',
+          params: {
+            tagType: 'matches',
+            scheduleId: item.id,
+            onPress: this.onPressMatch,
+          },
+        });
+        break;
+      case 'matches':
+        this.setState({ match: item });
+        this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+        break;
+
+      default:
+        console.log('invalid tagType');
+        break;
+    }
+  }
+
+  onPressMatch = (tagType, item) => {
+    this.setState({ match: item });
+    this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+  }
+
+
+  addTeam = () => {
+    this.props.navigation.navigate({
+      routeName: 'SearchTag',
+      params: {
+        tagType: 'teams',
+        onPress: this.onPress,
+      },
+    });
+  }
+
+  addMatch = () => {
+    this.props.navigation.navigate({
+      routeName: 'SearchTag',
+      params: {
+        tagType: 'matchSchedules',
+        onPress: this.onPress,
+      },
+    });
+  }
+
+  upload = async () => {
     // eslint-disable-next-line
     const res = await fetch(this.props.navigation.state.params.image.uri);
     const file = await res.blob();
@@ -86,8 +140,8 @@ class PhotoUploader extends React.Component {
       createdAt,
       tags: this.mapArray(this.state.tags),
       people: this.mapArray(this.state.people),
-      matchId: this.state.matchId,
-      teamId: this.state.teamId,
+      matchId: this.state.match.d,
+      teamId: this.state.team.Id,
       width: this.props.navigation.state.params.image.width,
       height: this.props.navigation.state.params.image.height,
       likes: 0,
@@ -118,7 +172,7 @@ class PhotoUploader extends React.Component {
       <View style={styles.container}>
         <PhotoHeader
           onPressLeft={() => { this.props.navigation.goBack(); }}
-          onPressRight={this.onPress}
+          onPressRight={this.upload}
           headerTitle="New Photo"
           rightButtonTitle="Post"
         />
@@ -132,16 +186,24 @@ class PhotoUploader extends React.Component {
             />
           </View>
           <SelectItem
-            onPress={this.onPressTest}
+            onPress={this.onPressAlert}
             title="Tag People"
+            selected=""
           />
           <SelectItem
-            onPress={this.onPressTest}
-            title="Add Team"
+            onPress={this.addTeam}
+            // title="Add Team"
+            title={[
+              !this.state.team && 'Add Team',
+              this.state.team && this.state.team.data.name,
+            ]}
           />
           <SelectItem
-            onPress={this.onPressTest}
-            title="Add Game"
+            onPress={this.addMatch}
+            title={[
+              !this.state.match && 'Add Match',
+              this.state.match && `${this.state.match.data.home.teamName} vs ${this.state.match.data.away.teamName}`,
+            ]}
           />
         </View>
       </View>

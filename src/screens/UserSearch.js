@@ -24,7 +24,7 @@ class UserSearch extends React.Component {
     ],
   }
 
-  onPressTest(text) {
+  onPressTest = (text) => {
     // Alert.alert('button pressed')
     console.log({ text });
   }
@@ -62,8 +62,8 @@ class UserSearch extends React.Component {
         />
         <SearchBar
           lightTheme
-          onChangeText={(searchText) => this.setState({ searchText })}
-          onClear={(searchText) => this.onPressTest({ searchText })}
+          onChangeText={searchText => this.setState({ searchText })}
+          onClear={searchText => this.onPressTest({ searchText })}
           placeholder="Search"
           value={this.state.searchText}
           showLoading

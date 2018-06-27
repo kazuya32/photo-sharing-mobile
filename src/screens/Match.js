@@ -18,7 +18,7 @@ class Match extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchMatches();  
+    this.fetchMatches();
   }
 
   fetchMatches = () => {
@@ -36,7 +36,7 @@ class Match extends React.Component {
 
   keyExtractor = (item, index) => index.toString();
 
-  renderItem({ item }) {
+  renderItem = ({ item }) => {
     return (
       <ListItem
         onPress={() => {
@@ -44,7 +44,7 @@ class Match extends React.Component {
             routeName: 'Home',
           });
         }}
-        text={`${item.data.home} vs ${item.data.away}`}
+        text={`${item.data.home.teamName} vs ${item.data.away.teamName}`}
       />
     );
   }
@@ -66,7 +66,7 @@ class Match extends React.Component {
         <View style={styles.feedArea}>
           <FlatList
             data={this.state.matches}
-            renderItem={this.renderItem.bind(this)}
+            renderItem={this.renderItem}
             keyExtractor={this.keyExtractor}
           />
         </View>

@@ -18,6 +18,8 @@ import Schedule from './src/screens/Schedule.js';
 import Match from './src/screens/Match.js';
 import Team from './src/screens/Team.js';
 import UserSearch from './src/screens/UserSearch.js';
+import SearchTag from './src/screens/SearchTag.js';
+import SearchMatch from './src/screens/SearchMatch.js';
 
 import ENV from './env.json';
 
@@ -69,6 +71,8 @@ const HomeStack = createStackNavigator({
 const UploadStack = createStackNavigator({
   PhotoPicker: { screen: PhotoPicker },
   PhotoUploader: { screen: PhotoUploader },
+  SearchTag: { screen: SearchTag },
+  SearchMatch: { screen: SearchMatch },
   Signature: { screen: Signature },
   MyPageFun: { screen: MyPageFun },
   Nortification: { screen: Nortification },
