@@ -10,7 +10,8 @@ import firebase from 'firebase';
 
 import Header from '../components/Header.js';
 import ListItem from '../components/ListItem.js';
-import BackgroundImage from '../../assets/image/background/sample7.jpg';
+// import BackgroundImage from '../../assets/image/background/sample7.jpg';
+import BackgroundImage from '../../assets/image/background/sample3.jpg';
 
 class Team extends React.Component {
   state = {
@@ -26,10 +27,8 @@ class Team extends React.Component {
     // const teams = { this.state.teams };
     const teams = [];
     db.collection('teams').get().then((querySnapshot) => {
-      // console.log(querySnapshot);
       querySnapshot.forEach((doc) => {
-        // console.log(doc.data().name);
-        teams.push(doc.data());
+        teams.push({ id: doc.id, data: doc.data() });
       });
       this.setState({ teams });
     });
@@ -42,10 +41,14 @@ class Team extends React.Component {
       <ListItem
         onPress={() => {
           this.props.navigation.navigate({
-            routeName: 'Home',
+            routeName: 'Feed',
+            params: {
+              feedType: 'team',
+              itemId: item.id,
+            },
           });
         }}
-        text={item.name}
+        text={item.data.name}
       />
     );
   }
@@ -82,7 +85,7 @@ const styles = StyleSheet.create({
     paddingTop: 70,
   },
   bgImage: {
-    opacity: 0.9,
+    opacity: 0.8,
     position: 'absolute',
     height: Dimensions.get('window').height,
     width: Dimensions.get('window').width,

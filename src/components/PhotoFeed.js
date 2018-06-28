@@ -10,9 +10,8 @@ import {
 import firebase from 'firebase';
 
 import PhotoTile from '../components/PhotoTile.js';
-import Header from '../components/Header.js';
 
-class Home extends React.Component {
+class Feed extends React.Component {
   state = {}
 
   componentWillMount() {
@@ -47,6 +46,7 @@ class Home extends React.Component {
           providerData,
         });
 
+        // this.fetchUser();
         this.fetchPhotos();
       // eslint-disable-next-line
       } else {
@@ -67,9 +67,37 @@ class Home extends React.Component {
   // eslint-disable-next-line
   fetchPhotos = () => {
     const db = firebase.firestore();
-    const maxResults = 10;
-    // const photosRef = db.collection('photos').where('uid', '==', this.state.uid).orderBy('createdAt', 'desc').limit(maxResults);
-    const photosRef = db.collection('photos').where('uid', '==', this.state.uid);
+    const maxResults = 15;
+    const { feedType } = this.props;
+
+    let photosRef;
+
+    switch (feedType) {
+      case 'home':
+        photosRef = db.collection('photos')
+          .orderBy('createdAt', 'desc')
+          .limit(maxResults);
+        break;
+      case 'user':
+        photosRef = db.collection('photos')
+          .where('uid', '==', this.state.uid)
+          .limit(maxResults);
+        break;
+      case 'match':
+        photosRef = db.collection('photos')
+          .where('matchId', '==', this.props.itemId)
+          .limit(maxResults);
+        break;
+      case 'team':
+        photosRef = db.collection('photos')
+          .where('teamId', '==', this.props.itemId)
+          .limit(maxResults);
+        break;
+
+      default:
+        console.log('invalid type');
+        break;
+    }
 
     const photos = [];
     photosRef.get()
@@ -84,41 +112,31 @@ class Home extends React.Component {
       });
   }
 
-  onPressTest= () => {
-    Alert.alert('button pressed')
-  }
-
   keyExtractor = (item, index) => index.toString();
 
-  renderItem = ({ item }) => {
-    return (
-      <TouchableHighlight
-        onPress={() => {
-          this.props.navigation.navigate({
-            routeName: 'PhotoDetail',
-            params: item,
-          });
-        }}
-        underlayColor="transparent"
-      >
-        <PhotoTile
-          photo={item}
-          onPressUser={this.onPressTest}
-          photoStyle={styles.photoItem}
-          uid={this.state.uid}
-        />
-      </TouchableHighlight>
-    );
-  }
+  renderItem = ({ item }) => (
+    <TouchableHighlight
+      onPress={() => {
+        this.props.navigation.navigate({
+          routeName: 'PhotoDetail',
+          params: item,
+        });
+      }}
+      underlayColor="transparent"
+    >
+      <PhotoTile
+        photo={item}
+        onPressUser={this.onPressTest}
+        photoStyle={styles.photoItem}
+        uid={this.state.uid}
+      />
+    </TouchableHighlight>
+  );
+
 
   render() {
     return (
       <View style={styles.container}>
-        <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
-          headerTitle="FLEGO"
-        />
         <ScrollView style={styles.feedArea}>
           <FlatList
             data={this.state.photos}
@@ -134,10 +152,8 @@ class Home extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   feedArea: {
-    marginTop: 70,
     paddingTop: 12,
     paddingBottom: 12,
   },
@@ -147,4 +163,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Feed;

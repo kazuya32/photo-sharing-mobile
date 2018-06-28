@@ -36,18 +36,20 @@ class Match extends React.Component {
 
   keyExtractor = (item, index) => index.toString();
 
-  renderItem = ({ item }) => {
-    return (
-      <ListItem
-        onPress={() => {
-          this.props.navigation.navigate({
-            routeName: 'Home',
-          });
-        }}
-        text={`${item.data.home.teamName} vs ${item.data.away.teamName}`}
-      />
-    );
-  }
+  renderItem = ({ item }) => (
+    <ListItem
+      onPress={() => {
+        this.props.navigation.navigate({
+          routeName: 'Feed',
+          params: {
+            feedType: 'match',
+            itemId: item.id,
+          },
+        });
+      }}
+      text={`${item.data.home.teamName} vs ${item.data.away.teamName}`}
+    />
+  );
 
   render() {
     return (

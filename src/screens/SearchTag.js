@@ -57,7 +57,7 @@ class SearchTag extends React.Component {
     let title;
 
     if (tagType === 'matchSchedules') {
-      title = item.data.date.toString();
+      title = item.data.date.toDateString();
       // onPress = this.nav;
       // onPress = {() => { this.props.navigation.goBack(); }}
     } else {

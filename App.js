@@ -7,7 +7,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import Login from './src/screens/Login.js';
-import Home from './src/screens/Home.js';
+import Feed from './src/screens/Feed.js';
 import Nortification from './src/screens/Nortification.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
 import MyPageFun from './src/screens/MyPageFun.js';
@@ -40,7 +40,7 @@ const config = {
 firebase.initializeApp(config);
 
 const HomeStack = createStackNavigator({
-  Home: { screen: Home },
+  Home: { screen: Feed },
   Nortification: { screen: Nortification },
   MyPageFun: { screen: MyPageFun },
   PhotoDetail: { screen: PhotoDetail },
@@ -83,7 +83,7 @@ const UploadStack = createStackNavigator({
 const MatchStack = createStackNavigator({
   Schedule: { screen: Schedule },
   Match: { screen: Match },
-  Home: { screen: Home },
+  Feed: { screen: Feed },
   MyPageFun: { screen: MyPageFun },
   Nortification: { screen: Nortification },
 }, {
@@ -92,7 +92,7 @@ const MatchStack = createStackNavigator({
 
 const TeamStack = createStackNavigator({
   Team: { screen: Team },
-  Home: { screen: Home },
+  Feed: { screen: Feed },
   MyPageFun: { screen: MyPageFun },
   Nortification: { screen: Nortification },
 }, {
