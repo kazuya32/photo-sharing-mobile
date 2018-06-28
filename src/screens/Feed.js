@@ -10,12 +10,21 @@ import Header from '../components/Header.js';
 class Feed extends React.Component {
   state = {}
 
+  onPressPhoto = (item) => {
+    this.props.navigation.navigate({
+      routeName: 'PhotoDetail',
+      params: { photo: item },
+    });
+  }
+
   render() {
     let feedType = 'home';
     let itemId;
+    // let scheduleId;
     if (this.props.navigation.state.params && this.props.navigation.state.params.feedType) {
       feedType = this.props.navigation.state.params.feedType;
       itemId = this.props.navigation.state.params.itemId;
+      // scheduleId = this.props.navigation.state.params.scheduleId;
     }
     return (
       <View style={styles.container}>
@@ -27,6 +36,9 @@ class Feed extends React.Component {
         <PhotoFeed
           feedType={feedType}
           itemId={itemId}
+          onPressUser={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressPhoto={this.onPressPhoto}
+          // scheduleId={scheduleId}
         />
       </View>
     );

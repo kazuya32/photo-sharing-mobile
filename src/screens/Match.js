@@ -25,7 +25,18 @@ class Match extends React.Component {
     const { id, data } = this.props.navigation.state.params;
     const db = firebase.firestore();
     const matches = [];
-    db.collection(`matchSchedules/${id}/matches`).get()
+
+    const matchRef = db.collection(`matchSchedules/${id}/matches`)
+    //   .then((querySnapshot) => {
+    //     querySnapshot.forEach((doc) => {
+    //       matches.push({ id: doc.id, data: doc.data() });
+    //     });
+    //     this.setState({ matches });
+    //   });
+    // const matchRef = db.collection('matches')
+    //   .where('date', '==', this.state.uid);
+
+    matchRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           matches.push({ id: doc.id, data: doc.data() });
@@ -44,6 +55,7 @@ class Match extends React.Component {
           params: {
             feedType: 'match',
             itemId: item.id,
+            // scheduleId: this.props.navigation.state.params.id,
           },
         });
       }}

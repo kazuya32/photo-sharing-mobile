@@ -7,26 +7,62 @@ import {
   Image,
   ActivityIndicator,
   Dimensions,
+  Alert,
 } from 'react-native';
 import firebase from 'firebase';
 
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class PhotoTile extends React.Component {
-  state = { user: null }
+  state = {
+    stadium: null,
+  }
 
   componentWillMount() {
     this.getUser(this.props.uid);
+    const {
+      photo,
+    } = this.props;
+
+    if (photo.data.matchPath) {
+      this.getMatch(photo.data.matchPath);
+    }
+
+    if (photo.data.teamId) {
+      this.getTeam(photo.data.teamId);
+    }
   }
 
   getUser = (uid) => {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(uid);
     userRef.get().then((doc) => {
-      const user = doc.data();
-      console.log(user);
+      // const user = doc.data();
+      const user = { id: doc.id, data: doc.data() };
       this.setState({ user });
     });
+  }
+
+  getMatch = (matchPath) => {
+    const db = firebase.firestore();
+    const Ref = db.doc(matchPath);
+    Ref.get().then((doc) => {
+      const match = { id: doc.id, data: doc.data() };
+      this.setState({ match });
+    });
+  }
+
+  getTeam = (teamId) => {
+    const db = firebase.firestore();
+    const Ref = db.collection('teams').doc(teamId);
+    Ref.get().then((doc) => {
+      const team = { id: doc.id, data: doc.data() };
+      this.setState({ team });
+    });
+  }
+
+  onPressMatch = () => {
+    Alert.alert('開発中');
   }
 
   render() {
@@ -46,11 +82,36 @@ class PhotoTile extends React.Component {
 
     return (
       <View style={styles.container}>
+        <View style={[styles.match, !this.state.match && { display: 'none' }]}>
+          <Text style={styles.prefix}>
+            In
+          </Text>
+          <TouchableHighlight
+            onPress={this.onPressMatch}
+            underlayColor="transparent"
+          >
+            <Text style={styles.title}>
+              {this.state.match && `${this.state.match.data.home.teamName} vs ${this.state.match.data.away.teamName}`}
+            </Text>
+          </TouchableHighlight>
+        </View>
+        <View style={[styles.team, !this.state.team && { display: 'none' }]}>
+          <Text style={styles.prefix}>
+            For
+          </Text>
+          <TouchableHighlight
+            onPress={this.onPressMatch}
+            underlayColor="transparent"
+          >
+            <Text style={styles.title}>
+              {this.state.team && `${this.state.team.data.name}`}
+            </Text>
+          </TouchableHighlight>
+        </View>
         <View>
           <Image
             style={[styles.photo, photoStyle]}
             source={{ uri: photo.data.downloadURL }}
-            // source={require('../../assets/image/athlete/naoya_kondo.jpg')}
             resizeMode="contain"
           />
         </View>
@@ -67,7 +128,7 @@ class PhotoTile extends React.Component {
             </Text>
             <TouchableHighlight onPress={onPressUser} underlayColor="transparent">
               <Text style={styles.userName}>
-                {this.state.user.name}
+                {this.state.user.data.name}
               </Text>
             </TouchableHighlight>
           </View>
@@ -80,6 +141,32 @@ class PhotoTile extends React.Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
+  },
+  match: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignContent: 'center',
+    paddingTop: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 12,
+  },
+  team: {
+    alignContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    paddingTop: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 12,
+  },
+  title: {
+    alignSelf: 'center',
+    color: '#DB4D5E',
+  },
+  prefix: {
+    marginRight: 4,
+    alignSelf: 'center',
   },
   photo: {
     // width: '100%',

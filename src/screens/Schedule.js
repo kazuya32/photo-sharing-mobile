@@ -31,8 +31,6 @@ class Schedule extends React.Component {
         // console.log(doc.data().name);
         schedules.push({ id: doc.id, data: doc.data() });
       });
-      console.log(schedules);
-      console.log(schedules[0].id);
       this.setState({ schedules });
     });
   }

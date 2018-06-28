@@ -112,23 +112,25 @@ class Feed extends React.Component {
       });
   }
 
+  onPressTest = () => {
+    Alert.alert('Pressed');
+  }
+
+
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
     <TouchableHighlight
-      onPress={() => {
-        this.props.navigation.navigate({
-          routeName: 'PhotoDetail',
-          params: item,
-        });
-      }}
+      // onPress={() => { this.props.onPressPhoto(item); }}
+      onPress={this.onPressTest}
       underlayColor="transparent"
     >
       <PhotoTile
         photo={item}
-        onPressUser={this.onPressTest}
+        onPressUser={this.props.onPressUser}
         photoStyle={styles.photoItem}
         uid={this.state.uid}
+        scheduleId={this.state}
       />
     </TouchableHighlight>
   );

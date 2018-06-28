@@ -34,7 +34,7 @@ class PhotoPicker extends React.Component {
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
-      base64: true,
+      // base64: true,
     });
 
     console.log(result);

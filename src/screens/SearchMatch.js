@@ -51,13 +51,15 @@ class SearchTag extends React.Component {
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => {
+    const itemWithParent = item;
     const { tagType, onPress } = this.props.navigation.state.params;
-
+    // 親のidを付加しないと後にfull pathを参照できなくなる
+    itemWithParent.scheduleId = this.props.navigation.state.params.scheduleId;
     const title = `${item.data.home.teamName} vs ${item.data.away.teamName}`;
 
     return (
       <SearchItem
-        onPress={() => onPress(tagType, item)}
+        onPress={() => onPress(tagType, itemWithParent)}
         title={title}
       />
     );
