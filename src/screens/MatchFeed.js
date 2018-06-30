@@ -4,6 +4,7 @@ import {
   View,
   Alert,
 } from 'react-native';
+import firebase from 'firebase';
 
 import PhotoFeed from '../components/PhotoFeed.js';
 import Header from '../components/Header.js';
@@ -11,15 +12,25 @@ import Header from '../components/Header.js';
 class Feed extends React.Component {
   state = {
     headerTitle: 'FLEGO',
-    feedType: 'home',
   }
 
-  // componentWillMount() {
-  //   if (this.props.navigation.state.params && this.props.navigation.state.params.feedType) {
-  //     const { feedType, itemId } = this.props.navigation.state.params;
-  //     this.setState({ feedType, itemId });
-  //   }
-  // }
+  componentWillMount() {
+    if (this.props.navigation.state.params && this.props.navigation.state.params.feedType) {
+      const { feedType, itemId, matchPath } = this.props.navigation.state.params;
+      this.setState({ feedType, itemId });
+      this.getMatch(matchPath);
+    }
+  }
+
+  getMatch = (matchPath) => {
+    const db = firebase.firestore();
+    const Ref = db.doc(matchPath);
+    Ref.get().then((doc) => {
+      const match = { id: doc.id, data: doc.data() };
+      this.setState({ match });
+      this.setState({ headerTitle: `${match.data.home.teamName} vs ${match.data.away.teamName}` });
+    });
+  }
 
   onPressPhoto = (item) => {
     this.props.navigation.navigate({
@@ -37,30 +48,29 @@ class Feed extends React.Component {
   onPressMatch = (item) => {
     // this.setState({
     //   feedType: 'match',
-    //   itemId: item.data.matchId,
+    //   itemId: item.id,
     // });
     this.props.navigation.navigate({
-      routeName: 'MatchFeed',
+      routeName: 'Feed',
       params: {
         feedType: 'match',
-        itemId: item.data.matchId,
-        matchPath: item.data.matchPath,
+        itemId: item.id,
       },
     });
   }
 
   onPressTeam = (item) => {
-    // this.setState({
-    //   feedType: 'TeamFeed',
-    //   itemId: item.data.teamId,
-    // });
-    this.props.navigation.navigate({
-      routeName: 'TeamFeed',
-      params: {
-        feedType: 'team',
-        itemId: item.data.teamId,
-      },
+    this.setState({
+      feedType: 'team',
+      itemId: item.id,
     });
+    // this.props.navigation.navigate({
+    //   routeName: 'TeamFeed',
+    //   params: {
+    //     feedType: 'team',
+    //     itemId: item.id,
+    //   },
+    // });
   }
 
   render() {
@@ -78,7 +88,6 @@ class Feed extends React.Component {
           onPressPhoto={this.onPressPhoto}
           onPressMatch={this.onPressMatch}
           onPressTeam={this.onPressTeam}
-          navigation={this.props.navigation}
           // scheduleId={scheduleId}
         />
       </View>

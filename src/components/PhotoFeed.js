@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  TouchableHighlight,
   Alert,
   FlatList,
 } from 'react-native';
@@ -15,6 +14,8 @@ class Feed extends React.Component {
   state = {}
 
   componentWillMount() {
+    const { feedType } = this.props;
+    this.setState({ feedType });
     this.fetchData();
   }
 
@@ -68,11 +69,10 @@ class Feed extends React.Component {
   fetchPhotos = () => {
     const db = firebase.firestore();
     const maxResults = 15;
-    const { feedType } = this.props;
 
     let photosRef;
 
-    switch (feedType) {
+    switch (this.state.feedType) {
       case 'home':
         photosRef = db.collection('photos')
           .orderBy('createdAt', 'desc')
@@ -116,25 +116,21 @@ class Feed extends React.Component {
     Alert.alert('Pressed');
   }
 
-
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
-    <TouchableHighlight
-      // onPress={() => { this.props.onPressPhoto(item); }}
-      onPress={this.onPressTest}
-      underlayColor="transparent"
-    >
-      <PhotoTile
-        photo={item}
-        onPressUser={this.props.onPressUser}
-        photoStyle={styles.photoItem}
-        uid={this.state.uid}
-        scheduleId={this.state}
-      />
-    </TouchableHighlight>
+    <PhotoTile
+      photo={item}
+      onPressPhoto={() => { this.props.onPressPhoto(item); }}
+      onPressUser={this.props.onPressUser}
+      onPressMatch={() => { this.props.onPressMatch(item); }}
+      onPressTeam={() => { this.props.onPressTeam(item); }}
+      photoStyle={styles.photoItem}
+      uid={this.state.uid}
+      scheduleId={this.state}
+      navigation={this.props.navigation}
+    />
   );
-
 
   render() {
     return (

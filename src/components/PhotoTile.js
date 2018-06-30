@@ -19,10 +19,12 @@ class PhotoTile extends React.Component {
   }
 
   componentWillMount() {
-    this.getUser(this.props.uid);
     const {
       photo,
     } = this.props;
+    // this.setState({ photo });
+
+    this.getUser(photo.data.uid);
 
     if (photo.data.matchPath) {
       this.getMatch(photo.data.matchPath);
@@ -61,9 +63,16 @@ class PhotoTile extends React.Component {
     });
   }
 
-  onPressMatch = () => {
-    Alert.alert('開発中');
-  }
+  // onPressMatch = () => {
+  //   this.props.navigation.navigate({
+  //     routeName: 'MatchFeed',
+  //     params: {
+  //       feedType: 'match',
+  //       itemId: this.state.match.data.matchId,
+  //       matchPath: this.state.match.data.matchPath,
+  //     },
+  //   });
+  // }
 
   render() {
     const {
@@ -87,7 +96,8 @@ class PhotoTile extends React.Component {
             In
           </Text>
           <TouchableHighlight
-            onPress={this.onPressMatch}
+            // onPress={this.onPressMatch}
+            onPress={this.props.onPressMatch}
             underlayColor="transparent"
           >
             <Text style={styles.title}>
@@ -100,7 +110,7 @@ class PhotoTile extends React.Component {
             For
           </Text>
           <TouchableHighlight
-            onPress={this.onPressMatch}
+            onPress={this.props.onPressTeam}
             underlayColor="transparent"
           >
             <Text style={styles.title}>
@@ -108,13 +118,16 @@ class PhotoTile extends React.Component {
             </Text>
           </TouchableHighlight>
         </View>
-        <View>
+        <TouchableHighlight
+          onPress={this.props.onPressPhoto}
+          underlayColor="transparent"
+        >
           <Image
             style={[styles.photo, photoStyle]}
             source={{ uri: photo.data.downloadURL }}
             resizeMode="contain"
           />
-        </View>
+        </TouchableHighlight>
         <View style={styles.bar}>
           <View style={styles.likes}>
             <MaterialCommunityIcon name="heart" size={26} color="#D0364C" />

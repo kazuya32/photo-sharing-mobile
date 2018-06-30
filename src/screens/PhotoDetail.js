@@ -37,7 +37,7 @@ class LoginScreen extends React.Component {
             photo={this.props.navigation.state.params.photo}
             onPressUser={this.onPressTest}
             photoStyle={styles.photo}
-            uid={this.props.navigation.state.params.uid}
+            // uid={this.props.navigation.state.params.uid}
           />
           <View style={styles.inputBar}>
             <Avatar

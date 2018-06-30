@@ -8,6 +8,8 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import Login from './src/screens/Login.js';
 import Feed from './src/screens/Feed.js';
+import TeamFeed from './src/screens/TeamFeed.js';
+import MatchFeed from './src/screens/MatchFeed.js';
 import Nortification from './src/screens/Nortification.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
 import MyPageFun from './src/screens/MyPageFun.js';
@@ -41,6 +43,8 @@ firebase.initializeApp(config);
 
 const HomeStack = createStackNavigator({
   Home: { screen: Feed },
+  TeamFeed: { screen: TeamFeed },
+  MatchFeed: { screen: MatchFeed },
   Nortification: { screen: Nortification },
   MyPageFun: { screen: MyPageFun },
   PhotoDetail: { screen: PhotoDetail },
@@ -92,7 +96,7 @@ const MatchStack = createStackNavigator({
 
 const TeamStack = createStackNavigator({
   Team: { screen: Team },
-  Feed: { screen: Feed },
+  TeamFeed: { screen: TeamFeed },
   MyPageFun: { screen: MyPageFun },
   Nortification: { screen: Nortification },
 }, {

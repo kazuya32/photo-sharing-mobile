@@ -41,7 +41,7 @@ class Team extends React.Component {
       <ListItem
         onPress={() => {
           this.props.navigation.navigate({
-            routeName: 'Feed',
+            routeName: 'TeamFeed',
             params: {
               feedType: 'team',
               itemId: item.id,
