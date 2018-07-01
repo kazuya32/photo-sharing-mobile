@@ -83,7 +83,7 @@ class PhotoTile extends React.Component {
 
     if (!this.state.user) {
       return (
-        <View style={{ flex: 1, padding: 20 }}>
+        <View style={styles.indicator}>
           <ActivityIndicator />
         </View>
       );
@@ -92,7 +92,7 @@ class PhotoTile extends React.Component {
     return (
       <View style={styles.container}>
         <View style={[styles.match, !this.state.match && { display: 'none' }]}>
-          <Text style={styles.prefix}>
+          <Text style={styles.matchPrefix}>
             In
           </Text>
           <TouchableHighlight
@@ -100,20 +100,20 @@ class PhotoTile extends React.Component {
             onPress={this.props.onPressMatch}
             underlayColor="transparent"
           >
-            <Text style={styles.title}>
+            <Text style={styles.matchTitle}>
               {this.state.match && `${this.state.match.data.home.teamName} vs ${this.state.match.data.away.teamName}`}
             </Text>
           </TouchableHighlight>
         </View>
         <View style={[styles.team, !this.state.team && { display: 'none' }]}>
-          <Text style={styles.prefix}>
+          <Text style={styles.teamPrefix}>
             For
           </Text>
           <TouchableHighlight
             onPress={this.props.onPressTeam}
             underlayColor="transparent"
           >
-            <Text style={styles.title}>
+            <Text style={styles.teamTitle}>
               {this.state.team && `${this.state.team.data.name}`}
             </Text>
           </TouchableHighlight>
@@ -155,41 +155,53 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
   },
+  indicator: {
+    height: Dimensions.get('window').height * 0.6,
+    width: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
   match: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignContent: 'center',
-    paddingTop: 12,
+    paddingTop: 8,
     paddingLeft: 16,
     paddingRight: 16,
-    paddingBottom: 12,
+    paddingBottom: 8,
   },
   team: {
-    alignContent: 'center',
+    alignContent: 'flex-end',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    paddingTop: 12,
+    paddingTop: 8,
     paddingLeft: 16,
     paddingRight: 16,
-    paddingBottom: 12,
+    paddingBottom: 8,
   },
-  title: {
+  matchTitle: {
     alignSelf: 'center',
     color: '#DB4D5E',
+    // fontSize: 12,
   },
-  prefix: {
+  teamTitle: {
+    color: '#DB4D5E',
+    fontSize: 12,
+  },
+  matchPrefix: {
     marginRight: 4,
     alignSelf: 'center',
   },
+  teamPrefix: {
+    marginRight: 4,
+    fontSize: 12,
+  },
   photo: {
-    // width: '100%',
-    // height: '100%',
     height: Dimensions.get('window').width,
     width: Dimensions.get('window').width,
     flex: 1,
     alignSelf: 'center',
-    // borderColor: '#EBEBEB',
-    // borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,

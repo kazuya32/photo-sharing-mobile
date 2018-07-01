@@ -41,6 +41,13 @@ const config = {
 };
 firebase.initializeApp(config);
 
+firebase.auth().onAuthStateChanged((user) => {
+  if (user != null) {
+    console.log('We are authenticated now!');
+  }
+  console.log('not logiin');
+});
+
 const HomeStack = createStackNavigator({
   Home: { screen: Feed },
   TeamFeed: { screen: TeamFeed },

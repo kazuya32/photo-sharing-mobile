@@ -17,6 +17,7 @@ class PhotoUploader extends React.Component {
     people: null,
     match: null,
     team: null,
+    isUploading: false,
   }
 
   componentDidMount() {
@@ -110,24 +111,27 @@ class PhotoUploader extends React.Component {
     });
   }
 
-  upload = async () => {
-    // eslint-disable-next-line
-    const res = await fetch(this.props.navigation.state.params.image.uri);
-    const file = await res.blob();
+  uploadPhoto = async () => {
+    if (!this.state.isUploading) {  
+      this.setState({ isUploading: true });
+      // eslint-disable-next-line
+      const res = await fetch(this.props.navigation.state.params.image.uri);
+      const file = await res.blob();
 
-    const path = `photos/${this.state.uid}/${Date.now().toString()}.jpg`;
-    const storageRef = firebase.storage().ref();
-    const imageRef = storageRef.child(path);
+      const path = `photos/${this.state.uid}/${Date.now().toString()}.jpg`;
+      const storageRef = firebase.storage().ref();
+      const imageRef = storageRef.child(path);
 
-    imageRef.put(file).then((snapshot) => {
-      // console.log(snapshot);
-      if (snapshot.state) {
-        const createdAt = Date.now();
-        this.indexToDatabase(path, snapshot.downloadURL, createdAt);
-      } else {
-        Alert.alert('アップロードに失敗しました。');
-      }
-    });
+      imageRef.put(file).then((snapshot) => {
+        // console.log(snapshot);
+        if (snapshot.state) {
+          const createdAt = Date.now();
+          this.indexToDatabase(path, snapshot.downloadURL, createdAt);
+        } else {
+          Alert.alert('アップロードに失敗しました。');
+        }
+      });
+    }
   }
 
   indexToDatabase = (storagePath, downloadURL, createdAt) => {
@@ -173,7 +177,7 @@ class PhotoUploader extends React.Component {
       <View style={styles.container}>
         <PhotoHeader
           onPressLeft={() => { this.props.navigation.goBack(); }}
-          onPressRight={this.upload}
+          onPressRight={this.uploadPhoto}
           headerTitle="New Photo"
           rightButtonTitle="Post"
         />

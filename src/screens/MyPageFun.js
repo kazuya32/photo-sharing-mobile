@@ -8,6 +8,7 @@ import {
   Dimensions,
   FlatList,
   ActivityIndicator,
+  Text,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -17,15 +18,6 @@ import Header from '../components/Header.js';
 class MyPageFun extends React.Component {
   state = {
     user: null,
-    name: '',
-    desc: '',
-    data: [
-      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/naoya_kondo.jpg') },
-      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/masaki_yamamoto.jpg') },
-      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/takayuki_funayama.jpg') },
-      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yuya_sato.jpg') },
-      { likes: 32, userName: 'sasaki', source: require('../../assets/image/athlete/yushi_mizobuchi.jpg') },
-    ],
   }
 
   // componentDidMount() {
@@ -159,6 +151,27 @@ class MyPageFun extends React.Component {
       );
     }
 
+    if (!this.state.photos) {
+    // if (this.state.photos && this.state.photos.length === 0) {
+      return (
+        <View style={styles.container}>
+          <Header
+            onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+            onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+            headerTitle="FLEGO"
+          />
+          <Profile
+            onPress={this.onPressTest}
+            userName={this.state.user.name}
+            userDesc={this.state.user.desc}
+          />
+          <Text style={styles.alert}>
+             まだ投稿画像はありません.
+          </Text>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Header
@@ -195,6 +208,10 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').width / 3,
     borderWidth: 1,
     borderColor: '#fff',
+  },
+  alert: {
+    padding: 16,
+    // alignSelf: 'center',
   },
 });
 

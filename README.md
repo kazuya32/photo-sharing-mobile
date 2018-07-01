@@ -32,6 +32,10 @@ then, in new terminal tab
 
     $ npm install --save firebase@4.6.2
 
+### Facebook Login in Expo
+
+<https://docs.expo.io/versions/latest/sdk/facebook.html#registering-your-app-with-facebook>
+
 ### Cross Platform React Native UI Toolkit
 
     $ npm install react-native-vector-icons --save

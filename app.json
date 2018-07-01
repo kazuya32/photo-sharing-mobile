@@ -23,6 +23,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.flego.ios"
-    }
+    },
+    "android": {
+      "package": "com.flego.android"
+    },
+    "facebookScheme": "fb2113813658871952",
+    "facebookAppId": "2113813658871952",
+    "facebookDisplayName": "FLEGO"
   }
 }

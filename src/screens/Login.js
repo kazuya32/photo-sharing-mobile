@@ -1,52 +1,95 @@
 import React from 'react';
-import { StyleSheet, View, Image, Dimensions, Alert } from 'react-native';
-import { Facebook } from 'expo';
+import { StyleSheet, View, Image, Dimensions } from 'react-native';
+import Expo from 'expo';
 import firebase from 'firebase';
 import { SocialIcon } from 'react-native-elements';
 
 import BackgroundImage from '../../assets/splash.png';
-
-// const provider = new firebase.auth.FacebookAuthProvider();
-
-async function logIn() {
-  const { type, token } = await Facebook.logInWithReadPermissionsAsync('<APP_ID>', {
-      permissions: ['public_profile'],
-      // behavior: 'native',
-    });
-  if (type === 'success') {
-    // Build Firebase credential with the Facebook access token.
-    const credential = firebase.auth.FacebookAuthProvider.credential(token);
-
-    // Sign in with credential from the Facebook user.
-    firebase
-      .auth()
-      .signInWithCredential(credential)
-      .catch(error => {
-        console.error(error)
-        // Handle Errors here.
-      });
-  }
-}
+import ENV from '../../env.json';
 
 class Login extends React.Component {
-  onPress() {
-    Alert.alert('現在は使用できません');
-  }
-
   logInTest = () => {
-    const testEmail = 'testuser@example.com'
-    const testPassword = 'testuser'
+    const testEmail = 'testuser@example.com';
+    const testPassword = 'testuser';
 
     firebase.auth().signInWithEmailAndPassword(testEmail, testPassword)
       .then((user) => {
         this.props.navigation.navigate('Home');
       })
-      .catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
         console.log(errorCode, errorMessage);
       });
   }
+
+  logInWithFacebook = async () => {
+    // const provider = new firebase.auth.FacebookAuthProvider();
+    // firebase.auth().languageCode = 'ja_JP';
+    // firebase.auth().useDeviceLanguage();
+    // firebase.auth().signInWithRedirect(provider);
+    const appId = ENV.FACEBOOK_APP_ID;
+
+    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
+      appId,
+      {
+        permissions: ['public_profile'],
+        // behavior: 'native',
+      },
+    );
+
+    if (type === 'success') {
+    // Get the user's name using Facebook's Graph API
+      const response = await fetch(
+        `https://graph.facebook.com/me?access_token=${token}`
+      );
+      console.log(await response.json());
+      // Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+    }
+    if (type === 'success') {
+      // Build Firebase credential with the Facebook access token.
+      const credential = firebase.auth.FacebookAuthProvider.credential(token);
+
+      // Sign in with credential from the Facebook user.
+      firebase
+        .auth()
+        .signInWithCredential(credential)
+        .then((user) => {
+          this.handleFacebookUser(user);
+          this.props.navigation.navigate('Service');
+        })
+        .catch((error) => {
+          console.error(error)
+        });
+    }
+  }
+
+  handleFacebookUser = (user) => {
+    console.log(user);
+    const db = firebase.firestore();
+    const userRef = db.collection('users').doc(user.uid);
+    userRef.get().then((DocumentSnapshot) => {
+      if (DocumentSnapshot.exist) {
+        console.log(DocumentSnapshot.data());
+      } else {
+        console.log('No exist');
+        db.collection('users').doc(user.uid).set({
+          name: user.displayName,
+          facebookId: user.providerData[0].uid,
+          phoneNumber: user.phoneNumber && user.phoneNumber,
+          photoURL: user.photoURL,
+          desc: '',
+        })
+          .then(() => {
+            console.log('Document successfully written!');
+          })
+          .catch((error) => {
+            console.error('Error writing document: ', error);
+          });
+      }
+    });
+  }
+
 
   render() {
     return (
@@ -59,6 +102,13 @@ class Login extends React.Component {
         />
         <View style={styles.upperArea} />
         <View style={styles.underArea}>
+          <SocialIcon
+            title="Facebookでログイン"
+            button
+            type="facebook"
+            raised
+            onPress={this.logInWithFacebook}
+          />
           <SocialIcon
             title="テストユーザーでログイン"
             button
@@ -101,7 +151,7 @@ const styles = StyleSheet.create({
     flex: 2,
     padding: 20,
     alignContent:'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
   },
 });
 

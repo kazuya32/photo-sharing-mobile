@@ -28,7 +28,7 @@ class Feed extends React.Component {
     Ref.get().then((doc) => {
       const match = { id: doc.id, data: doc.data() };
       this.setState({ match });
-      this.setState({ headerTitle: `${match.data.home.teamName} vs ${match.data.away.teamName}` });
+      // this.setState({ headerTitle: `${match.data.home.teamName} vs ${match.data.away.teamName}` });
     });
   }
 
