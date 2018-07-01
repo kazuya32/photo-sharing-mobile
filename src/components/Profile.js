@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight, Image } from 'react-native';
+import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
+
+import UserIcon from '../elements/UserIcon.js';
 
 class Profile extends React.Component {
   render() {
@@ -12,13 +14,11 @@ class Profile extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.profilePhoto}>
-          <Image
-            style={styles.photo}
-            source={{ uri: photoURL }}
-            resizeMode="cover"
-          />
-        </View>
+        <UserIcon
+          // onPress
+          photoURL={photoURL}
+          dia={48}
+        />
         <View style={styles.profileText}>
           <Text style={styles.userName}>
             {userName}
@@ -46,26 +46,6 @@ const styles = StyleSheet.create({
     paddingBottom: 36,
     paddingLeft: 16,
     paddingRight: 16,
-  },
-  profilePhoto: {
-    // alignSelf: 'center',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    backgroundColor: 'gray',
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-  },
-  photo: {
-    width: 48,
-    height: 48,
-    borderWidth: 1,
-    borderRadius: 24,
-    borderColor: '#EBEBEB',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
   },
   profileText: {
     alignSelf: 'center',

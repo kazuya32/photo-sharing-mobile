@@ -65,7 +65,7 @@ class Header extends React.Component {
 
     if (!this.state.user) {
       return (
-        <View style={{ flex: 1, padding: 20, alignSelf: 'center' }}>
+        <View style={{ height: 20, padding: 8, alignSelf: 'center' }}>
           <ActivityIndicator />
         </View>
       );

@@ -4,7 +4,6 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Alert,
   Dimensions,
   FlatList,
   ActivityIndicator,
@@ -116,10 +115,6 @@ class MyPageFun extends React.Component {
       });
   }
 
-  onPressTest = () => {
-    Alert.alert('button pressed')
-  }
-
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
@@ -182,10 +177,17 @@ class MyPageFun extends React.Component {
           headerTitle="FLEGO"
         />
         <Profile
-          onPress={this.onPressTest}
           userName={this.state.user.name}
           userDesc={this.state.user.desc}
           photoURL={this.state.user.photoURL}
+          onPress={() => {
+            this.props.navigation.navigate({
+              routeName: 'EditProfile',
+              params: {
+                user: this.state.user,
+              },
+            });
+          }}
         />
         <FlatList
           navigation={this.props.navigation}

@@ -13,6 +13,7 @@ import MatchFeed from './src/screens/MatchFeed.js';
 import Nortification from './src/screens/Nortification.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
 import MyPageFun from './src/screens/MyPageFun.js';
+import EditProfile from './src/screens/EditProfile.js';
 import Signature from './src/screens/Signature.js';
 import PhotoPicker from './src/screens/PhotoPickerExpo.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
@@ -54,6 +55,7 @@ const HomeStack = createStackNavigator({
   MatchFeed: { screen: MatchFeed },
   Nortification: { screen: Nortification },
   MyPageFun: { screen: MyPageFun },
+  EditProfile: { screen: EditProfile },
   PhotoDetail: { screen: PhotoDetail },
   Signature: { screen: Signature },
 }, {
@@ -86,6 +88,7 @@ const UploadStack = createStackNavigator({
   SearchMatch: { screen: SearchMatch },
   Signature: { screen: Signature },
   MyPageFun: { screen: MyPageFun },
+  EditProfile: { screen: EditProfile },
   Nortification: { screen: Nortification },
 }, {
   headerMode: 'none',
@@ -96,6 +99,7 @@ const MatchStack = createStackNavigator({
   Match: { screen: Match },
   Feed: { screen: Feed },
   MyPageFun: { screen: MyPageFun },
+  EditProfile: { screen: EditProfile },
   Nortification: { screen: Nortification },
 }, {
   headerMode: 'none',
@@ -105,6 +109,7 @@ const TeamStack = createStackNavigator({
   Team: { screen: Team },
   TeamFeed: { screen: TeamFeed },
   MyPageFun: { screen: MyPageFun },
+  EditProfile: { screen: EditProfile },
   Nortification: { screen: Nortification },
 }, {
   headerMode: 'none',
@@ -113,6 +118,7 @@ const TeamStack = createStackNavigator({
 const PlayerStack = createStackNavigator({
   UserSearch: { screen: UserSearch },
   MyPageFun: { screen: MyPageFun },
+  EditProfile: { screen: EditProfile },
   Nortification: { screen: Nortification },
 }, {
   headerMode: 'none',

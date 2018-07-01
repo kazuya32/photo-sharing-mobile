@@ -19,23 +19,25 @@ class SendButton extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    right: 16,
     height: 30,
     alignSelf: 'center',
   },
   sendButton: {
-    backgroundColor: '#DB4D5E',
     borderRadius: 21,
     paddingTop: 8,
     paddingBottom: 8,
-    paddingRight: 16,
-    paddingLeft: 16,
+    paddingRight: 12,
+    paddingLeft: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
+    borderColor: '#C4C4C4',
+    borderWidth: 1,
   },
   sendButtonTitle: {
-    color: '#fff',
+    color: '#C4C4C4',
   },
 });
 

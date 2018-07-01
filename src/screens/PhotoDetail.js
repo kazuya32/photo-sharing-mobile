@@ -7,7 +7,6 @@ import {
   ScrollView,
   Alert,
   Dimensions,
-  KeyboardAvoidingView,
 } from 'react-native';
 import { Avatar } from 'react-native-elements';
 
@@ -58,7 +57,7 @@ class LoginScreen extends React.Component {
               multiline={false}
               numberOfLines={2}
             />
-            <SendButton onPress={this.onPressTest}>
+            <SendButton onPress={this.onPressTest} style={{ position: 'absolute', right: 16 }} >
               投稿
             </SendButton>
           </View>
