@@ -1,16 +1,23 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, TouchableHighlight, Image } from 'react-native';
 
 class Profile extends React.Component {
   render() {
-    const { onPress, userName, userDesc } = this.props;
+    const {
+      onPress,
+      userName,
+      userDesc,
+      photoURL,
+    } = this.props;
 
     return (
       <View style={styles.container}>
-        <View style={styles.profileIcon}>
-          <Text style={styles.profileImage}>
-            YK
-          </Text>
+        <View style={styles.profilePhoto}>
+          <Image
+            style={styles.photo}
+            source={{ uri: photoURL }}
+            resizeMode="cover"
+          />
         </View>
         <View style={styles.profileText}>
           <Text style={styles.userName}>
@@ -40,17 +47,25 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
   },
-  profileIcon: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
+  profilePhoto: {
+    // alignSelf: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
     backgroundColor: 'gray',
     width: 48,
     height: 48,
     borderRadius: 24,
   },
-  profileImage: {
-    alignSelf: 'center',
+  photo: {
+    width: 48,
+    height: 48,
+    borderWidth: 1,
+    borderRadius: 24,
+    borderColor: '#EBEBEB',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
   },
   profileText: {
     alignSelf: 'center',

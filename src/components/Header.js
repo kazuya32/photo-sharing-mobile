@@ -1,10 +1,61 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import firebase from 'firebase';
 
 import HeaderLeftButton from '../elements/HeaderLeftButton.js';
 import HeaderRightButton from '../elements/HeaderRightButton.js';
 
 class Header extends React.Component {
+  state = {}
+
+  componentWillMount() {
+    this.fetchData();
+  }
+
+  // eslint-disable-next-line
+  fetchData = () => {
+    this.setAuth();
+  }
+
+  setAuth = () => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const {
+          displayName,
+          email,
+          emailVerified,
+          photoURL,
+          isAnonymous,
+          uid,
+          providerData,
+        } = user;
+
+        this.setState({
+          displayName,
+          email,
+          emailVerified,
+          photoURL,
+          isAnonymous,
+          uid,
+          providerData,
+        });
+        this.fetchUser();
+      // eslint-disable-next-line
+      } else {
+        this.props.navigation.navigate({ routeName: 'Login' });
+      }
+    });
+  }
+
+  fetchUser = () => {
+    const db = firebase.firestore();
+    const userRef = db.collection('users').doc(this.state.uid);
+    userRef.get().then((doc) => {
+      const user = doc.data();
+      this.setState({ user });
+    });
+  }
+
   render() {
     const {
       onPressLeft,
@@ -12,10 +63,21 @@ class Header extends React.Component {
       headerTitle,
     } = this.props;
 
+    if (!this.state.user) {
+      return (
+        <View style={{ flex: 1, padding: 20, alignSelf: 'center' }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.button}>
-          <HeaderLeftButton onPress={onPressLeft} />
+          <HeaderLeftButton
+            onPress={onPressLeft}
+            photoURL={this.state.user && this.state.user.photoURL}
+          />
         </View>
         <View style={styles.appbar}>
           <View>

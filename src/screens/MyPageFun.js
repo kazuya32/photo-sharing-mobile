@@ -91,6 +91,8 @@ class MyPageFun extends React.Component {
     userRef.get().then((doc) => {
       const user = doc.data();
       this.setState({ user });
+      console.log('detail');
+      console.log(user);
     });
   }
 
@@ -120,27 +122,26 @@ class MyPageFun extends React.Component {
 
   keyExtractor = (item, index) => index.toString();
 
-  renderItem = ({ item }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          this.props.navigation.navigate({
-            routeName: 'PhotoDetail',
-            params: {
-              photo: item,
-              uid: this.state.uid,
-            },
-          });
-        }}
-      >
-        <Image
-          style={styles.photoItem}
-          source={{ uri: item.data.downloadURL }}
-          resizeMode="cover"
-        />
-      </TouchableOpacity>
-    );
-  }
+  renderItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => {
+        this.props.navigation.navigate({
+          routeName: 'PhotoDetail',
+          params: {
+            photo: item,
+            uid: this.state.uid,
+          },
+        });
+      }}
+    >
+      <Image
+        style={styles.photoItem}
+        source={{ uri: item.data.downloadURL }}
+        resizeMode="cover"
+      />
+    </TouchableOpacity>
+  );
+
 
   render() {
     if (!this.state.user) {
@@ -164,6 +165,7 @@ class MyPageFun extends React.Component {
             onPress={this.onPressTest}
             userName={this.state.user.name}
             userDesc={this.state.user.desc}
+            photoURL={this.state.user.photoURL}
           />
           <Text style={styles.alert}>
              まだ投稿画像はありません.
@@ -183,6 +185,7 @@ class MyPageFun extends React.Component {
           onPress={this.onPressTest}
           userName={this.state.user.name}
           userDesc={this.state.user.desc}
+          photoURL={this.state.user.photoURL}
         />
         <FlatList
           navigation={this.props.navigation}
