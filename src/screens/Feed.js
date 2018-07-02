@@ -4,6 +4,7 @@ import {
   View,
   Alert,
 } from 'react-native';
+import { Constants } from 'expo';
 
 import PhotoFeed from '../components/PhotoFeed.js';
 import Header from '../components/Header.js';
@@ -64,6 +65,8 @@ class Feed extends React.Component {
   }
 
   render() {
+    console.log(Constants.statusBarHeight);
+    
     return (
       <View style={styles.container}>
         <Header

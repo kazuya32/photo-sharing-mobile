@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, Image, Dimensions, AsyncStorage } from 'react-native';
 import Expo from 'expo';
 import firebase from 'firebase';
 import { SocialIcon } from 'react-native-elements';
@@ -38,14 +38,15 @@ class Login extends React.Component {
       },
     );
 
-    if (type === 'success') {
-    // Get the user's name using Facebook's Graph API
-      const response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}`
-      );
-      console.log(await response.json());
-      // Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
-    }
+    // if (type === 'success') {
+    // // Get the user's name using Facebook's Graph API
+    //   const response = await fetch(
+    //     `https://graph.facebook.com/me?access_token=${token}`
+    //   );
+    //   console.log(await response.json());
+    //   // Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
+    // }
+
     if (type === 'success') {
       // Build Firebase credential with the Facebook access token.
       const credential = firebase.auth.FacebookAuthProvider.credential(token);
@@ -81,6 +82,7 @@ class Login extends React.Component {
           desc: '',
         })
           .then(() => {
+            this.storeUserPhoto(user.photoURL);
             console.log('Document successfully written!');
           })
           .catch((error) => {
@@ -88,6 +90,14 @@ class Login extends React.Component {
           });
       }
     });
+  }
+
+  storeUserPhoto = async (photoURL) => {
+    try {
+      await AsyncStorage.setItem('photoURL', photoURL);
+    } catch (error) {
+      // Error saving data
+    }
   }
 
 

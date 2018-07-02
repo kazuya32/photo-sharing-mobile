@@ -1,9 +1,33 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import {
+  // Platform,
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+} from 'react-native';
 
 class EditItem extends React.Component {
+  state = { value: this.props.value }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.value !== nextState.value) {
+      return false;
+    }
+
+    return true;
+  }
+
+  // shouldComponentUpdate(nextProps) {
+  //   return Platform.OS !== 'ios' || this.props.value === nextProps.value;
+  // }
+
   render() {
-    const { onChangeText, title, value } = this.props;
+    const {
+      onChangeText,
+      title,
+      maxLength,
+    } = this.props;
 
     return (
       <View style={styles.container}>
@@ -13,10 +37,14 @@ class EditItem extends React.Component {
         <TextInput
           style={styles.input}
           title={title}
-          value={value}
-          onChangeText={(text) => { onChangeText(text); }}
+          value={this.state.value}
+          onChangeText={(value) => { this.setState({ value }); }}
+          onBlur={() => { onChangeText(this.state.value); }}
+          // onBlur={() => { console.log(this.state.value); }}
           autoCapitalize="none"
           autoCorrect={false}
+          multiline={false}
+          maxLength={maxLength}
         />
       </View>
     );

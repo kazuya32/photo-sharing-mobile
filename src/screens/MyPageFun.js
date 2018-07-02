@@ -8,6 +8,7 @@ import {
   FlatList,
   ActivityIndicator,
   Text,
+  AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -87,12 +88,21 @@ class MyPageFun extends React.Component {
   fetchUser = () => {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(this.state.uid);
-    userRef.get().then((doc) => {
+    userRef.onSnapshot((doc) => {
+      const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
+      console.log(source, ' data: ', doc.data());
       const user = doc.data();
       this.setState({ user });
-      console.log('detail');
-      console.log(user);
+      this.storeUserPhoto(user.photoURL);
     });
+  }
+
+  storeUserPhoto = async (photoURL) => {
+    try {
+      await AsyncStorage.setItem('photoURL', photoURL);
+    } catch (error) {
+      // Error saving data
+    }
   }
 
   // eslint-disable-next-line
@@ -103,16 +113,15 @@ class MyPageFun extends React.Component {
     const photosRef = db.collection('photos').where('uid', '==', this.state.uid);
 
     const photos = [];
-    photosRef.get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          photos.push({
-            id: doc.id,
-            data: doc.data(),
-          });
-          this.setState({ photos });
+    photosRef.onSnapshot((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        photos.push({
+          id: doc.id,
+          data: doc.data(),
         });
+        this.setState({ photos });
       });
+    });
   }
 
   keyExtractor = (item, index) => index.toString();

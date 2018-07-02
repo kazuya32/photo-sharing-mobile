@@ -56,14 +56,25 @@ class Feed extends React.Component {
     });
   }
 
-  fetchUser = () => {
-    const db = firebase.firestore();
-    const userRef = db.collection('users').doc(this.state.uid);
-    userRef.get().then((doc) => {
-      const user = doc.data();
-      this.setState({ user });
-    });
-  }
+  // fetchUser = () => {
+  //   const db = firebase.firestore();
+  //   const userRef = db.collection('users').doc(this.state.uid);
+  //   userRef.onSnapshot((doc) => {
+  //     const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
+  //     console.log(source, ' data: ', doc.data());
+  //     const user = doc.data();
+  //     this.setState({ user });
+  //     this.storeUserPhoto(user.photoURL);
+  //   });
+  // }
+
+  // storeUserPhoto = async (photoURL) => {
+  //   try {
+  //     await AsyncStorage.setItem('photoURL', photoURL);
+  //   } catch (error) {
+  //     // Error saving data
+  //   }
+  // }
 
   // eslint-disable-next-line
   fetchPhotos = () => {
@@ -203,7 +214,7 @@ class Feed extends React.Component {
             renderItem={this.renderItem}
             keyExtractor={this.keyExtractor}
             onEndReachedThreshold={0.2}
-            onEndReached={this.reloadPhotos}
+            // onEndReached={this.reloadPhotos}
             getItemLayout={(data, index) => (
              { length: 400, offset: 400 * index, index }
            )}

@@ -53,11 +53,26 @@ class EditProfile extends React.Component {
     });
   }
 
+  updateProfile = () => {
+    const db = firebase.firestore();
+    const userRef = db.collection('users').doc(this.state.uid);
+    userRef.update({
+      name: this.state.name,
+      desc: this.state.desc,
+    })
+      .then(() => {
+        this.props.navigation.goBack();
+      })
+      .catch((error) => {
+        console.error('Error updating document: ', error);
+        Alert.alert('データ更新に失敗しました。時間をおいてから再度実行してください。');
+      });
+  }
+
   // eslint-disable-next-line
   onChangeTextName = (text) => {
     this.setState({ name: text });
   }
-
 
   // eslint-disable-next-line
   onChangeTextDesc = (text) => {
@@ -65,8 +80,13 @@ class EditProfile extends React.Component {
   }
 
   // eslint-disable-next-line
-  onPressTest = () => {
-    Alert.alert('実装中');
+  onPressSave = () => {
+    this.updateProfile();
+  }
+
+  // eslint-disable-next-line
+  onPressCancel = () => {
+    this.props.navigation.goBack();
   }
 
   render() {
@@ -85,21 +105,23 @@ class EditProfile extends React.Component {
         />
         <EditItem
           onChangeText={this.onChangeTextName}
-          title="ユーザー名"
+          title="ユーザー名（最大20文字）"
+          maxLength={20}
           value={this.state.name}
           // style={styles.icon}
         />
         <EditItem
           onChangeText={this.onChangeTextDesc}
-          title="自己紹介"
+          title="自己紹介（最大200文字）"
           value={this.state.desc}
+          maxLength={200}
           // style={styles.icon}
         />
         <View style={styles.footer}>
-          <CancelButton onPress={this.onPressTest}>
+          <CancelButton onPress={this.onPressCancel}>
             キャンセル
           </CancelButton>
-          <SendButton onPress={this.onPressTest}>
+          <SendButton onPress={this.onPressSave}>
             保存
           </SendButton>
         </View>
