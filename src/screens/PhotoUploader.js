@@ -11,6 +11,7 @@ import firebase from 'firebase';
 
 import PhotoHeader from '../components/PhotoHeader.js';
 import SelectItem from '../components/SelectItem.js';
+import TagBox from '../components/TagBox.js';
 
 class PhotoUploader extends React.Component {
   state = {
@@ -156,6 +157,11 @@ class PhotoUploader extends React.Component {
     return array;
   }
 
+  // eslint-disable-next-line
+  onChangeText = (text) => {
+    this.setState({ tags: [text] });
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -166,12 +172,17 @@ class PhotoUploader extends React.Component {
           rightButtonTitle="Post"
         />
         <View style={styles.body}>
-          <View style={styles.bodyItem}>
+          <View style={styles.top}>
             <Image
               style={styles.image}
               source={{ uri: this.props.navigation.state.params.image.uri }}
               // source={this.props.navigation.state.params.image.base64}
               resizeMode="cover"
+            />
+            <TagBox
+              placeholder="タグをつける"
+              onChangeText={this.onChangeText}
+              value={this.state.tagText}
             />
           </View>
           <SelectItem
@@ -209,13 +220,14 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 80,
   },
-  bodyItem: {
+  top: {
     borderColor: '#EBEBEB',
     borderBottomWidth: 1,
     paddingTop: 16,
     paddingBottom: 16,
     paddingLeft: 16,
     paddingRight: 16,
+    flexDirection: 'row',
   },
   image: {
     width: Dimensions.get('window').width / 4,

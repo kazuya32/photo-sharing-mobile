@@ -7,7 +7,7 @@ import {
   TextInput,
 } from 'react-native';
 
-class EditItem extends React.Component {
+class TagBox extends React.Component {
   state = { value: this.props.value }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -24,27 +24,25 @@ class EditItem extends React.Component {
 
   render() {
     const {
-      // onBlur,
       onChangeText,
-      title,
+      // onBlur,
+      value,
       maxLength,
+      placeholder,
     } = this.props;
 
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>
-          {title}
-        </Text>
         <TextInput
           style={styles.input}
-          title={title}
-          value={this.state.value}
-          onChangeText={(value) => { this.setState({ value }); }}
-          onBlur={() => { onChangeText(this.state.value); }}
+          value={value}
+          onChangeText={(text) => { onChangeText(text); }}
+          // onBlur={() => { console.log(this.state.value); }}
           autoCapitalize="none"
           autoCorrect={false}
           multiline={false}
           maxLength={maxLength}
+          placeholder={placeholder}
         />
       </View>
     );
@@ -54,22 +52,14 @@ class EditItem extends React.Component {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
-  title: {
-    fontSize: 12,
-    paddingTop: 12,
-    paddingBottom: 12,
-    color: '#C4C4C4',
+    paddingLeft: 8,
+    paddingRight: 8,
   },
   input: {
     fontSize: 16,
-    borderColor: '#808080',
     color: '#808080',
-    borderBottomWidth: 1,
     paddingBottom: 4,
   },
 });
 
-export default EditItem;
+export default TagBox;

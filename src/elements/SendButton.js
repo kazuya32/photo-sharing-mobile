@@ -3,12 +3,12 @@ import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 
 class SendButton extends React.Component {
   render() {
-    const { onPress, style } = this.props;
+    const { onPress, style, textStyle } = this.props;
 
     return (
       <TouchableHighlight style={[styles.container, style]} onPress={onPress} underlayColor="transparent">
         <View style={styles.sendButton}>
-          <Text style={styles.sendButtonTitle}>
+          <Text style={[styles.sendButtonTitle, textStyle]}>
             {this.props.children}
           </Text>
         </View>
