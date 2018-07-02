@@ -1,5 +1,6 @@
 import React from 'react';
 import firebase from 'firebase';
+import { AsyncStorage } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 // import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -42,11 +43,42 @@ const config = {
 };
 firebase.initializeApp(config);
 
-firebase.auth().onAuthStateChanged((user) => {
-  if (user != null) {
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (user) {
     console.log('We are authenticated now!');
+
+    const { // eslint-disable-next-line
+      displayName,    // eslint-disable-next-line
+      email, // eslint-disable-next-line
+      emailVerified, // eslint-disable-next-line
+      photoURL, // eslint-disable-next-line
+      isAnonymous,
+      uid, // eslint-disable-next-line
+      providerData,
+    } = user;
+
+    // this.setState({
+    //   displayName,
+    //   email,
+    //   emailVerified,
+    //   photoURL,
+    //   isAnonymous,
+    //   uid,
+    //   providerData,
+    // });
+
+    try {
+      await AsyncStorage.setItem('uid', uid);
+      // await AsyncStorage.setItem('facebookId', providerData[0].uid);
+    } catch (error) {
+      console.log('failed to saving AsyncStorage');
+    }
+
+  // eslint-disable-next-line
+  } else {
+    console.log('not login');
+    // this.props.navigation.navigate({ routeName: 'Login' });
   }
-  console.log('not logiin');
 });
 
 const HomeStack = createStackNavigator({

@@ -2,14 +2,16 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Alert,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Dimensions,
 } from 'react-native';
 import firebase from 'firebase';
 
-import PhotoFeed from '../components/PhotoFeed.js';
 import Header from '../components/Header.js';
 
-class Feed extends React.Component {
+class TeamFeed extends React.Component {
   state = {
     headerTitle: 'FLEGO',
   }
@@ -17,8 +19,9 @@ class Feed extends React.Component {
   componentWillMount() {
     if (this.props.navigation.state.params && this.props.navigation.state.params.feedType) {
       const { feedType, itemId } = this.props.navigation.state.params;
-      this.setState({ feedType, itemId });
+      // this.setState({ feedType, itemId });
       this.getTeam(itemId);
+      this.fetchPhotos();
     }
   }
 
@@ -32,46 +35,52 @@ class Feed extends React.Component {
     });
   }
 
-  onPressPhoto = (item) => {
-    this.props.navigation.navigate({
-      routeName: 'PhotoDetail',
-      params: {
-        photo: item,
-      },
-    });
+  // eslint-disable-next-line
+  fetchPhotos = () => {
+    const teamId = this.props.navigation.state.params.itemId;
+    const db = firebase.firestore();
+    // const maxResults = 5;
+
+    const photosRef = db.collection('photos')
+      .where('teamId', '==', teamId);
+
+    const photos = [];
+    photosRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          photos.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+          this.setState({ photos });
+        });
+        const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        this.setState({ lastVisible });
+        // this.setState({ photosRef, lastVisible });
+      });
   }
 
-  onPressUser = () => {
-    Alert.alert('Pressed');
-  }
+  keyExtractor = (item, index) => index.toString();
 
-  onPressMatch = (item) => {
-    // this.setState({
-    //   feedType: 'match',
-    //   itemId: item.id,
-    // });
-    this.props.navigation.navigate({
-      routeName: 'Feed',
-      params: {
-        feedType: 'match',
-        itemId: item.id,
-      },
-    });
-  }
-
-  onPressTeam = (item) => {
-    this.setState({
-      feedType: 'team',
-      itemId: item.id,
-    });
-    // this.props.navigation.navigate({
-    //   routeName: 'TeamFeed',
-    //   params: {
-    //     feedType: 'team',
-    //     itemId: item.id,
-    //   },
-    // });
-  }
+  renderItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => {
+        this.props.navigation.navigate({
+          routeName: 'PhotoDetail',
+          params: {
+            photo: item,
+            uid: this.state.uid,
+          },
+        });
+      }}
+    >
+      <Image
+        style={styles.photoItem}
+        source={{ uri: item.data.downloadURL }}
+        resizeMode="cover"
+      />
+    </TouchableOpacity>
+  );
 
   render() {
     return (
@@ -81,14 +90,13 @@ class Feed extends React.Component {
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle={this.state.headerTitle}
         />
-        <PhotoFeed
-          feedType={this.state.feedType}
-          itemId={this.state.itemId}
-          onPressUser={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
-          onPressPhoto={this.onPressPhoto}
-          onPressMatch={this.onPressMatch}
-          onPressTeam={this.onPressTeam}
-          // scheduleId={scheduleId}
+        <FlatList
+          navigation={this.props.navigation}
+          data={this.state.photos}
+          renderItem={this.renderItem}
+          numColumns={4}
+          // horizontal={true}
+          keyExtractor={this.keyExtractor}
         />
       </View>
     );
@@ -101,6 +109,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: 70,
   },
+  photoItem: {
+    width: Dimensions.get('window').width / 4,
+    height: Dimensions.get('window').width / 4,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },
 });
 
-export default Feed;
+export default TeamFeed;

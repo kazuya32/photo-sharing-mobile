@@ -5,6 +5,7 @@ import {
   Image,
   Alert,
   Dimensions,
+  AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -20,42 +21,26 @@ class PhotoUploader extends React.Component {
     isUploading: false,
   }
 
-  componentDidMount() {
-    this.setAuth();
+  componentWillMount() {
+    this.fetchData();
+  }
+
+  // eslint-disable-next-line
+  fetchData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('uid');
+      if (value !== null) {
+        this.setState({ uid: value });
+        // this.fetchUser();
+        // this.fetchPhotos();
+      }
+    } catch (error) {
+    //
+    }
   }
 
   onPressAlert = () => {
     Alert.alert('この機能はまだ利用できません。');
-  }
-
-  // eslint-disable-next-line
-  setAuth = () => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        const {
-          displayName,
-          email,
-          emailVerified,
-          photoURL,
-          isAnonymous,
-          uid,
-          providerData,
-        } = user;
-
-        this.setState({
-          displayName,
-          email,
-          emailVerified,
-          photoURL,
-          isAnonymous,
-          uid,
-          providerData,
-        });
-      // eslint-disable-next-line
-      } else {
-        this.props.navigation.navigate({ routeName: 'Login' });
-      }
-    });
   }
 
   onPress = (tagType, item) => {
@@ -90,7 +75,6 @@ class PhotoUploader extends React.Component {
     this.props.navigation.navigate({ routeName: 'PhotoUploader' });
   }
 
-
   addTeam = () => {
     this.props.navigation.navigate({
       routeName: 'SearchTag',
@@ -112,7 +96,7 @@ class PhotoUploader extends React.Component {
   }
 
   uploadPhoto = async () => {
-    if (!this.state.isUploading) {  
+    if (!this.state.isUploading) {
       this.setState({ isUploading: true });
       // eslint-disable-next-line
       const res = await fetch(this.props.navigation.state.params.image.uri);

@@ -48,41 +48,17 @@ class MyPageFun extends React.Component {
     this.fetchData();
   }
 
-  // eslint-disable-next-line
-  fetchData = () => {
-    this.setAuth();
-  }
-
-  setAuth = () => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        const {
-          displayName,
-          email,
-          emailVerified,
-          photoURL,
-          isAnonymous,
-          uid,
-          providerData,
-        } = user;
-
-        this.setState({
-          displayName,
-          email,
-          emailVerified,
-          photoURL,
-          isAnonymous,
-          uid,
-          providerData,
-        });
-
+  fetchData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('uid');
+      if (value !== null) {
+        this.setState({ uid: value });
         this.fetchUser();
         this.fetchPhotos();
-      // eslint-disable-next-line
-      } else {
-        this.props.navigation.navigate({ routeName: 'Login' });
       }
-    });
+    } catch (error) {
+    //
+    }
   }
 
   fetchUser = () => {
@@ -166,10 +142,18 @@ class MyPageFun extends React.Component {
             headerTitle="FLEGO"
           />
           <Profile
-            onPress={this.onPressTest}
             userName={this.state.user.name}
             userDesc={this.state.user.desc}
             photoURL={this.state.user.photoURL}
+            onPress={() => {
+              this.props.navigation.navigate({
+                routeName: 'EditProfile',
+                params: {
+                  user: this.state.user,
+                  uid: this.state.uid,
+                },
+              });
+            }}
           />
           <Text style={styles.alert}>
              まだ投稿画像はありません.
@@ -194,6 +178,7 @@ class MyPageFun extends React.Component {
               routeName: 'EditProfile',
               params: {
                 user: this.state.user,
+                uid: this.state.uid,
               },
             });
           }}

@@ -82,7 +82,7 @@ class Login extends React.Component {
           desc: '',
         })
           .then(() => {
-            this.storeUserPhoto(user.photoURL);
+            this.storeUserPhoto(user.uid, user.photoURL);
             console.log('Document successfully written!');
           })
           .catch((error) => {
@@ -92,8 +92,9 @@ class Login extends React.Component {
     });
   }
 
-  storeUserPhoto = async (photoURL) => {
+  storeUser = async (uid, photoURL) => {
     try {
+      await AsyncStorage.setItem('uid', uid);
       await AsyncStorage.setItem('photoURL', photoURL);
     } catch (error) {
       // Error saving data

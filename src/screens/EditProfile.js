@@ -14,45 +14,13 @@ import CancelButton from '../elements/CancelButton.js';
 
 class EditProfile extends React.Component {
   state = {
+    uid: this.props.navigation.state.params.uid,
     user: this.props.navigation.state.params.user,
     name: this.props.navigation.state.params.user.name,
     desc: this.props.navigation.state.params.user.desc,
   }
 
-  componentWillMount() {
-    this.setAuth();
-  }
-
   // eslint-disable-next-line
-  setAuth = () => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        const {
-          displayName,
-          email,
-          emailVerified,
-          photoURL,
-          isAnonymous,
-          uid,
-          providerData,
-        } = user;
-
-        this.setState({
-          displayName,
-          email,
-          emailVerified,
-          photoURL,
-          isAnonymous,
-          uid,
-          providerData,
-        });
-      // eslint-disable-next-line
-      } else {
-        this.props.navigation.navigate({ routeName: 'Login' });
-      }
-    });
-  }
-
   updateProfile = () => {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(this.state.uid);
@@ -64,6 +32,7 @@ class EditProfile extends React.Component {
         this.props.navigation.goBack();
       })
       .catch((error) => {
+        // eslint-disable-next-line
         console.error('Error updating document: ', error);
         Alert.alert('データ更新に失敗しました。時間をおいてから再度実行してください。');
       });

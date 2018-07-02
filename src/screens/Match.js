@@ -51,7 +51,7 @@ class Match extends React.Component {
     <ListItem
       onPress={() => {
         this.props.navigation.navigate({
-          routeName: 'Feed',
+          routeName: 'MatchFeed',
           params: {
             feedType: 'match',
             itemId: item.id,

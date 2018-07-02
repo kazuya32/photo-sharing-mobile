@@ -8,7 +8,6 @@ class Header extends React.Component {
   state = {}
 
   componentWillMount() {
-    // this.fetchData();
     this.retrieveUserPhoto();
   }
 

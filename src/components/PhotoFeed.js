@@ -5,6 +5,7 @@ import {
   ScrollView,
   Alert,
   FlatList,
+  AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -20,65 +21,21 @@ class Feed extends React.Component {
   }
 
   // eslint-disable-next-line
-  fetchData = () => {
-    this.setAuth();
-  }
-
-  setAuth = () => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        const {
-          displayName,
-          email,
-          emailVerified,
-          photoURL,
-          isAnonymous,
-          uid,
-          providerData,
-        } = user;
-
-        this.setState({
-          displayName,
-          email,
-          emailVerified,
-          photoURL,
-          isAnonymous,
-          uid,
-          providerData,
-        });
-
+  fetchData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('uid');
+      if (value !== null) {
+        this.setState({ uid: value });
         // this.fetchUser();
         this.fetchPhotos();
-      // eslint-disable-next-line
-      } else {
-        this.props.navigation.navigate({ routeName: 'Login' });
       }
-    });
+    } catch (error) {
+    //
+    }
   }
-
-  // fetchUser = () => {
-  //   const db = firebase.firestore();
-  //   const userRef = db.collection('users').doc(this.state.uid);
-  //   userRef.onSnapshot((doc) => {
-  //     const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
-  //     console.log(source, ' data: ', doc.data());
-  //     const user = doc.data();
-  //     this.setState({ user });
-  //     this.storeUserPhoto(user.photoURL);
-  //   });
-  // }
-
-  // storeUserPhoto = async (photoURL) => {
-  //   try {
-  //     await AsyncStorage.setItem('photoURL', photoURL);
-  //   } catch (error) {
-  //     // Error saving data
-  //   }
-  // }
 
   // eslint-disable-next-line
   fetchPhotos = () => {
-    console.log('fetch photos');
     const db = firebase.firestore();
     const maxResults = 5;
 
