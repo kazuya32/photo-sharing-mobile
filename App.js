@@ -13,6 +13,7 @@ import TeamFeed from './src/screens/TeamFeed.js';
 import MatchFeed from './src/screens/MatchFeed.js';
 import Nortification from './src/screens/Nortification.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
+import Request from './src/screens/Request.js';
 import MyPageFun from './src/screens/MyPageFun.js';
 import EditProfile from './src/screens/EditProfile.js';
 import Signature from './src/screens/Signature.js';
@@ -89,6 +90,7 @@ const HomeStack = createStackNavigator({
   MyPageFun: { screen: MyPageFun },
   EditProfile: { screen: EditProfile },
   PhotoDetail: { screen: PhotoDetail },
+  Request: { screen: Request },
   Signature: { screen: Signature },
 }, {
   headerMode: 'none',

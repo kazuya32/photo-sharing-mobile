@@ -6,14 +6,12 @@ import {
   Alert,
   Dimensions,
   AsyncStorage,
-  FlatList,
 } from 'react-native';
 import firebase from 'firebase';
 
 import PhotoHeader from '../components/PhotoHeader.js';
 import SelectItem from '../components/SelectItem.js';
 import TagBox from '../components/TagBox.js';
-import Tag from '../elements/Tag.js';
 
 class PhotoUploader extends React.Component {
   state = {
@@ -165,14 +163,6 @@ class PhotoUploader extends React.Component {
     this.setState({ tags });
   }
 
-  keyExtractor = (item, index) => index.toString();
-
-  renderItem = ({ item }) => (
-    <Tag
-      onPress={this.props.onPressUser}
-      text={item}
-    />
-  );
 
   render() {
     return (
@@ -222,13 +212,6 @@ class PhotoUploader extends React.Component {
     );
   }
 }
-//
-// <FlatList
-//   data={this.state.tags}
-//   renderItem={this.renderItem}
-//   keyExtractor={this.keyExtractor}
-//   style={styles.tags}
-// />
 
 const styles = StyleSheet.create({
   container: {

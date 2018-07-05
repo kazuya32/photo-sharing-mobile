@@ -15,7 +15,13 @@ class LoginScreen extends React.Component {
   state = {}
 
   onPress = () => {
-    Alert.alert('ダウンロードリクエストを送信しました。');
+    // Alert.alert('ダウンロードリクエストを送信しました。');
+    this.props.navigation.navigate({
+      routeName: 'Request',
+      params: {
+        photo: this.props.navigation.state.params.photo,
+      },
+    });
   }
 
   render() {
@@ -50,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 70,
+    paddingTop: 80,
   },
   photo: {
     marginTop: 12,
