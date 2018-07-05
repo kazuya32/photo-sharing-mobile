@@ -10,8 +10,9 @@ import {
   Alert,
 } from 'react-native';
 import firebase from 'firebase';
-
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import TagTile from '../components/TagTile.js';
 
 class PhotoTile extends React.Component {
   state = {
@@ -146,6 +147,10 @@ class PhotoTile extends React.Component {
             </TouchableHighlight>
           </View>
         </View>
+        <TagTile
+          style={[styles.tags, !photo.data.tags && { display: 'none' }]}
+          tags={photo.data.tags}
+        />
       </View>
     );
   }
@@ -154,6 +159,7 @@ class PhotoTile extends React.Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
+    marginBottom: 12,
   },
   indicator: {
     height: Dimensions.get('window').height * 0.6,
@@ -211,10 +217,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 20,
+    paddingTop: 12,
     paddingLeft: 12,
     paddingRight: 12,
-    paddingBottom: 20,
+    // paddingBottom: 12,
   },
   likes: {
     flexDirection: 'row',
@@ -238,6 +244,12 @@ const styles = StyleSheet.create({
   userName: {
     color: '#DB4D5E',
     alignSelf: 'center',
+  },
+  tags: {
+    // paddingTop: 8,
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingBottom: 8,
   },
 });
 

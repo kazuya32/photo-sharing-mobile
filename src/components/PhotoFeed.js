@@ -174,7 +174,8 @@ class Feed extends React.Component {
             // onEndReached={this.reloadPhotos}
             getItemLayout={(data, index) => (
              { length: 400, offset: 400 * index, index }
-           )}
+            )}
+            extraData={this.state}
           />
         </ScrollView>
       </View>

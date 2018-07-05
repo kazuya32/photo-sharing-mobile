@@ -6,16 +6,19 @@ import {
   Alert,
   Dimensions,
   AsyncStorage,
+  FlatList,
 } from 'react-native';
 import firebase from 'firebase';
 
 import PhotoHeader from '../components/PhotoHeader.js';
 import SelectItem from '../components/SelectItem.js';
 import TagBox from '../components/TagBox.js';
+import Tag from '../elements/Tag.js';
 
 class PhotoUploader extends React.Component {
   state = {
-    tags: null,
+    // tags: null,
+    tags: ['sample1', 'sample2'],
     people: null,
     match: null,
     team: null,
@@ -158,9 +161,18 @@ class PhotoUploader extends React.Component {
   }
 
   // eslint-disable-next-line
-  onChangeText = (text) => {
-    this.setState({ tags: [text] });
+  setTags = (tags) => {
+    this.setState({ tags });
   }
+
+  keyExtractor = (item, index) => index.toString();
+
+  renderItem = ({ item }) => (
+    <Tag
+      onPress={this.props.onPressUser}
+      text={item}
+    />
+  );
 
   render() {
     return (
@@ -176,13 +188,13 @@ class PhotoUploader extends React.Component {
             <Image
               style={styles.image}
               source={{ uri: this.props.navigation.state.params.image.uri }}
-              // source={this.props.navigation.state.params.image.base64}
               resizeMode="cover"
             />
             <TagBox
               placeholder="タグをつける"
-              onChangeText={this.onChangeText}
+              setter={this.setTags}
               value={this.state.tagText}
+              style={styles.tagBox}
             />
           </View>
           <SelectItem
@@ -210,6 +222,13 @@ class PhotoUploader extends React.Component {
     );
   }
 }
+//
+// <FlatList
+//   data={this.state.tags}
+//   renderItem={this.renderItem}
+//   keyExtractor={this.keyExtractor}
+//   style={styles.tags}
+// />
 
 const styles = StyleSheet.create({
   container: {
@@ -220,6 +239,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 80,
   },
+  // tags: {
+  //   flexDirection: 'row',
+  // },
   top: {
     borderColor: '#EBEBEB',
     borderBottomWidth: 1,
@@ -230,8 +252,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   image: {
-    width: Dimensions.get('window').width / 4,
-    height: Dimensions.get('window').width / 4,
+    width: Dimensions.get('window').width / 3,
+    height: Dimensions.get('window').width / 3,
+  },
+  tagBox: {
+    height: Dimensions.get('window').width / 3,
   },
 });
 

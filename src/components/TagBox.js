@@ -3,12 +3,17 @@ import {
   // Platform,
   StyleSheet,
   View,
-  Text,
   TextInput,
+  FlatList,
 } from 'react-native';
 
+import Tag from '../elements/Tag.js';
+
 class TagBox extends React.Component {
-  state = { value: this.props.value }
+  state = {
+    tags: [],
+    text: '',
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.value !== nextState.value) {
@@ -18,31 +23,81 @@ class TagBox extends React.Component {
     return true;
   }
 
+  keyExtractor = (item, index) => index.toString();
+
+  addTag = () => {
+    const { setter } = this.props;
+    const { tags } = this.state;
+    tags.push(this.state.text);
+    const text = '';
+    this.setState({ tags, text });
+    setter(tags);
+    console.log(tags);
+    // this._textInput.setNativeProps({text: ''});
+    this.attendee.setNativeProps({ text: ' ' });
+    // this.attendee.clear();
+  };
+
+  deleteTag = (text) => {
+    const { setter } = this.props;
+    const { tags } = this.state;
+    this.setState({ tags, text });
+    const index = tags.indexOf(text);
+
+    if (index >= 0) {
+      tags.splice(index, 1);
+    }
+
+    setter(tags);
+    console.log(tags);
+  };
+
+  renderItem = ({ item }) => (
+    <Tag
+      onPress={() => { this.deleteTag(item); }}
+      text={item}
+      withDelete
+    />
+  );
+
   // shouldComponentUpdate(nextProps) {
   //   return Platform.OS !== 'ios' || this.props.value === nextProps.value;
   // }
 
   render() {
     const {
-      onChangeText,
+      // setter,
       // onBlur,
+      style,
       value,
       maxLength,
       placeholder,
     } = this.props;
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, style]}>
         <TextInput
-          style={styles.input}
+          // ref={component => this._textInput = component}
+          ref={(element) => { this.attendee = element; }}
+          style={[styles.input]}
           value={value}
-          onChangeText={(text) => { onChangeText(text); }}
-          // onBlur={() => { console.log(this.state.value); }}
+          onChangeText={(text) => { this.setState({ text }); }}
+          onBlur={this.addTag}
           autoCapitalize="none"
           autoCorrect={false}
-          multiline={false}
+          // multiline
+          // textShadowColor="gray"
           maxLength={maxLength}
           placeholder={placeholder}
+        />
+        <FlatList
+          data={this.state.tags}
+          extraData={this.state}
+          renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
+          style={styles.tags}
+          // horizontal
+          numColumns={2}
         />
       </View>
     );
@@ -52,13 +107,24 @@ class TagBox extends React.Component {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingLeft: 8,
-    paddingRight: 8,
   },
   input: {
+    width: '100%',
+    // height: '100%',
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingTop: 4,
+    paddingBottom: 4,
     fontSize: 16,
     color: '#808080',
-    paddingBottom: 4,
+  },
+  tags: {
+    width: '100%',
+    // height: '100%',
+    paddingLeft: 8,
+    paddingRight: 8,
+    flexWrap: 'wrap',
+    // backgroundColor: 'blue',
   },
 });
 
