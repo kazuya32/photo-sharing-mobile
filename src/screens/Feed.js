@@ -8,6 +8,7 @@ import { Constants } from 'expo';
 
 import PhotoFeed from '../components/PhotoFeed.js';
 import Header from '../components/Header.js';
+import UploadButton from '../elements/UploadButton.js';
 
 class Feed extends React.Component {
   state = {
@@ -66,7 +67,7 @@ class Feed extends React.Component {
 
   render() {
     console.log(Constants.statusBarHeight);
-    
+
     return (
       <View style={styles.container}>
         <Header
@@ -83,6 +84,9 @@ class Feed extends React.Component {
           onPressTeam={this.onPressTeam}
           navigation={this.props.navigation}
           // scheduleId={scheduleId}
+        />
+        <UploadButton
+          onPress={() => { this.props.navigation.navigate({ routeName: 'PhotoPicker' }); }}
         />
       </View>
     );

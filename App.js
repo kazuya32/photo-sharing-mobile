@@ -1,6 +1,6 @@
 import React from 'react';
 import firebase from 'firebase';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Easing, Animated } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 // import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -92,9 +92,40 @@ const HomeStack = createStackNavigator({
   PhotoDetail: { screen: PhotoDetail },
   Request: { screen: Request },
   Signature: { screen: Signature },
+  PhotoPicker: { screen: PhotoPicker },
+  PhotoUploader: { screen: PhotoUploader },
 }, {
   headerMode: 'none',
-  // navigationOptions: {
+  // mode: 'modal',
+  navigationOptions: {
+    gesturesEnabled: true,
+    // gestureResponseDistance: {
+    //   horizontal: 50,
+    // },
+    // transitionConfig: () => ({
+    //   transitionSpec: {
+    //     duration: 300,
+    //     easing: Easing.out(Easing.poly(4)),
+    //     timing: Animated.timing,
+    //   },
+    //   screenInterpolator: sceneProps => {
+    //     const { layout, position, scene } = sceneProps;
+    //     const { index } = scene;
+    //
+    //     const height = layout.initHeight;
+    //     const translateY = position.interpolate({
+    //       inputRange: [index - 1, index, index + 1],
+    //       outputRange: [height, 0, 0],
+    //     });
+    //
+    //     const opacity = position.interpolate({
+    //       inputRange: [index - 1, index - 0.99, index],
+    //       outputRange: [0, 1, 1],
+    //     });
+    //
+    //     return { opacity, transform: [{ translateY }] };
+    //   },
+    // }),
   //   headerTitle: 'FLEGO',
   //   headerStyle: {
   //     backgroundColor: '#FCFCFC',
@@ -112,7 +143,7 @@ const HomeStack = createStackNavigator({
   //   headerBackTitle: '<',
   //   headerLeft: <FontAwesomeIcon name="user-circle-o" size={24} />,
   //   headerRight: <MaterialCommunityIcon name="bell-outline" size={24} />,
-  // },
+  },
 });
 
 const UploadStack = createStackNavigator({
@@ -208,7 +239,7 @@ const ServiceStack = createBottomTabNavigator({
 
 const App = createStackNavigator({
   Auth: { screen: Login },
-  Service: ServiceStack,
+  Home: HomeStack,
 }, {
   headerMode: 'none',
 });

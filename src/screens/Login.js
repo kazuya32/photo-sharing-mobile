@@ -57,7 +57,7 @@ class Login extends React.Component {
         .signInWithCredential(credential)
         .then((user) => {
           this.handleFacebookUser(user);
-          this.props.navigation.navigate('Service');
+          this.props.navigation.navigate('Home');
         })
         .catch((error) => {
           console.error(error)
@@ -78,11 +78,11 @@ class Login extends React.Component {
           name: user.displayName,
           facebookId: user.providerData[0].uid,
           phoneNumber: user.phoneNumber && user.phoneNumber,
-          photoURL: user.photoURL,
+          photoURL: `${user.photoURL}?type=normal`,
           desc: '',
         })
           .then(() => {
-            this.storeUserPhoto(user.uid, user.photoURL);
+            this.storeUser(user.uid, `${user.photoURL}?type=normal`);
             console.log('Document successfully written!');
           })
           .catch((error) => {
