@@ -16,8 +16,8 @@ class EditProfile extends React.Component {
   state = {
     uid: this.props.navigation.state.params.uid,
     user: this.props.navigation.state.params.user,
-    name: this.props.navigation.state.params.user.name,
-    desc: this.props.navigation.state.params.user.desc,
+    name: this.props.navigation.state.params.user.data.name,
+    desc: this.props.navigation.state.params.user.data.desc,
   }
 
   // eslint-disable-next-line
@@ -68,7 +68,7 @@ class EditProfile extends React.Component {
         />
         <UserIcon
           // onPress
-          photoURL={this.state.user.photoURL}
+          photoURL={this.state.user.data.photoURL}
           dia={80}
           style={styles.icon}
         />

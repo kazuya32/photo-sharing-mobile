@@ -45,7 +45,11 @@ class Header extends React.Component {
           </View>
         </View>
         <View style={styles.button}>
-          <HeaderRightButton onPress={onPressRight} />
+          <HeaderRightButton
+            onPress={onPressRight}
+            onPressIcon={onPressLeft}
+            photoURL={this.state.photoURL}
+          />
         </View>
       </View>
     );
@@ -58,13 +62,13 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 70,
+    height: 80,
     backgroundColor: '#FCFCFC',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 32,
-    paddingBottom: 12,
+    paddingBottom: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
@@ -77,6 +81,8 @@ const styles = StyleSheet.create({
 
   },
   appbarTitle: {
+    // position: 'absolute',
+    // alignSelf: 'center',
     color: '#000000',
     fontSize: 18,
     fontWeight: '700',

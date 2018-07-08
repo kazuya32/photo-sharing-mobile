@@ -2,15 +2,53 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 
 import UserIcon from '../elements/UserIcon.js';
+import FollowButton from '../elements/FollowButton.js';
 
 class Profile extends React.Component {
+  state = {
+    isMyPage: this.props.isMyPage,
+    isFollowing: this.props.isFollowing,
+  }
   render() {
     const {
       onPress,
       userName,
       userDesc,
       photoURL,
+      handleFollowButton,
+      // isFollowing,
     } = this.props;
+
+    console.log('isFollowing in profile');
+    console.log(this.state.isFollowing);
+
+    if (this.state.isMyPage) {
+      return (
+        <View style={styles.container}>
+          <UserIcon
+            // onPress
+            photoURL={photoURL}
+            dia={48}
+          />
+          <View style={styles.profileText}>
+            <Text style={styles.userName}>
+              {userName}
+            </Text>
+            <Text style={styles.userDesc}>
+              {userDesc}
+            </Text>
+          </View>
+          <TouchableHighlight style={styles.buttonContainer} onPress={onPress} underlayColor="transparent">
+            <View style={styles.menuButton}>
+              <Text style={styles.menuButtonTitle}>
+                •••
+              </Text>
+            </View>
+          </TouchableHighlight>
+        </View>
+      );
+    }
+
 
     return (
       <View style={styles.container}>
@@ -27,13 +65,12 @@ class Profile extends React.Component {
             {userDesc}
           </Text>
         </View>
-        <TouchableHighlight style={styles.buttonContainer} onPress={onPress} underlayColor="transparent">
-          <View style={styles.menuButton}>
-            <Text style={styles.menuButtonTitle}>
-              •••
-            </Text>
-          </View>
-        </TouchableHighlight>
+        <FollowButton
+          onPress={onPress}
+          style={styles.followButton}
+          isFollowing={this.state.isFollowing}
+          handleFollowButton={handleFollowButton}
+        />
       </View>
     );
   }
@@ -42,8 +79,8 @@ class Profile extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    paddingTop: 24,
-    paddingBottom: 36,
+    paddingTop: 16,
+    paddingBottom: 16,
     paddingLeft: 16,
     paddingRight: 16,
   },
@@ -85,6 +122,13 @@ const styles = StyleSheet.create({
     color: '#DB4D5E',
     alignSelf: 'center',
     fontSize: 8,
+  },
+  followButton: {
+    position: 'absolute',
+    right: 16,
+    // height: 30,
+    alignSelf: 'flex-start',
+    marginTop: 16,
   },
 });
 

@@ -8,8 +8,8 @@ import BackgroundImage from '../../assets/splash.png';
 import ENV from '../../env.json';
 
 class Login extends React.Component {
-  logInTest = () => {
-    const testEmail = 'testuser@example.com';
+  logInTest = (testEmail) => {
+    // const testEmail = 'testuser@example.com';
     const testPassword = 'testuser';
 
     firebase.auth().signInWithEmailAndPassword(testEmail, testPassword)
@@ -77,7 +77,7 @@ class Login extends React.Component {
         db.collection('users').doc(user.uid).set({
           name: user.displayName,
           facebookId: user.providerData[0].uid,
-          phoneNumber: user.phoneNumber && user.phoneNumber,
+          phoneNumber: user.phoneNumber,
           photoURL: `${user.photoURL}?type=normal`,
           desc: '',
         })
@@ -97,7 +97,7 @@ class Login extends React.Component {
       await AsyncStorage.setItem('uid', uid);
       await AsyncStorage.setItem('photoURL', photoURL);
     } catch (error) {
-      // Error saving data
+      console.error('Error writing document: ', error);
     }
   }
 
@@ -121,11 +121,18 @@ class Login extends React.Component {
             onPress={this.logInWithFacebook}
           />
           <SocialIcon
-            title="テストユーザーでログイン"
+            title="テストユーザー1でログイン"
             button
             type="facebook"
             raised
-            onPress={this.logInTest}
+            onPress={() => { this.logInTest('testuser@example.com'); }}
+          />
+          <SocialIcon
+            title="テストユーザー2でログイン"
+            button
+            type="facebook"
+            raised
+            onPress={() => { this.logInTest('testuser2@example.com'); }}
           />
         </View>
       </View>

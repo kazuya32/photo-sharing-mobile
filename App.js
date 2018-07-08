@@ -8,13 +8,13 @@ import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import Login from './src/screens/Login.js';
-import Feed from './src/screens/Feed.js';
+import Home from './src/screens/Home.js';
 import TeamFeed from './src/screens/TeamFeed.js';
 import MatchFeed from './src/screens/MatchFeed.js';
 import Nortification from './src/screens/Nortification.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
 import Request from './src/screens/Request.js';
-import MyPageFun from './src/screens/MyPageFun.js';
+import UserPage from './src/screens/UserPage.js';
 import EditProfile from './src/screens/EditProfile.js';
 import Signature from './src/screens/Signature.js';
 import PhotoPicker from './src/screens/PhotoPicker.js';
@@ -83,11 +83,11 @@ firebase.auth().onAuthStateChanged(async (user) => {
 });
 
 const HomeStack = createStackNavigator({
-  Home: { screen: Feed },
+  Home: { screen: Home },
   TeamFeed: { screen: TeamFeed },
   MatchFeed: { screen: MatchFeed },
   Nortification: { screen: Nortification },
-  MyPageFun: { screen: MyPageFun },
+  UserPage: { screen: UserPage },
   EditProfile: { screen: EditProfile },
   PhotoDetail: { screen: PhotoDetail },
   Request: { screen: Request },
@@ -152,7 +152,7 @@ const UploadStack = createStackNavigator({
   SearchTag: { screen: SearchTag },
   SearchMatch: { screen: SearchMatch },
   Signature: { screen: Signature },
-  MyPageFun: { screen: MyPageFun },
+  UserPage: { screen: UserPage },
   EditProfile: { screen: EditProfile },
   Nortification: { screen: Nortification },
 }, {
@@ -162,8 +162,8 @@ const UploadStack = createStackNavigator({
 const MatchStack = createStackNavigator({
   Schedule: { screen: Schedule },
   Match: { screen: Match },
-  Feed: { screen: Feed },
-  MyPageFun: { screen: MyPageFun },
+  Home: { screen: Home },
+  UserPage: { screen: UserPage },
   EditProfile: { screen: EditProfile },
   Nortification: { screen: Nortification },
 }, {
@@ -173,7 +173,7 @@ const MatchStack = createStackNavigator({
 const TeamStack = createStackNavigator({
   Team: { screen: Team },
   TeamFeed: { screen: TeamFeed },
-  MyPageFun: { screen: MyPageFun },
+  UserPage: { screen: UserPage },
   EditProfile: { screen: EditProfile },
   Nortification: { screen: Nortification },
 }, {
@@ -182,7 +182,7 @@ const TeamStack = createStackNavigator({
 
 const PlayerStack = createStackNavigator({
   UserSearch: { screen: UserSearch },
-  MyPageFun: { screen: MyPageFun },
+  UserPage: { screen: UserPage },
   EditProfile: { screen: EditProfile },
   Nortification: { screen: Nortification },
 }, {

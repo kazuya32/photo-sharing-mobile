@@ -1,21 +1,47 @@
 import React from 'react';
-import { TouchableHighlight } from 'react-native';
-
+import { View, StyleSheet, TouchableHighlight } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import UserIcon from './UserIcon.js';
 
 class HeaderRightButton extends React.Component {
   render() {
-    const { onPress } = this.props;
+    const { onPress, photoURL, onPressIcon } = this.props;
 
     return (
-      <TouchableHighlight
-        onPress={onPress}
-        underlayColor="transparent"
-      >
-        <MaterialCommunityIcon name="bell-outline" size={24} />
-      </TouchableHighlight>
+      <View style={styles.container}>
+        <TouchableHighlight
+          onPress={onPress}
+          underlayColor="transparent"
+          style={styles.nortification}
+        >
+          <MaterialCommunityIcon
+            name="bell-outline"
+            size={28}
+            style={styles.icon}
+          />
+        </TouchableHighlight>
+        <UserIcon
+          onPress={onPressIcon}
+          photoURL={photoURL}
+          dia={32}
+        />
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  nortification: {
+    marginRight: 4,
+  },
+  icon: {
+    alignSelf: 'center',
+  },
+});
 
 export default HeaderRightButton;

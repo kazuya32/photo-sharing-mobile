@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  Alert,
   Dimensions,
 } from 'react-native';
 
@@ -24,18 +23,27 @@ class LoginScreen extends React.Component {
     });
   }
 
+  onPressUser = (item) => {
+    this.props.navigation.navigate({
+      routeName: 'UserPage',
+      params: {
+        user: item,
+      },
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="FLEGO"
         />
         <ScrollView>
           <PhotoTile
             photo={this.props.navigation.state.params.photo}
-            onPressUser={this.onPressTest}
+            onPressUser={this.onPressUser}
             photoStyle={styles.photo}
             // uid={this.props.navigation.state.params.uid}
           />

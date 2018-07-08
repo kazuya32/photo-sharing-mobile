@@ -10,10 +10,11 @@ import PhotoFeed from '../components/PhotoFeed.js';
 import Header from '../components/Header.js';
 import UploadButton from '../elements/UploadButton.js';
 
-class Feed extends React.Component {
+class Home extends React.Component {
   state = {
     headerTitle: 'FLEGO',
-    feedType: 'home',
+    // feedType: 'home',
+    logInUser: null,
   }
 
   // componentWillMount() {
@@ -22,6 +23,45 @@ class Feed extends React.Component {
   //     this.setState({ feedType, itemId });
   //   }
   // }
+  componentWillMount() {
+    this.fetchData();
+  }
+
+  fetchData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('uid');
+      this.setState({ uid: value });
+      this.fetchLogInUser();
+
+    } catch (error) {
+    //
+    }
+  }
+
+  fetchLogInUser = () => {
+    const db = firebase.firestore();
+    const userRef = db.collection('users').doc(this.state.uid);
+    userRef.onSnapshot((doc) => {
+      const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
+      console.log(source, ' data: ', doc.data());
+      const logInUser = {
+        id: doc.id,
+        data: doc.data(),
+      };
+      this.setState({ logInUser });
+      // if (this.state.isMyPage) {
+      //   this.storeUserPhoto(user.photoURL);
+      // }
+    });
+  }
+
+  storeUserPhoto = async (photoURL) => {
+    try {
+      await AsyncStorage.setItem('photoURL', photoURL);
+    } catch (error) {
+      // Error saving data
+    }
+  }
 
   onPressPhoto = (item) => {
     this.props.navigation.navigate({
@@ -32,8 +72,16 @@ class Feed extends React.Component {
     });
   }
 
-  onPressUser = () => {
-    Alert.alert('Pressed');
+  onPressUser = (item) => {
+    this.props.navigation.navigate({
+      routeName: 'UserPage',
+      params: {
+        uid: item,
+        logInUser: this.state.logInUser,
+        // user: item,
+      },
+      key: 'UserPage' + item,
+    });
   }
 
   onPressMatch = (item) => {
@@ -71,14 +119,24 @@ class Feed extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressLeft={() => {
+            this.props.navigation.navigate({
+              routeName: 'UserPage',
+              params: {
+                logInUser: this.state.logInUser,
+                // user: item,
+              },
+              key: 'UserPage' + this.state.uid,
+            });
+          }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle={this.state.headerTitle}
         />
         <PhotoFeed
-          feedType={this.state.feedType}
+          feedType="home"
+          // feedType={this.state.feedType}
           itemId={this.state.itemId}
-          onPressUser={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
+          onPressUser={this.onPressUser}
           onPressPhoto={this.onPressPhoto}
           onPressMatch={this.onPressMatch}
           onPressTeam={this.onPressTeam}
@@ -101,4 +159,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Feed;
+export default Home;

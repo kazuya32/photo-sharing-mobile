@@ -140,7 +140,10 @@ class PhotoTile extends React.Component {
             <Text style={styles.userBy}>
               by
             </Text>
-            <TouchableHighlight onPress={onPressUser} underlayColor="transparent">
+            <TouchableHighlight
+              onPress={() => { this.props.onPressUser(this.state.user.id); }}
+              underlayColor="transparent"
+            >
               <Text style={styles.userName}>
                 {this.state.user.data.name}
               </Text>

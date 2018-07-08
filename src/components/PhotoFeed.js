@@ -152,6 +152,7 @@ class Feed extends React.Component {
     <PhotoTile
       photo={item}
       onPressPhoto={() => { this.props.onPressPhoto(item); }}
+      // onPressUser={() => { this.props.onPressUser(item.data.uid); }}
       onPressUser={this.props.onPressUser}
       onPressMatch={() => { this.props.onPressMatch(item); }}
       onPressTeam={() => { this.props.onPressTeam(item); }}

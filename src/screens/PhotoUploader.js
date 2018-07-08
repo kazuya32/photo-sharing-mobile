@@ -138,11 +138,11 @@ class PhotoUploader extends React.Component {
       likes: 0,
     })
       .then(() => {
-        this.props.navigation.navigate({ routeName: 'MyPageFun' });
+        this.props.navigation.navigate({ routeName: 'UserPage' });
       })
       .catch((error) => {
         console.error('Error writing document: ', error);
-        this.props.navigation.navigate({ routeName: 'MyPageFun' });
+        this.props.navigation.navigate({ routeName: 'UserPage' });
       });
   }
 

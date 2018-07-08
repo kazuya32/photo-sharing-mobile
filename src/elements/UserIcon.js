@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, TouchableHighlight, Image } from 'react-native';
 
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+
 class SendButton extends React.Component {
   render() {
     const {
@@ -9,6 +11,17 @@ class SendButton extends React.Component {
       dia,
       style,
     } = this.props;
+
+    if (!photoURL) {
+      return (
+        <TouchableHighlight
+          onPress={onPress}
+          underlayColor="transparent"
+        >
+          <FontAwesomeIcon name="user-circle-o" size={24} />
+        </TouchableHighlight>
+      );
+    }
 
     return (
       <TouchableHighlight style={[styles.profilePhoto, { width: dia, height: dia, borderRadius: dia * 0.5 }, style]} onPress={onPress} underlayColor="transparent">
