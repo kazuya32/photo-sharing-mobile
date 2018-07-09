@@ -13,6 +13,7 @@ class PhotoPicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     };
   }
 
@@ -44,7 +45,10 @@ class PhotoPicker extends React.Component {
     } else {
       this.props.navigation.navigate({
         routeName: 'PhotoUploader',
-        params: { image: result },
+        params: {
+          image: result,
+          logInUser: this.state.logInUser,
+        },
       });
     }
   };

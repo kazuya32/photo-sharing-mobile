@@ -38,7 +38,7 @@ class PhotoCollection extends React.Component {
 
 
   render() {
-    if (!this.state.photos) {
+    if (!this.state.photos || !this.state.photos.length) {
       return (
         <Text style={styles.alert}>
            投稿画像はありません.

@@ -11,14 +11,17 @@ import PhotoTile from '../components/PhotoTile';
 import Header from '../components/Header.js';
 
 class LoginScreen extends React.Component {
-  state = {}
+  state = {
+    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
+  }
 
   onPress = () => {
     // Alert.alert('ダウンロードリクエストを送信しました。');
     this.props.navigation.navigate({
-      routeName: 'Request',
+      routeName: 'SendRequest',
       params: {
         photo: this.props.navigation.state.params.photo,
+        logInUser: this.state.logInUser,
       },
     });
   }
@@ -28,7 +31,9 @@ class LoginScreen extends React.Component {
       routeName: 'UserPage',
       params: {
         user: item,
+        logInUser: this.state.logInUser,
       },
+      key: 'UserPage' + item.id,
     });
   }
 
@@ -49,7 +54,10 @@ class LoginScreen extends React.Component {
           />
           <SendButton
             onPress={this.onPress}
-            style={styles.reqBtn}
+            style={[
+              styles.reqBtn,
+              (this.props.navigation.state.params.photo.data.uid === this.state.logInUser.id) && { display: 'none' },
+            ]}
             textStyle={styles.btnTitle}
           >
             ダウンロードリクエスト

@@ -14,12 +14,16 @@ import firebase from 'firebase';
 
 import Header from '../components/Header.js';
 import SendButton from '../elements/SendButton';
+import SaveButton from '../elements/SaveButton.js';
+import CancelButton from '../elements/CancelButton.js';
 
-class PhotoUploader extends React.Component {
+class SendRequest extends React.Component {
   state = {
+    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     headerTitle: 'リクエスト',
     placeholder: '  メッセージを伝えましょう！（任意）',
     maxLength: 200,
+    isUploading: false,
   }
 
   componentWillMount() {
@@ -37,9 +41,32 @@ class PhotoUploader extends React.Component {
     });
   }
 
-
-  onPress = () => {
-    Alert.alert('この機能はまだ利用できません。');
+  uploadRequest = () => {
+    if (!this.state.isUploading) {
+      this.setState({ isUploading: true });
+      const db = firebase.firestore();
+      db.collection('requests').doc().set({
+        from: this.state.logInUser.id,
+        to: this.state.user.id,
+        photoId: this.props.navigation.state.params.photo.id,
+        message: this.state.text,
+      })
+        .then(() => {
+          Alert.alert('ダウンロードリクエストを送信しました。');
+          this.setState({ isUploading: false });
+          this.props.navigation.navigate({
+            routeName: 'Home',
+            params: {
+              uid: this.state.logInUser.id,
+              // user: item,
+            },
+            key: 'Home' + this.state.logInUser.id,
+          });
+        })
+        .catch((error) => {
+          console.error('Error writing document: ', error);
+        });
+    }
   }
 
 
@@ -87,14 +114,15 @@ class PhotoUploader extends React.Component {
             maxLength={this.state.maxLength}
             placeholder={this.state.placeholder}
           />
-          <SendButton
-            onPress={this.onPress}
-            style={styles.btn}
-            textStyle={styles.btnTitle}
-          >
-            送信
-          </SendButton>
         </ScrollView>
+        <View style={styles.footer}>
+          <CancelButton onPress={() => { this.props.navigation.goBack(); }}>
+            キャンセル
+          </CancelButton>
+          <SaveButton onPress={this.uploadRequest} shadow >
+            送信
+          </SaveButton>
+        </View>
       </View>
     );
   }
@@ -140,7 +168,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
   },
+  footer: {
+    // position: 'absolute',
+    width: '100%',
+    borderTopWidth: 1,
+    borderColor: '#C4C4C4',
+    // paddingTop: 20,
+    paddingBottom: 20,
+    paddingRight: 20,
+    paddingLeft: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    bottom: 0,
+    height: 80,
+  },
 
 });
 
-export default PhotoUploader;
+export default SendRequest;

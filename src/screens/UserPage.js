@@ -29,26 +29,20 @@ class UserPage extends React.Component {
     this.fetchData();
   }
 
+  // eslint-disable-next-line
   fetchData = async () => {
     try {
       const value = await AsyncStorage.getItem('uid');
-      // this.setState({ logInUid: value });
-      // const user = this.props.navigation.state.params && this.props.navigation.state.params.user;
       const uid = this.state.uid || value;
-      // const userId = user && user.id;
-      // const uid = user ? user.id : value;
       const isMyPage = (value === uid);
       this.setState({ uid, isMyPage, logInUid: value });
 
-      console.log('value');
-      console.log(value);
-      console.log('isMyPage');
-      console.log(this.state.isMyPage);
-      console.log('uid');
-      console.log(uid);
-
       this.fetchUser();
       this.fetchPhotos();
+
+      if (isMyPage) {
+        this.fetchRequest();
+      }
 
       // if (this.state.isMyPage) {
       //   this.setState({ uid: this.props.navigation.state.params.user.id });
@@ -75,8 +69,8 @@ class UserPage extends React.Component {
         data: doc.data(),
       };
 
-      const followersArray = this.makeList(user.data.followers);
-      const followingArray = this.makeList(user.data.following);
+      const followersArray = this.makeListFromObject(user.data.followers);
+      const followingArray = this.makeListFromObject(user.data.following);
 
       this.setState({
         user,
@@ -87,22 +81,33 @@ class UserPage extends React.Component {
       // if (this.state.isMyPage) {
       //   this.storeUserPhoto(user.photoURL);
       // }
-      // if (!this.state.isMyPage) {
-      //   this.checkFollowing();
-      // }
     });
   }
 
-  // checkFollowing = () => {
-  //   const { followers } = this.state;
-  //   const isFollowing = (followers[this.state.logInUid]);
-  //   console.log('isFollowing');
-  //   console.log(isFollowing);
-  //   this.setState({ isFollowing });
-  // }
+  fetchRequest = () => {
+    console.log('requests');
+    const db = firebase.firestore();
+    const requestRef = db.collection('requests').where('to', '==', this.state.uid);
+
+    const requests = [];
+    requestRef.onSnapshot((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        requests.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+        console.log(requests);
+        this.setState({ requests });
+      });
+    });
+
+    if (!requests.length) {
+      this.setState({ requests });
+    }
+  }
 
   // eslint-disable-next-line
-  makeList = (obj) => {
+  makeListFromObject = (obj) => {
     // const count = 0;
     const array = [];
     Object.keys(obj).forEach((prop) => {
@@ -117,6 +122,7 @@ class UserPage extends React.Component {
   fetchPhotos = () => {
     const db = firebase.firestore();
     const maxResults = 30;
+    // eslint-disable-next-line
     // const photosRef = db.collection('photos').where('uid', '==', this.state.uid).orderBy('createdAt', 'desc').limit(maxResults);
     const photosRef = db.collection('photos').where('uid', '==', this.state.uid);
 
@@ -149,6 +155,19 @@ class UserPage extends React.Component {
         // user: item,
       },
       key: 'UserPage' + uid,
+    });
+  }
+
+  onPressRequest = () => {
+    console.log(this.state.requests);
+    this.props.navigation.navigate({
+      routeName: 'RequestList',
+      params: {
+        // uid,
+        logInUser: this.state.logInUser,
+        requests: this.state.requests,
+      },
+      // key: 'ViewRequest' + uid,
     });
   }
 
@@ -218,7 +237,15 @@ class UserPage extends React.Component {
   renderTabBar = () => <ScrollableTabBar style={styles.header} activeTab={styles.activeTab} />;
 
   render() {
-    if (!this.state.user) {
+    if (!(this.state.user && this.state.photos)) {
+      return (
+        <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
+    if (this.state.isMyPage && !this.state.requests) {
       return (
         <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
           <ActivityIndicator />
@@ -228,72 +255,6 @@ class UserPage extends React.Component {
 
     const followersTitle = `Followers ${this.state.followersArray && this.state.followersArray.length}`;
     const followingTitle = `Following ${this.state.followersArray && this.state.followingArray.length}`;
-
-    if (!this.state.photos) {
-    // if (this.state.photos && this.state.photos.length === 0) {
-      return (
-        <View style={styles.container}>
-          <Header
-            onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
-            onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
-            headerTitle="FLEGO"
-          />
-          <Profile
-            userName={this.state.user.data.name}
-            userDesc={this.state.user.data.desc}
-            photoURL={this.state.user.data.photoURL}
-            isMyPage={this.state.isMyPage}
-            isFollowing={this.state.isFollowing}
-            handleFollowButton={this.handleFollowButton}
-            onPress={() => {
-              this.props.navigation.navigate({
-                routeName: 'EditProfile',
-                params: {
-                  user: this.state.user,
-                  uid: this.state.uid,
-                },
-              });
-            }}
-          />
-          <ScrollableTabView
-            // renderTabBar={this.renderTabBar}
-            style={styles.header}
-            tabBarUnderlineStyle={styles.underline}
-            tabBarBackgroundColor="#fff"
-            tabBarActiveTextColor="#DB4D5E"
-            tabBarInactiveTextColor="black"
-            tabBarTextStyle={styles.tabBarText}
-            tabStyle={{ paddingBottom: 0 }}
-          >
-            <Text style={styles.alert} tabLabel="Posts" >
-               投稿画像はありません.
-            </Text>
-            <FollowingList
-              tabLabel={followersTitle}
-              navigation={this.props.navigation}
-              photos={this.state.photos}
-              followingArray={this.state.followersArray}
-              logInUser={this.state.logInUser}
-              logInUid={this.state.logInUid}
-              onPressUser={this.onPressUser}
-              // numColumns={3}
-              // horizontal={true}
-            />
-            <FollowingList
-              tabLabel={followingTitle}
-              navigation={this.props.navigation}
-              photos={this.state.photos}
-              followingArray={this.state.followingArray}
-              logInUser={this.state.logInUser}
-              logInUid={this.state.logInUid}
-              onPressUser={this.onPressUser}
-              // numColumns={3}
-              // horizontal={true}
-            />
-          </ScrollableTabView>
-        </View>
-      );
-    }
 
     return (
       <View style={styles.container}>
@@ -305,13 +266,16 @@ class UserPage extends React.Component {
           headerTitle="FLEGO"
         />
         <Profile
+          logInUid={this.state.logInUid}
+          requests={this.state.requests}
           userName={this.state.user.data.name}
           userDesc={this.state.user.data.desc}
           photoURL={this.state.user.data.photoURL}
           isMyPage={this.state.isMyPage}
           isFollowing={this.state.isFollowing}
           handleFollowButton={this.handleFollowButton}
-          onPress={() => {
+          onPressRequest={this.onPressRequest}
+          onPressEdit={() => {
             this.props.navigation.navigate({
               routeName: 'EditProfile',
               params: {

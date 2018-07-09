@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   Alert,
+  ScrollView,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -66,26 +67,28 @@ class EditProfile extends React.Component {
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="Edit Profile"
         />
-        <UserIcon
-          // onPress
-          photoURL={this.state.user.data.photoURL}
-          dia={80}
-          style={styles.icon}
-        />
-        <EditItem
-          onChangeText={this.onChangeTextName}
-          title="ユーザー名（最大20文字）"
-          maxLength={20}
-          value={this.state.name}
-          // style={styles.icon}
-        />
-        <EditItem
-          onChangeText={this.onChangeTextDesc}
-          title="自己紹介（最大200文字）"
-          value={this.state.desc}
-          maxLength={200}
-          // style={styles.icon}
-        />
+        <ScrollView>
+          <UserIcon
+            // onPress
+            photoURL={this.state.user.data.photoURL}
+            dia={80}
+            style={styles.icon}
+          />
+          <EditItem
+            onChangeText={this.onChangeTextName}
+            title="ユーザー名（最大20文字）"
+            maxLength={20}
+            value={this.state.name}
+            // style={styles.icon}
+          />
+          <EditItem
+            onChangeText={this.onChangeTextDesc}
+            title="自己紹介（最大200文字）"
+            value={this.state.desc}
+            maxLength={200}
+            // style={styles.icon}
+          />
+        </ScrollView>
         <View style={styles.footer}>
           <CancelButton onPress={this.onPressCancel}>
             キャンセル
@@ -103,7 +106,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 70,
+    paddingTop: 80,
   },
   icon: {
     left: 24,
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   footer: {
-    position: 'absolute',
+    // position: 'absolute',
     width: '100%',
     borderTopWidth: 1,
     borderColor: '#C4C4C4',

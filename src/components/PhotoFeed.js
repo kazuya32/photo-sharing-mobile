@@ -37,7 +37,7 @@ class Feed extends React.Component {
   // eslint-disable-next-line
   fetchPhotos = () => {
     const db = firebase.firestore();
-    const maxResults = 5;
+    const maxResults = 2;
 
     let photosRef;
 

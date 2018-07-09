@@ -4,7 +4,7 @@ import {
   View,
   Text,
   TouchableHighlight,
-  AsyncStorage,
+  ActivityIndicator,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -102,7 +102,9 @@ class UserTile extends React.Component {
 
     if (!this.state.user) {
       return (
-        <View />
+        <View style={{ flex: 1, height:30, alignSelf: 'center' }}>
+          <ActivityIndicator />
+        </View>
       );
     }
 

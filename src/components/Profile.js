@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
+import firebase from 'firebase';
 
 import UserIcon from '../elements/UserIcon.js';
 import EditButton from '../elements/EditButton.js';
@@ -11,13 +12,38 @@ class Profile extends React.Component {
     isMyPage: this.props.isMyPage,
     isFollowing: this.props.isFollowing,
   }
+
+  // componentWillMount() {
+  //   if (this.state.isMyPage) {
+  //     this.fetchRequest();
+  //   }
+  // }
+
+  // fetchRequest = () => {
+  //   const db = firebase.firestore();
+  //   const requestRef = db.collection('request').where('to', '==', this.props.logInUid);
+  //
+  //   const requests = [];
+  //   requestRef.onSnapshot((querySnapshot) => {
+  //     querySnapshot.forEach((doc) => {
+  //       requests.push({
+  //         id: doc.id,
+  //         data: doc.data(),
+  //       });
+  //       this.setState({ requests });
+  //     });
+  //   });
+  // }
+
   render() {
     const {
-      onPress,
+      onPressEdit,
+      onPressRequest,
       userName,
       userDesc,
       photoURL,
       handleFollowButton,
+      requests,
       // isFollowing,
     } = this.props;
 
@@ -42,12 +68,12 @@ class Profile extends React.Component {
           </View>
           <RequestButton
             style={styles.requestButton}
-            onPress={onPress}
-            hasRequest
+            onPress={onPressRequest}
+            hasRequest={requests && requests.length}
           />
           <EditButton
             style={styles.editButton}
-            onPress={onPress}
+            onPress={onPressEdit}
           />
         </View>
       );

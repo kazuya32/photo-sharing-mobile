@@ -3,12 +3,24 @@ import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 
 class SaveButton extends React.Component {
   render() {
-    const { onPress, style, textStyle } = this.props;
+    const {
+      onPress,
+      style,
+      buttonStyle,
+      textStyle,
+      shadow,
+    } = this.props;
 
     return (
       <TouchableHighlight style={[styles.container, style]} onPress={onPress} underlayColor="transparent">
-        <View style={styles.sendButton}>
-          <Text style={[styles.sendButtonTitle, textStyle]}>
+        <View style={[styles.sendButton, buttonStyle]}>
+          <Text
+            style={[
+              styles.sendButtonTitle,
+              shadow && styles.shadow,
+              textStyle,
+            ]}
+          >
             {this.props.children}
           </Text>
         </View>
@@ -29,10 +41,12 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingRight: 16,
     paddingLeft: 16,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.2,
-    // shadowRadius: 3,
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   sendButtonTitle: {
     color: '#fff',

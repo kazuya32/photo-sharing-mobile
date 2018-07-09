@@ -13,9 +13,11 @@ import TeamFeed from './src/screens/TeamFeed.js';
 import MatchFeed from './src/screens/MatchFeed.js';
 import Nortification from './src/screens/Nortification.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
-import Request from './src/screens/Request.js';
+import SendRequest from './src/screens/SendRequest.js';
 import UserPage from './src/screens/UserPage.js';
 import EditProfile from './src/screens/EditProfile.js';
+import RequestList from './src/screens/RequestList.js';
+import ViewRequest from './src/screens/ViewRequest.js';
 import Signature from './src/screens/Signature.js';
 import PhotoPicker from './src/screens/PhotoPicker.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
@@ -90,7 +92,9 @@ const HomeStack = createStackNavigator({
   UserPage: { screen: UserPage },
   EditProfile: { screen: EditProfile },
   PhotoDetail: { screen: PhotoDetail },
-  Request: { screen: Request },
+  SendRequest: { screen: SendRequest },
+  RequestList: { screen: RequestList },
+  ViewRequest: { screen: ViewRequest },
   Signature: { screen: Signature },
   PhotoPicker: { screen: PhotoPicker },
   PhotoUploader: { screen: PhotoUploader },

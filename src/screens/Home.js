@@ -6,6 +6,7 @@ import {
   AsyncStorage,
 } from 'react-native';
 import { Constants } from 'expo';
+import firebase from 'firebase';
 
 import PhotoFeed from '../components/PhotoFeed.js';
 import Header from '../components/Header.js';
@@ -32,16 +33,16 @@ class Home extends React.Component {
     try {
       const value = await AsyncStorage.getItem('uid');
       this.setState({ uid: value });
-      this.fetchLogInUser();
+      this.fetchLogInUser(value);
 
     } catch (error) {
     //
     }
   }
 
-  fetchLogInUser = () => {
+  fetchLogInUser = (uid) => {
     const db = firebase.firestore();
-    const userRef = db.collection('users').doc(this.state.uid);
+    const userRef = db.collection('users').doc(uid);
     userRef.onSnapshot((doc) => {
       const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
       console.log(source, ' data: ', doc.data());
@@ -69,6 +70,7 @@ class Home extends React.Component {
       routeName: 'PhotoDetail',
       params: {
         photo: item,
+        logInUser: this.state.logInUser,
       },
     });
   }
@@ -96,6 +98,7 @@ class Home extends React.Component {
         feedType: 'match',
         itemId: item.data.matchId,
         matchPath: item.data.matchPath,
+        logInUser: this.state.logInUser,
       },
     });
   }
@@ -153,7 +156,15 @@ class Home extends React.Component {
           // scheduleId={scheduleId}
         />
         <UploadButton
-          onPress={() => { this.props.navigation.navigate({ routeName: 'PhotoPicker' }); }}
+          onPress={() => {
+            this.props.navigation.navigate({
+              routeName: 'PhotoPicker',
+              params: {
+                logInUser: this.state.logInUser,
+                // user: item,
+              },
+            });
+          }}
         />
       </View>
     );
