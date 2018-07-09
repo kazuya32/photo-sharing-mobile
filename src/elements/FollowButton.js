@@ -14,8 +14,8 @@ class SendButton extends React.Component {
 
   render() {
     const {
-      onPress,
       style,
+      buttonStyle,
       textStyle,
       // isFollowing,
     } = this.props;
@@ -31,6 +31,7 @@ class SendButton extends React.Component {
           style={[
             styles.button,
             this.state.isFollowing && styles.followingButton,
+            buttonStyle,
           ]}
         >
           <Text
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     alignItems: 'center',
-    alignContent: 'center',
+    justifyContent: 'center',
     width: 88,
     height: 28,
     borderColor: '#DB4D5E',

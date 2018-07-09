@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 
 import UserIcon from '../elements/UserIcon.js';
+import EditButton from '../elements/EditButton.js';
+import RequestButton from '../elements/RequestButton.js';
 import FollowButton from '../elements/FollowButton.js';
 
 class Profile extends React.Component {
@@ -38,17 +40,18 @@ class Profile extends React.Component {
               {userDesc}
             </Text>
           </View>
-          <TouchableHighlight style={styles.buttonContainer} onPress={onPress} underlayColor="transparent">
-            <View style={styles.menuButton}>
-              <Text style={styles.menuButtonTitle}>
-                •••
-              </Text>
-            </View>
-          </TouchableHighlight>
+          <RequestButton
+            style={styles.requestButton}
+            onPress={onPress}
+            hasRequest
+          />
+          <EditButton
+            style={styles.editButton}
+            onPress={onPress}
+          />
         </View>
       );
     }
-
 
     return (
       <View style={styles.container}>
@@ -66,7 +69,6 @@ class Profile extends React.Component {
           </Text>
         </View>
         <FollowButton
-          onPress={onPress}
           style={styles.followButton}
           isFollowing={this.state.isFollowing}
           handleFollowButton={handleFollowButton}
@@ -99,29 +101,17 @@ const styles = StyleSheet.create({
     // flex: 1,
     fontSize: 14,
   },
-  buttonContainer: {
+  editButton: {
     position: 'absolute',
     right: 16,
     // height: 30,
     alignSelf: 'center',
   },
-  menuButton: {
-    backgroundColor: '#fff',
-    borderRadius: 18,
-    height: 30,
-    width: 30,
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: '#DB4D5E',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-  },
-  menuButtonTitle: {
-    color: '#DB4D5E',
+  requestButton: {
+    position: 'absolute',
+    right: 68,
+    // height: 30,
     alignSelf: 'center',
-    fontSize: 8,
   },
   followButton: {
     position: 'absolute',

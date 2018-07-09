@@ -12,19 +12,27 @@ class SendButton extends React.Component {
       style,
     } = this.props;
 
-    if (!photoURL) {
-      return (
-        <TouchableHighlight
-          onPress={onPress}
-          underlayColor="transparent"
-        >
-          <FontAwesomeIcon name="user-circle-o" size={24} />
-        </TouchableHighlight>
-      );
-    }
+    // if (!photoURL) {
+    //   return (
+    //     <TouchableHighlight
+    //       onPress={onPress}
+    //       underlayColor="transparent"
+    //     >
+    //       <FontAwesomeIcon name="user-circle-o" size={dia} />
+    //     </TouchableHighlight>
+    //   );
+    // }
 
     return (
-      <TouchableHighlight style={[styles.profilePhoto, { width: dia, height: dia, borderRadius: dia * 0.5 }, style]} onPress={onPress} underlayColor="transparent">
+      <TouchableHighlight
+        style={[
+          styles.profilePhoto,
+          { width: dia, height: dia, borderRadius: dia * 0.5 },
+          style,
+        ]}
+        onPress={onPress}
+        underlayColor="transparent"
+      >
         <Image
           style={[styles.photo, { width: dia, height: dia, borderRadius: dia * 0.5 }]}
           source={{ uri: photoURL }}

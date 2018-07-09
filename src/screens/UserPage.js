@@ -15,11 +15,12 @@ import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab
 import Profile from '../components/Profile.js';
 import Header from '../components/Header.js';
 import PhotoCollection from '../components/PhotoCollection.js';
+import FollowingList from '../components/FollowingList.js';
 
 class UserPage extends React.Component {
   state = {
     uid: this.props.navigation.state.params && this.props.navigation.state.params.uid,
-    isMyPage: null,
+    // isMyPage: null,
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     // uid:
   }
@@ -31,13 +32,13 @@ class UserPage extends React.Component {
   fetchData = async () => {
     try {
       const value = await AsyncStorage.getItem('uid');
-      // this.setState({ myUid: value });
+      // this.setState({ logInUid: value });
       // const user = this.props.navigation.state.params && this.props.navigation.state.params.user;
       const uid = this.state.uid || value;
       // const userId = user && user.id;
       // const uid = user ? user.id : value;
       const isMyPage = (value === uid);
-      this.setState({ uid, isMyPage, myUid: value });
+      this.setState({ uid, isMyPage, logInUid: value });
 
       console.log('value');
       console.log(value);
@@ -73,11 +74,15 @@ class UserPage extends React.Component {
         id: doc.id,
         data: doc.data(),
       };
+
+      const followersArray = this.makeList(user.data.followers);
+      const followingArray = this.makeList(user.data.following);
+
       this.setState({
         user,
-        followers: user.data.followers,
-        following: user.data.following,
-        isFollowing: !this.state.isMyPage && user.data.followers[this.state.myUid],
+        followersArray,
+        followingArray,
+        isFollowing: !this.state.isMyPage && user.data.followers[this.state.logInUid],
       });
       // if (this.state.isMyPage) {
       //   this.storeUserPhoto(user.photoURL);
@@ -90,11 +95,23 @@ class UserPage extends React.Component {
 
   // checkFollowing = () => {
   //   const { followers } = this.state;
-  //   const isFollowing = (followers[this.state.myUid]);
+  //   const isFollowing = (followers[this.state.logInUid]);
   //   console.log('isFollowing');
   //   console.log(isFollowing);
   //   this.setState({ isFollowing });
   // }
+
+  // eslint-disable-next-line
+  makeList = (obj) => {
+    // const count = 0;
+    const array = [];
+    Object.keys(obj).forEach((prop) => {
+      if (obj[prop]) {
+        array.push(prop);
+      }
+    });
+    return array;
+  };
 
   // eslint-disable-next-line
   fetchPhotos = () => {
@@ -123,11 +140,24 @@ class UserPage extends React.Component {
     }
   }
 
+  onPressUser = (uid) => {
+    this.props.navigation.navigate({
+      routeName: 'UserPage',
+      params: {
+        uid,
+        logInUser: this.state.logInUser,
+        // user: item,
+      },
+      key: 'UserPage' + uid,
+    });
+  }
+
+
   handleFollowButton = (nextValue) => {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(this.state.uid);
     userRef.update({
-      [`followers.${this.state.myUid}`]: nextValue,
+      [`followers.${this.state.logInUid}`]: nextValue,
     })
       .then(() => {
         // eslint-disable-next-line
@@ -138,9 +168,9 @@ class UserPage extends React.Component {
         console.error('Error updating document: ', error);
       });
 
-    const logInUserRef = db.collection('users').doc(this.state.myUid);
+    const logInUserRef = db.collection('users').doc(this.state.logInUid);
     logInUserRef.update({
-      [`following.${this.state.myUid}`]: nextValue,
+      [`following.${this.state.uid}`]: nextValue,
     })
       .then(() => {
         // eslint-disable-next-line
@@ -156,10 +186,10 @@ class UserPage extends React.Component {
     this.props.navigation.navigate({
       routeName: 'UserPage',
       params: {
-        uid: this.state.myUid,
+        uid: this.state.logInUid,
         // user: item,
       },
-      key: 'UserPage' + this.state.myUid,
+      key: 'UserPage' + this.state.logInUid,
     });
   }
 
@@ -196,6 +226,9 @@ class UserPage extends React.Component {
       );
     }
 
+    const followersTitle = `Followers ${this.state.followersArray && this.state.followersArray.length}`;
+    const followingTitle = `Following ${this.state.followersArray && this.state.followingArray.length}`;
+
     if (!this.state.photos) {
     // if (this.state.photos && this.state.photos.length === 0) {
       return (
@@ -228,24 +261,32 @@ class UserPage extends React.Component {
             tabBarUnderlineStyle={styles.underline}
             tabBarBackgroundColor="#fff"
             tabBarActiveTextColor="#DB4D5E"
-            tabBarInactiveTextColor="#DB4D5E"
+            tabBarInactiveTextColor="black"
             tabBarTextStyle={styles.tabBarText}
             tabStyle={{ paddingBottom: 0 }}
           >
             <Text style={styles.alert} tabLabel="Posts" >
                投稿画像はありません.
             </Text>
-            <PhotoCollection
-              tabLabel="Followers"
+            <FollowingList
+              tabLabel={followersTitle}
               navigation={this.props.navigation}
               photos={this.state.photos}
+              followingArray={this.state.followersArray}
+              logInUser={this.state.logInUser}
+              logInUid={this.state.logInUid}
+              onPressUser={this.onPressUser}
               // numColumns={3}
               // horizontal={true}
             />
-            <PhotoCollection
-              tabLabel="Following"
+            <FollowingList
+              tabLabel={followingTitle}
               navigation={this.props.navigation}
               photos={this.state.photos}
+              followingArray={this.state.followingArray}
+              logInUser={this.state.logInUser}
+              logInUid={this.state.logInUid}
+              onPressUser={this.onPressUser}
               // numColumns={3}
               // horizontal={true}
             />
@@ -259,7 +300,7 @@ class UserPage extends React.Component {
         <Header
           // onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
           onPressLeft={this.navigateToMyPage}
-          // onPressLeft={() => { this.setState({ uid: this.state.myUid }); }}
+          // onPressLeft={() => { this.setState({ uid: this.state.logInUid }); }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="FLEGO"
         />
@@ -286,7 +327,7 @@ class UserPage extends React.Component {
           tabBarUnderlineStyle={styles.underline}
           tabBarBackgroundColor="#fff"
           tabBarActiveTextColor="#DB4D5E"
-          tabBarInactiveTextColor="#DB4D5E"
+          tabBarInactiveTextColor="black"
           tabBarTextStyle={styles.tabBarText}
           tabStyle={{ paddingBottom: 0 }}
         >
@@ -297,17 +338,25 @@ class UserPage extends React.Component {
             // numColumns={3}
             // horizontal={true}
           />
-          <PhotoCollection
-            tabLabel="Followers"
+          <FollowingList
+            tabLabel={followersTitle}
             navigation={this.props.navigation}
             photos={this.state.photos}
+            followingArray={this.state.followersArray}
+            logInUser={this.state.logInUser}
+            logInUid={this.state.logInUid}
+            onPressUser={this.onPressUser}
             // numColumns={3}
             // horizontal={true}
           />
-          <PhotoCollection
-            tabLabel="Following"
+          <FollowingList
+            tabLabel={followingTitle}
             navigation={this.props.navigation}
             photos={this.state.photos}
+            followingArray={this.state.followingArray}
+            logInUser={this.state.logInUser}
+            logInUid={this.state.logInUid}
+            onPressUser={this.onPressUser}
             // numColumns={3}
             // horizontal={true}
           />
@@ -343,7 +392,7 @@ const styles = StyleSheet.create({
     // borderBottomColor: '#272C35',
   },
   underline: {
-    backgroundColor: '#fff',
+    backgroundColor: '#DB4D5E',
     borderWidth: 0,
     // height: 0,
     // borderBottomColor: '#DB4D5E',

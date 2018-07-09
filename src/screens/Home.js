@@ -2,7 +2,8 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Alert,
+  Text,
+  AsyncStorage,
 } from 'react-native';
 import { Constants } from 'expo';
 
@@ -14,7 +15,7 @@ class Home extends React.Component {
   state = {
     headerTitle: 'FLEGO',
     // feedType: 'home',
-    logInUser: null,
+    // logInUser: null,
   }
 
   // componentWillMount() {
@@ -115,6 +116,14 @@ class Home extends React.Component {
 
   render() {
     console.log(Constants.statusBarHeight);
+
+    // if (!this.state.logInUser) {
+    //   return (
+    //     <Text style={{ flex: 1, padding: 20, alignSelf: 'center' }}>
+    //       ログイン中・・・
+    //     </Text>
+    //   );
+    // }
 
     return (
       <View style={styles.container}>

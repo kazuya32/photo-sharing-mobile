@@ -14,12 +14,15 @@ class Login extends React.Component {
 
     firebase.auth().signInWithEmailAndPassword(testEmail, testPassword)
       .then((user) => {
-        this.props.navigation.navigate('Home');
+        AsyncStorage.setItem('uid', user.uid);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
+      })
+      .then(() => {
+        this.props.navigation.navigate('Home');
       });
   }
 
@@ -80,6 +83,8 @@ class Login extends React.Component {
           phoneNumber: user.phoneNumber,
           photoURL: `${user.photoURL}?type=normal`,
           desc: '',
+          followers: {},
+          following: {},
         })
           .then(() => {
             this.storeUser(user.uid, `${user.photoURL}?type=normal`);
@@ -121,14 +126,14 @@ class Login extends React.Component {
             onPress={this.logInWithFacebook}
           />
           <SocialIcon
-            title="テストユーザー1でログイン"
+            title="ファンテストユーザー"
             button
             type="facebook"
             raised
             onPress={() => { this.logInTest('testuser@example.com'); }}
           />
           <SocialIcon
-            title="テストユーザー2でログイン"
+            title="アスリートテストユーザー"
             button
             type="facebook"
             raised

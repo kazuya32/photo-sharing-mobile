@@ -9,7 +9,7 @@ import firebase from 'firebase';
 import Header from '../components/Header.js';
 import UserIcon from '../elements/UserIcon.js';
 import EditItem from '../components/EditItem.js';
-import SendButton from '../elements/SendButton.js';
+import SaveButton from '../elements/SaveButton.js';
 import CancelButton from '../elements/CancelButton.js';
 
 class EditProfile extends React.Component {
@@ -25,8 +25,8 @@ class EditProfile extends React.Component {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(this.state.uid);
     userRef.update({
-      name: this.state.name,
-      desc: this.state.desc,
+      name: this.state.name || '',
+      desc: this.state.desc || '',
     })
       .then(() => {
         this.props.navigation.goBack();
@@ -90,9 +90,9 @@ class EditProfile extends React.Component {
           <CancelButton onPress={this.onPressCancel}>
             キャンセル
           </CancelButton>
-          <SendButton onPress={this.onPressSave}>
+          <SaveButton onPress={this.onPressSave}>
             保存
-          </SendButton>
+          </SaveButton>
         </View>
       </View>
     );
@@ -115,14 +115,14 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopWidth: 1,
     borderColor: '#C4C4C4',
-    paddingTop: 12,
-    paddingBottom: 12,
-    paddingRight: 16,
-    paddingLeft: 16,
+    // paddingTop: 20,
+    paddingBottom: 20,
+    paddingRight: 20,
+    paddingLeft: 20,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     bottom: 0,
-    height: 60,
+    height: 80,
   },
 });
 

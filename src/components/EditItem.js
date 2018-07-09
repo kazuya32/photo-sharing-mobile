@@ -39,8 +39,11 @@ class EditItem extends React.Component {
           style={styles.input}
           title={title}
           value={this.state.value}
-          onChangeText={(value) => { this.setState({ value }); }}
-          onBlur={() => { onChangeText(this.state.value); }}
+          onChangeText={(value) => {
+            this.setState({ value });
+            onChangeText(value);
+          }}
+          // onBlur={() => { onChangeText(this.state.value); }}
           autoCapitalize="none"
           autoCorrect={false}
           multiline={false}
@@ -61,12 +64,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingTop: 12,
     paddingBottom: 12,
-    color: '#C4C4C4',
+    color: '#AAAAAA',
   },
   input: {
     fontSize: 16,
     borderColor: '#808080',
-    color: '#808080',
+    // color: '#808080',
+    color: 'black',
     borderBottomWidth: 1,
     paddingBottom: 4,
   },
