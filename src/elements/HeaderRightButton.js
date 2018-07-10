@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     alignSelf: 'center',
+    display: 'none', // 通知機能未実装のために暫定処置
   },
 });
 

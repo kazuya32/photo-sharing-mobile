@@ -7,7 +7,6 @@ import {
   Image,
   ActivityIndicator,
   Dimensions,
-  Alert,
 } from 'react-native';
 import firebase from 'firebase';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +16,9 @@ import TagTile from '../components/TagTile.js';
 class PhotoTile extends React.Component {
   state = {
     stadium: null,
+    liked: this.props.photo.data.likes[this.props.uid],
+    // logInUser: this.props.logInUser,
+    uid: this.props.uid,
   }
 
   componentWillMount() {
@@ -24,6 +26,9 @@ class PhotoTile extends React.Component {
       photo,
     } = this.props;
     // this.setState({ photo });
+
+    const likes = this.makeListFromObject(photo.data.likes);
+    this.setState({ likes });
 
     this.getUser(photo.data.uid);
 
@@ -64,6 +69,18 @@ class PhotoTile extends React.Component {
     });
   }
 
+  // eslint-disable-next-line
+  makeListFromObject = (obj) => {
+    // const count = 0;
+    const array = [];
+    Object.keys(obj).forEach((prop) => {
+      if (obj[prop]) {
+        array.push(prop);
+      }
+    });
+    return array;
+  };
+
   // onPressMatch = () => {
   //   this.props.navigation.navigate({
   //     routeName: 'MatchFeed',
@@ -74,6 +91,40 @@ class PhotoTile extends React.Component {
   //     },
   //   });
   // }
+
+  handleLikeButton = (nextValue) => {
+    let { likes } = this.state;
+    if (nextValue) {
+      likes.push(this.state.uid);
+    } else {
+      likes = this.deletePropFromArray(likes, this.state.uid);
+    }
+
+    this.setState({ liked: nextValue, likes });
+
+    const db = firebase.firestore();
+    const ref = db.collection('photos').doc(this.props.photo.id);
+    ref.update({
+      [`likes.${this.state.uid}`]: nextValue,
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
+  }
+
+  deletePropFromArray = (array, prop) => {
+    const index = array.indexOf(prop);
+
+    if (index >= 0) {
+      array.splice(index, 1);
+    }
+    return array;
+  };
 
   render() {
     const {
@@ -88,6 +139,14 @@ class PhotoTile extends React.Component {
           <ActivityIndicator />
         </View>
       );
+    }
+
+    let iconName;
+
+    if (this.state.liked) {
+      iconName = 'heart';
+    } else {
+      iconName = 'heart-outline';
     }
 
     return (
@@ -131,9 +190,18 @@ class PhotoTile extends React.Component {
         </TouchableHighlight>
         <View style={styles.bar}>
           <View style={styles.likes}>
-            <MaterialCommunityIcon name="heart" size={26} color="#D0364C" />
+            <TouchableHighlight
+              onPress={() => { this.handleLikeButton(!this.state.liked); }}
+              underlayColor="transparent"
+            >
+              <MaterialCommunityIcon
+                name={iconName}
+                size={26}
+                style={[styles.heart]}
+              />
+            </TouchableHighlight>
             <Text style={styles.likesNumber}>
-              {photo.data.likes}
+              {this.state.likes.length}
             </Text>
           </View>
           <View style={styles.userItem}>
@@ -141,7 +209,7 @@ class PhotoTile extends React.Component {
               by
             </Text>
             <TouchableHighlight
-              onPress={() => { this.props.onPressUser(this.state.user.id); }}
+              onPress={() => { onPressUser(this.state.user.id); }}
               underlayColor="transparent"
             >
               <Text style={styles.userName}>
@@ -224,6 +292,14 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     paddingRight: 12,
     // paddingBottom: 12,
+  },
+  heart: {
+    color: '#D0364C',
+    // borderWidth: 1,
+    // borderColor: '#D0364C',
+  },
+  heartLiked: {
+    color: '#fff',
   },
   likes: {
     flexDirection: 'row',

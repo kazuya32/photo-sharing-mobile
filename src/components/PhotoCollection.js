@@ -12,6 +12,7 @@ import {
 class PhotoCollection extends React.Component {
   state = {
     photos: this.props.photos,
+    logInUser: this.props.logInUser,
   }
 
 
@@ -24,6 +25,7 @@ class PhotoCollection extends React.Component {
           routeName: 'PhotoDetail',
           params: {
             photo: item,
+            logInUser: this.state.logInUser,
           },
         });
       }}

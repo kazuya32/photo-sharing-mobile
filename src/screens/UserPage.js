@@ -90,16 +90,17 @@ class UserPage extends React.Component {
     const requestRef = db.collection('requests').where('to', '==', this.state.uid);
 
     const requests = [];
-    requestRef.onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        requests.push({
-          id: doc.id,
-          data: doc.data(),
+    requestRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          requests.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+          console.log(requests);
+          this.setState({ requests });
         });
-        console.log(requests);
-        this.setState({ requests });
       });
-    });
 
     if (!requests.length) {
       this.setState({ requests });
@@ -127,15 +128,16 @@ class UserPage extends React.Component {
     const photosRef = db.collection('photos').where('uid', '==', this.state.uid);
 
     const photos = [];
-    photosRef.onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        photos.push({
-          id: doc.id,
-          data: doc.data(),
+    photosRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          photos.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+          this.setState({ photos });
         });
-        this.setState({ photos });
       });
-    });
   }
 
   storeUserPhoto = async (photoURL) => {
@@ -299,6 +301,7 @@ class UserPage extends React.Component {
             tabLabel="Posts"
             navigation={this.props.navigation}
             photos={this.state.photos}
+            logInUser={this.state.logInUser}
             // numColumns={3}
             // horizontal={true}
           />

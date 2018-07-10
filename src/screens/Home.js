@@ -145,6 +145,8 @@ class Home extends React.Component {
           headerTitle={this.state.headerTitle}
         />
         <PhotoFeed
+          logInUser={this.state.logInUser}
+          uid={this.state.uid}
           feedType="home"
           // feedType={this.state.feedType}
           itemId={this.state.itemId}

@@ -10,7 +10,7 @@ import SendButton from '../elements/SendButton';
 import PhotoTile from '../components/PhotoTile';
 import Header from '../components/Header.js';
 
-class LoginScreen extends React.Component {
+class PhotoDetail extends React.Component {
   state = {
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
   }
@@ -50,7 +50,8 @@ class LoginScreen extends React.Component {
             photo={this.props.navigation.state.params.photo}
             onPressUser={this.onPressUser}
             photoStyle={styles.photo}
-            // uid={this.props.navigation.state.params.uid}
+            logInUser={this.state.logInUser}
+            uid={this.state.logInUser && this.state.logInUser.id}
           />
           <SendButton
             onPress={this.onPress}
@@ -87,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default PhotoDetail;

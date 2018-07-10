@@ -12,7 +12,10 @@ import firebase from 'firebase';
 import PhotoTile from '../components/PhotoTile.js';
 
 class Feed extends React.Component {
-  state = {}
+  state = {
+    logInUser: this.props.logInUser,
+    isReloading: false,
+  }
 
   componentWillMount() {
     const { feedType } = this.props;
@@ -86,60 +89,64 @@ class Feed extends React.Component {
 
   // eslint-disable-next-line
   reloadPhotos = () => {
-    console.log('reload');
-    const db = firebase.firestore();
-    const maxResults = 4;
+    if (!this.state.isReloading) {
+      this.setState({ isReloading: true });
 
-    // 画像URLの取得だけは最初に一度におこない、レンダリングだけ順番に行う機能を実装する
+      console.log('reload');
+      const db = firebase.firestore();
+      const maxResults = 2;
 
-    // let photosRef;
-    //
-    // switch (this.state.feedType) {
-    //   case 'home':
-    //     photosRef = db.collection('photos')
-    //       .orderBy('createdAt', 'desc')
-    //       .startAfter(this.state.lastVisible)
-    //       .limit(maxResults);
-    //     break;
-    //   case 'user':
-    //     photosRef = db.collection('photos')
-    //       .where('uid', '==', this.state.uid)
-    //       .startAfter(this.state.lastVisible)
-    //       .limit(maxResults);
-    //     break;
-    //   case 'match':
-    //     photosRef = db.collection('photos')
-    //       .where('matchId', '==', this.props.itemId)
-    //       .startAfter(this.state.lastVisible)
-    //       .limit(maxResults);
-    //     break;
-    //   case 'team':
-    //     photosRef = db.collection('photos')
-    //       .where('teamId', '==', this.props.itemId)
-    //       .startAfter(this.state.lastVisible)
-    //       .limit(maxResults);
-    //     break;
-    //
-    //   default:
-    //     console.log('invalid type');
-    //     break;
-    // }
-    //
-    // const photos = this.state;
+      // 画像URLの取得だけは最初に一度におこない、レンダリングだけ順番に行う機能を実装する
 
-    // photosRef.get()
-    //   .then((querySnapshot) => {
-    //     querySnapshot.forEach((doc) => {
-    //       photos.push({
-    //         id: doc.id,
-    //         data: doc.data(),
-    //       });
-    //       this.setState({ photos });
-    //     });
-    //     const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-    //     this.setState({ lastVisible });
-    //     // this.setState({ photosRef, lastVisible });
-    //   });
+      let photosRef;
+
+      switch (this.state.feedType) {
+        case 'home':
+          photosRef = db.collection('photos')
+            .orderBy('createdAt', 'desc')
+            .startAfter(this.state.lastVisible)
+            .limit(maxResults);
+          break;
+        case 'user':
+          photosRef = db.collection('photos')
+            .where('uid', '==', this.state.uid)
+            .startAfter(this.state.lastVisible)
+            .limit(maxResults);
+          break;
+        case 'match':
+          photosRef = db.collection('photos')
+            .where('matchId', '==', this.props.itemId)
+            .startAfter(this.state.lastVisible)
+            .limit(maxResults);
+          break;
+        case 'team':
+          photosRef = db.collection('photos')
+            .where('teamId', '==', this.props.itemId)
+            .startAfter(this.state.lastVisible)
+            .limit(maxResults);
+          break;
+
+        default:
+          console.log('invalid type');
+          break;
+      }
+
+      const { photos } = this.state;
+
+      photosRef.get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            photos.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+            this.setState({ photos });
+          });
+          const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+          this.setState({ lastVisible, isReloading: false });
+          // this.setState({ photosRef, lastVisible });
+        });
+    }
   }
 
   onPressTest = () => {
@@ -158,6 +165,7 @@ class Feed extends React.Component {
       onPressTeam={() => { this.props.onPressTeam(item); }}
       photoStyle={styles.photoItem}
       uid={this.state.uid}
+      logInUser={this.state.logInUser}
       scheduleId={this.state}
       navigation={this.props.navigation}
     />
@@ -171,11 +179,11 @@ class Feed extends React.Component {
             data={this.state.photos}
             renderItem={this.renderItem}
             keyExtractor={this.keyExtractor}
-            onEndReachedThreshold={0.2}
-            // onEndReached={this.reloadPhotos}
-            getItemLayout={(data, index) => (
-             { length: 400, offset: 400 * index, index }
-            )}
+            onEndReachedThreshold={0.5}
+            onEndReached={this.reloadPhotos}
+            // getItemLayout={(data, index) => (
+            //  { length: 400, offset: 400 * index, index }
+            // )}
             extraData={this.state}
           />
         </ScrollView>
