@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableHighlight, Image } from 'react-native';
 
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+// import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 class SendButton extends React.Component {
   render() {
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'gray',
   },
   photo: {
-    borderWidth: 1,
-    borderColor: '#EBEBEB',
+    // borderWidth: 1,
+    // borderColor: '#EBEBEB',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
