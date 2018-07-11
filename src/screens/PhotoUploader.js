@@ -136,6 +136,7 @@ class PhotoUploader extends React.Component {
       width: this.props.navigation.state.params.image.width,
       height: this.props.navigation.state.params.image.height,
       likes: {},
+      accesses: {},
     })
       .then(() => {
         this.setState({ isUploading: true });

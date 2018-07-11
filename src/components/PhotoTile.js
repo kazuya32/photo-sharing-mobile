@@ -7,11 +7,14 @@ import {
   Image,
   ActivityIndicator,
   Dimensions,
+  Alert,
+  CameraRoll,
 } from 'react-native';
 import firebase from 'firebase';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import TagTile from '../components/TagTile.js';
+import DownloadButton from '../elements/DownloadButton.js';
 
 class PhotoTile extends React.Component {
   state = {
@@ -126,6 +129,14 @@ class PhotoTile extends React.Component {
     return array;
   };
 
+  // eslint-disable-next-line
+  onPressDownload = () => {
+    CameraRoll.saveToCameraRoll(this.props.photo.data.downloadURL)
+      .then(() => {
+        Alert.alert('画像を保存しました。');
+      });
+  }
+
   render() {
     const {
       onPressUser,
@@ -188,6 +199,11 @@ class PhotoTile extends React.Component {
             resizeMode="contain"
           />
         </TouchableHighlight>
+        <DownloadButton
+          style={styles.downloadBtn}
+          onPress={this.onPressDownload}
+          hasAccess={photo.data.accesses && photo.data.accesses[this.state.uid]}
+        />
         <View style={styles.bar}>
           <View style={styles.likes}>
             <TouchableHighlight
@@ -283,6 +299,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
+  },
+  downloadBtn: {
+    left: (Dimensions.get('window').width * 0.5) - 32,
+    bottom: 56,
   },
   bar: {
     flexDirection: 'row',

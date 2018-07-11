@@ -12,7 +12,6 @@ import {
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
-import SendButton from '../elements/SendButton';
 import SaveButton from '../elements/SaveButton.js';
 import CancelButton from '../elements/CancelButton.js';
 
@@ -25,7 +24,25 @@ class ViewRequest extends React.Component {
 
   onPress = () => {
     Alert.alert('ダウンロードリクエストを承認しました。');
-    this.navigateToMyPage();
+    this.giveAccess();
+    // this.navigateToMyPage();
+    this.props.navigation.goBack();
+  }
+
+  giveAccess = () => {
+    const db = firebase.firestore();
+    const Ref = db.collection('photos').doc(this.props.navigation.state.params.photo.id);
+    Ref.update({
+      [`accesses.${this.props.navigation.state.params.user.id}`]: true,
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
   }
 
   navigateToMyPage = () => {

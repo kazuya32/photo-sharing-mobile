@@ -35,11 +35,10 @@ const styles = StyleSheet.create({
     borderRadius: 28,
   },
   button: {
+    width: 44,
+    height: 44,
     alignSelf: 'center',
-    alignItems: 'center',
     color: '#fff',
-    justifyContent: 'center',
-    alignContent: 'center',
     textAlign: 'center',
     textAlignVertical: 'center',
     // borderRadius: 48 * 0.5,
