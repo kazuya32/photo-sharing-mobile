@@ -1,5 +1,10 @@
 import React from 'react';
-import { StyleSheet, TouchableHighlight } from 'react-native';
+import {
+  StyleSheet,
+  TouchableHighlight,
+  View,
+  Text,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class RequestButton extends React.Component {
@@ -8,37 +13,55 @@ class RequestButton extends React.Component {
       onPress,
       style,
       hasRequest,
+      requests,
     } = this.props;
+
+    let num = requests && requests.length;
+    if (num > 99) { num = 99; }
 
     return (
       <TouchableHighlight
         style={[
-          styles.menuButton,
-          hasRequest && styles.hasRequest,
           style,
         ]}
         onPress={onPress}
         underlayColor="transparent"
       >
-        <Icon
-          name="card-giftcard"
-          size={24}
+        <View
           style={[
-            styles.menuButtonTitle,
-            hasRequest && styles.hasRequestTitle,
+            styles.menuButton,
+            hasRequest && styles.hasRequest,
           ]}
-        />
+        >
+          <Icon
+            name="card-giftcard"
+            size={24}
+            style={[
+              styles.menuButtonTitle,
+              hasRequest && styles.hasRequestTitle,
+            ]}
+          />
+          <View
+            style={[
+              styles.badge,
+              !hasRequest && { display: 'none' },
+            ]}
+          >
+            <Text
+              style={[
+                styles.badgeTitle,
+              ]}
+            >
+              {num}
+            </Text>
+          </View>
+        </View>
       </TouchableHighlight>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    right: 16,
-    // height: 30,
-    alignSelf: 'center',
-  },
   hasRequest: {
     backgroundColor: '#DB4D5E',
     borderWidth: 2,
@@ -63,6 +86,25 @@ const styles = StyleSheet.create({
     color: '#DB4D5E',
     alignSelf: 'center',
     // fontSize: 8,
+  },
+  badge: {
+    position: 'absolute',
+    right: -8,
+    top: -8,
+    backgroundColor: '#fff',
+    alignSelf: 'center',
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#DB4D5E',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeTitle: {
+    color: '#DB4D5E',
+    alignSelf: 'center',
+    fontSize: 10,
   },
   followButton: {
     position: 'absolute',

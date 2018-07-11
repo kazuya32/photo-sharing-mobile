@@ -70,6 +70,7 @@ class Profile extends React.Component {
             style={styles.requestButton}
             onPress={onPressRequest}
             hasRequest={requests && requests.length}
+            requests={requests}
           />
           <EditButton
             style={styles.editButton}
