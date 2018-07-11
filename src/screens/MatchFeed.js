@@ -52,10 +52,9 @@ class MatchFeed extends React.Component {
             id: doc.id,
             data: doc.data(),
           });
-          this.setState({ photos });
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        this.setState({ lastVisible });
+        this.setState({ photos, lastVisible });
         // this.setState({ photosRef, lastVisible });
       });
   }

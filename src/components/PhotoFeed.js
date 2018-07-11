@@ -2,10 +2,9 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  ScrollView,
-  Alert,
   FlatList,
   AsyncStorage,
+  RefreshControl,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -15,6 +14,7 @@ class Feed extends React.Component {
   state = {
     logInUser: this.props.logInUser,
     isReloading: false,
+    refreshing: false,
   }
 
   componentWillMount() {
@@ -38,9 +38,9 @@ class Feed extends React.Component {
   }
 
   // eslint-disable-next-line
-  fetchPhotos = () => {
+  fetchPhotos = async () => {
     const db = firebase.firestore();
-    const maxResults = 2;
+    const maxResults = 3;
 
     let photosRef;
 
@@ -79,16 +79,15 @@ class Feed extends React.Component {
             id: doc.id,
             data: doc.data(),
           });
-          this.setState({ photos });
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        this.setState({ lastVisible });
+        this.setState({ photos, lastVisible });
         // this.setState({ photosRef, lastVisible });
       });
   }
 
   // eslint-disable-next-line
-  reloadPhotos = () => {
+  reloadPhotos = async() => {
     if (!this.state.isReloading) {
       this.setState({ isReloading: true });
 
@@ -96,7 +95,7 @@ class Feed extends React.Component {
       const db = firebase.firestore();
       const maxResults = 2;
 
-      // 画像URLの取得だけは最初に一度におこない、レンダリングだけ順番に行う機能を実装する
+      // 画像URLの取得だけは最初に一度におこない、レンダリングだけ順番に行う機能を実装するべき
 
       let photosRef;
 
@@ -140,17 +139,26 @@ class Feed extends React.Component {
               id: doc.id,
               data: doc.data(),
             });
-            this.setState({ photos });
           });
           const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-          this.setState({ lastVisible, isReloading: false });
+          this.setState({ photos, lastVisible, isReloading: false });
           // this.setState({ photosRef, lastVisible });
         });
     }
   }
 
-  onPressTest = () => {
-    Alert.alert('Pressed');
+  // onEndReached = () => {
+  //   this.setState({ refreshing: true });
+  //   this.reloadPhotos().then(() => {
+  //     this.setState({ refreshing: false });
+  //   });
+  // }
+
+  onRefresh = () => {
+    this.setState({ refreshing: true });
+    this.fetchPhotos().then(() => {
+      this.setState({ refreshing: false });
+    });
   }
 
   keyExtractor = (item, index) => index.toString();
@@ -174,19 +182,20 @@ class Feed extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.feedArea}>
-          <FlatList
-            data={this.state.photos}
-            renderItem={this.renderItem}
-            keyExtractor={this.keyExtractor}
-            onEndReachedThreshold={0.5}
-            onEndReached={this.reloadPhotos}
-            // getItemLayout={(data, index) => (
-            //  { length: 400, offset: 400 * index, index }
-            // )}
-            extraData={this.state}
-          />
-        </ScrollView>
+        <FlatList
+          data={this.state.photos}
+          renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
+          onEndReachedThreshold={0.7}
+          onEndReached={this.reloadPhotos}
+          extraData={this.state}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
+            />
+           }
+        />
       </View>
     );
   }
@@ -195,8 +204,6 @@ class Feed extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  feedArea: {
     paddingTop: 12,
     paddingBottom: 12,
   },

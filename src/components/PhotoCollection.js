@@ -56,6 +56,7 @@ class PhotoCollection extends React.Component {
           numColumns={3}
           // horizontal={true}
           keyExtractor={this.keyExtractor}
+          extraData={this.state}
         />
       </View>
     );

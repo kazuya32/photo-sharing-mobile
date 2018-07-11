@@ -85,7 +85,6 @@ class UserPage extends React.Component {
   }
 
   fetchRequest = () => {
-    console.log('requests');
     const db = firebase.firestore();
     const requestRef = db.collection('requests').where('to', '==', this.state.uid);
 
@@ -97,11 +96,9 @@ class UserPage extends React.Component {
             id: doc.id,
             data: doc.data(),
           });
-          console.log(requests);
-          this.setState({ requests });
         });
+        this.setState({ requests });
       });
-
     if (!requests.length) {
       this.setState({ requests });
     }
@@ -135,8 +132,8 @@ class UserPage extends React.Component {
             id: doc.id,
             data: doc.data(),
           });
-          this.setState({ photos });
         });
+        this.setState({ photos });
       });
   }
 
@@ -241,16 +238,34 @@ class UserPage extends React.Component {
   render() {
     if (!(this.state.user && this.state.photos)) {
       return (
-        <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-          <ActivityIndicator />
+        <View style={styles.container}>
+          <Header
+            // onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
+            onPressLeft={this.navigateToMyPage}
+            // onPressLeft={() => { this.setState({ uid: this.state.logInUid }); }}
+            onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+            headerTitle="FLEGO"
+          />
+          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+            <ActivityIndicator />
+          </View>
         </View>
       );
     }
 
     if (this.state.isMyPage && !this.state.requests) {
       return (
-        <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-          <ActivityIndicator />
+        <View style={styles.container}>
+          <Header
+            // onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
+            onPressLeft={this.navigateToMyPage}
+            // onPressLeft={() => { this.setState({ uid: this.state.logInUid }); }}
+            onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+            headerTitle="FLEGO"
+          />
+          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+            <ActivityIndicator />
+          </View>
         </View>
       );
     }

@@ -30,8 +30,7 @@ class TeamFeed extends React.Component {
     const Ref = db.collection('teams').doc(teamId);
     Ref.get().then((doc) => {
       const team = { id: doc.id, data: doc.data() };
-      this.setState({ team });
-      this.setState({ headerTitle: team.data.name })
+      this.setState({ team, headerTitle: team.data.name })
     });
   }
 
@@ -52,10 +51,9 @@ class TeamFeed extends React.Component {
             id: doc.id,
             data: doc.data(),
           });
-          this.setState({ photos });
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        this.setState({ lastVisible });
+        this.setState({ photos, lastVisible });
         // this.setState({ photosRef, lastVisible });
       });
   }
