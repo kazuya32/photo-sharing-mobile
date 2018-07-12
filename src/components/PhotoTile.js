@@ -192,6 +192,7 @@ class PhotoTile extends React.Component {
         <TouchableHighlight
           onPress={this.props.onPressPhoto}
           underlayColor="transparent"
+          style={styles.photoWrap}
         >
           <Image
             style={[styles.photo, photoStyle]}
@@ -259,19 +260,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignContent: 'center',
-    paddingTop: 8,
+    paddingTop: 4,
     paddingLeft: 16,
     paddingRight: 16,
-    paddingBottom: 8,
+    paddingBottom: 12,
   },
   team: {
     alignContent: 'flex-end',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    paddingTop: 8,
+    paddingTop: 4,
     paddingLeft: 16,
     paddingRight: 16,
-    paddingBottom: 8,
+    paddingBottom: 12,
   },
   matchTitle: {
     alignSelf: 'center',
@@ -300,6 +301,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
   },
+  photoWrap: {
+    borderTopWidth: 1,
+    borderTopColor: '#EBEBEB',
+  },
   downloadBtn: {
     left: (Dimensions.get('window').width * 0.5) - 32,
     bottom: 56,
@@ -312,6 +317,8 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     paddingRight: 12,
     // paddingBottom: 12,
+    // borderBottomWidth: 1,
+    // borderBottomColor: '#EBEBEB',
   },
   heart: {
     color: '#D0364C',

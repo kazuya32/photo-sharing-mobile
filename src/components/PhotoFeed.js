@@ -88,7 +88,7 @@ class Feed extends React.Component {
 
   // eslint-disable-next-line
   reloadPhotos = async() => {
-    if (!this.state.isReloading) {
+    if (!this.state.isReloading && this.state.lastVisible) {
       this.setState({ isReloading: true });
 
       console.log('reload');
@@ -204,7 +204,7 @@ class Feed extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 12,
+    // paddingTop: 12,
     paddingBottom: 12,
   },
   photoItem: {
