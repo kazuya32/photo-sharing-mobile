@@ -28,12 +28,12 @@ class PhotoTile extends React.Component {
     const {
       photo,
     } = this.props;
-    // this.setState({ photo });
 
-    const likes = this.makeListFromObject(photo.data.likes);
-    this.setState({ likes });
-
+    // const user = this.getUser(photo.data.uid);
     this.getUser(photo.data.uid);
+    const likes = this.makeListFromObject(photo.data.likes);
+    // let match;
+    // let team;
 
     if (photo.data.matchPath) {
       this.getMatch(photo.data.matchPath);
@@ -42,34 +42,47 @@ class PhotoTile extends React.Component {
     if (photo.data.teamId) {
       this.getTeam(photo.data.teamId);
     }
+
+    this.setState({
+      // user,
+      likes,
+      // match,
+      // team,
+    });
   }
 
   getUser = (uid) => {
+    let user;
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(uid);
     userRef.get().then((doc) => {
       // const user = doc.data();
-      const user = { id: doc.id, data: doc.data() };
+      user = { id: doc.id, data: doc.data() };
       this.setState({ user });
     });
+    // return user;
   }
 
   getMatch = (matchPath) => {
+    let match;
     const db = firebase.firestore();
     const Ref = db.doc(matchPath);
     Ref.get().then((doc) => {
-      const match = { id: doc.id, data: doc.data() };
+      match = { id: doc.id, data: doc.data() };
       this.setState({ match });
     });
+    // return match;
   }
 
   getTeam = (teamId) => {
+    let team;
     const db = firebase.firestore();
     const Ref = db.collection('teams').doc(teamId);
     Ref.get().then((doc) => {
-      const team = { id: doc.id, data: doc.data() };
+      team = { id: doc.id, data: doc.data() };
       this.setState({ team });
     });
+    // return team;
   }
 
   // eslint-disable-next-line
@@ -83,17 +96,6 @@ class PhotoTile extends React.Component {
     });
     return array;
   };
-
-  // onPressMatch = () => {
-  //   this.props.navigation.navigate({
-  //     routeName: 'MatchFeed',
-  //     params: {
-  //       feedType: 'match',
-  //       itemId: this.state.match.data.matchId,
-  //       matchPath: this.state.match.data.matchPath,
-  //     },
-  //   });
-  // }
 
   handleLikeButton = (nextValue) => {
     let { likes } = this.state;
@@ -143,14 +145,6 @@ class PhotoTile extends React.Component {
       photoStyle,
       photo,
     } = this.props;
-
-    if (!this.state.user) {
-      return (
-        <View style={styles.indicator}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
 
     let iconName;
 
@@ -218,19 +212,26 @@ class PhotoTile extends React.Component {
               />
             </TouchableHighlight>
             <Text style={styles.likesNumber}>
-              {this.state.likes.length}
+              {this.state.likes && this.state.likes.length}
             </Text>
           </View>
           <View style={styles.userItem}>
             <Text style={styles.userBy}>
               by
             </Text>
+            <View style={[
+                styles.indicator,
+                this.state.user && { display: 'none' },
+              ]}
+            >
+              <ActivityIndicator />
+            </View>
             <TouchableHighlight
               onPress={() => { onPressUser(this.state.user.id); }}
               underlayColor="transparent"
             >
               <Text style={styles.userName}>
-                {this.state.user.data.name}
+                {this.state.user && this.state.user.data.name}
               </Text>
             </TouchableHighlight>
           </View>
@@ -250,10 +251,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   indicator: {
-    height: Dimensions.get('window').height * 0.6,
-    width: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
+    // height: Dimensions.get('window').height * 0.6,
+    // height: 30,
+    // width: '100%',
     alignSelf: 'center',
   },
   match: {
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   team: {
-    alignContent: 'flex-end',
+    alignContent: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     paddingTop: 4,

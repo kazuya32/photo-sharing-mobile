@@ -26,14 +26,14 @@ class PhotoDetail extends React.Component {
     });
   }
 
-  onPressUser = (item) => {
+  onPressUser = () => {
     this.props.navigation.navigate({
       routeName: 'UserPage',
       params: {
-        user: item,
+        uid: this.props.navigation.state.params.photo.data.uid,
         logInUser: this.state.logInUser,
       },
-      key: 'UserPage' + item.id,
+      key: 'UserPage' + this.props.navigation.state.params.photo.data.uid,
     });
   }
 

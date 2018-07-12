@@ -35,24 +35,19 @@ class UserPage extends React.Component {
       const value = await AsyncStorage.getItem('uid');
       const uid = this.state.uid || value;
       const isMyPage = (value === uid);
-      this.setState({ uid, isMyPage, logInUid: value });
+      // const isMyPage = (this.state.uid === this.state.logInUser.id);
+      this.setState({
+        uid,
+        isMyPage,
+        logInUid: value,
+      });
 
       this.fetchUser();
-      this.fetchPhotos();
+      // this.fetchPhotos();
 
       if (isMyPage) {
         this.fetchRequest();
       }
-
-      // if (this.state.isMyPage) {
-      //   this.setState({ uid: this.props.navigation.state.params.user.id });
-      //   this.fetchUser();
-      //   this.fetchPhotos();
-      // } else {
-      //   this.setState({ uid: value });
-      //   this.fetchUser();
-      //   this.fetchPhotos();
-      // }
     } catch (error) {
     //
     }
@@ -115,27 +110,6 @@ class UserPage extends React.Component {
     });
     return array;
   };
-
-  // eslint-disable-next-line
-  fetchPhotos = () => {
-    const db = firebase.firestore();
-    const maxResults = 30;
-    // eslint-disable-next-line
-    // const photosRef = db.collection('photos').where('uid', '==', this.state.uid).orderBy('createdAt', 'desc').limit(maxResults);
-    const photosRef = db.collection('photos').where('uid', '==', this.state.uid);
-
-    const photos = [];
-    photosRef.get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          photos.push({
-            id: doc.id,
-            data: doc.data(),
-          });
-        });
-        this.setState({ photos });
-      });
-  }
 
   storeUserPhoto = async (photoURL) => {
     try {
@@ -205,7 +179,7 @@ class UserPage extends React.Component {
       routeName: 'UserPage',
       params: {
         uid: this.state.logInUid,
-        // user: item,
+        logInUser: this.state.logInUser,
       },
       key: 'UserPage' + this.state.logInUid,
     });
@@ -236,39 +210,23 @@ class UserPage extends React.Component {
   renderTabBar = () => <ScrollableTabBar style={styles.header} activeTab={styles.activeTab} />;
 
   render() {
-    if (!(this.state.user && this.state.photos)) {
-      return (
-        <View style={styles.container}>
-          <Header
-            // onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-            onPressLeft={this.navigateToMyPage}
-            // onPressLeft={() => { this.setState({ uid: this.state.logInUid }); }}
-            onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
-            headerTitle="FLEGO"
-          />
-          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-            <ActivityIndicator />
-          </View>
-        </View>
-      );
-    }
-
-    if (this.state.isMyPage && !this.state.requests) {
-      return (
-        <View style={styles.container}>
-          <Header
-            // onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-            onPressLeft={this.navigateToMyPage}
-            // onPressLeft={() => { this.setState({ uid: this.state.logInUid }); }}
-            onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
-            headerTitle="FLEGO"
-          />
-          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-            <ActivityIndicator />
-          </View>
-        </View>
-      );
-    }
+    // if (!(this.state.user && this.state.photos)) {
+    // if (!this.state.photos) {
+    //   return (
+    //     <View style={styles.container}>
+    //       <Header
+    //         // onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
+    //         onPressLeft={this.navigateToMyPage}
+    //         // onPressLeft={() => { this.setState({ uid: this.state.logInUid }); }}
+    //         onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+    //         headerTitle="FLEGO"
+    //       />
+    //       <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+    //         <ActivityIndicator />
+    //       </View>
+    //     </View>
+    //   );
+    // }
 
     const followersTitle = `Followers ${this.state.followersArray && this.state.followersArray.length}`;
     const followingTitle = `Following ${this.state.followersArray && this.state.followingArray.length}`;
@@ -283,12 +241,13 @@ class UserPage extends React.Component {
           headerTitle="FLEGO"
         />
         <Profile
-          logInUid={this.state.logInUid}
+          logInUser={this.state.logInUser}
+          uid={this.state.uid}
           requests={this.state.requests}
-          userName={this.state.user.data.name}
-          userDesc={this.state.user.data.desc}
-          photoURL={this.state.user.data.photoURL}
-          isMyPage={this.state.isMyPage}
+          user={this.state.user}
+          userName={this.state.user && this.state.user.data.name}
+          userDesc={this.state.user && this.state.user.data.desc}
+          photoURL={this.state.user && this.state.user.data.photoURL}
           isFollowing={this.state.isFollowing}
           handleFollowButton={this.handleFollowButton}
           onPressRequest={this.onPressRequest}
@@ -315,7 +274,8 @@ class UserPage extends React.Component {
           <PhotoCollection
             tabLabel="Posts"
             navigation={this.props.navigation}
-            photos={this.state.photos}
+            photos={this.state.photos && this.state.photos}
+            uid={this.state.uid}
             logInUser={this.state.logInUser}
             // numColumns={3}
             // horizontal={true}
@@ -323,7 +283,6 @@ class UserPage extends React.Component {
           <FollowingList
             tabLabel={followersTitle}
             navigation={this.props.navigation}
-            photos={this.state.photos}
             followingArray={this.state.followersArray}
             logInUser={this.state.logInUser}
             logInUid={this.state.logInUid}
@@ -334,7 +293,6 @@ class UserPage extends React.Component {
           <FollowingList
             tabLabel={followingTitle}
             navigation={this.props.navigation}
-            photos={this.state.photos}
             followingArray={this.state.followingArray}
             logInUser={this.state.logInUser}
             logInUid={this.state.logInUid}

@@ -10,6 +10,7 @@ import UserTile from '../components/UserTile.js';
 class FollowingList extends React.Component {
   state = {
     logInUser: this.props.logInUser,
+    // followingArray: this.props.followingArray,
   }
 
   componentWillMount() {
@@ -36,6 +37,7 @@ class FollowingList extends React.Component {
     return (
       <View style={[styles.container, this.props.style]}>
         <FlatList
+          // data={this.state.followingArray}
           data={this.props.followingArray}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}

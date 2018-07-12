@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import firebase from 'firebase';
+import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
 
 import UserIcon from '../elements/UserIcon.js';
 import EditButton from '../elements/EditButton.js';
@@ -9,31 +8,22 @@ import FollowButton from '../elements/FollowButton.js';
 
 class Profile extends React.Component {
   state = {
-    isMyPage: this.props.isMyPage,
-    isFollowing: this.props.isFollowing,
+    // isMyPage: this.props.isMyPage,
+    // isFollowing: this.props.isFollowing,
   }
 
-  // componentWillMount() {
-  //   if (this.state.isMyPage) {
-  //     this.fetchRequest();
-  //   }
-  // }
+  componentDidMount() {
+    this.checkMyPage();
+  }
 
-  // fetchRequest = () => {
-  //   const db = firebase.firestore();
-  //   const requestRef = db.collection('request').where('to', '==', this.props.logInUid);
-  //
-  //   const requests = [];
-  //   requestRef.onSnapshot((querySnapshot) => {
-  //     querySnapshot.forEach((doc) => {
-  //       requests.push({
-  //         id: doc.id,
-  //         data: doc.data(),
-  //       });
-  //       this.setState({ requests });
-  //     });
-  //   });
-  // }
+  checkMyPage = async () => {
+    const value = await AsyncStorage.getItem('uid');
+    const isMyPage = (this.props.uid === value);
+    // const isMyPage = (this.props.uid === this.props.logInUser.id);
+    this.setState({
+      isMyPage,
+    });
+  }
 
   render() {
     const {
@@ -44,11 +34,9 @@ class Profile extends React.Component {
       photoURL,
       handleFollowButton,
       requests,
-      // isFollowing,
+      isFollowing,
+      user,
     } = this.props;
-
-    console.log('isFollowing in profile');
-    console.log(this.state.isFollowing);
 
     if (this.state.isMyPage) {
       return (
@@ -96,8 +84,12 @@ class Profile extends React.Component {
           </Text>
         </View>
         <FollowButton
-          style={styles.followButton}
-          isFollowing={this.state.isFollowing}
+          style={[
+            styles.followButton,
+            !user && { display: 'none' },
+          ]}
+          // isFollowing={this.state.isFollowing}
+          isFollowing={isFollowing}
           handleFollowButton={handleFollowButton}
         />
       </View>

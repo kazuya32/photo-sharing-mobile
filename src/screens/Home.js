@@ -29,12 +29,12 @@ class Home extends React.Component {
     this.fetchData();
   }
 
+  // eslint-disable-next-line
   fetchData = async () => {
     try {
       const value = await AsyncStorage.getItem('uid');
       this.setState({ uid: value });
       this.fetchLogInUser(value);
-
     } catch (error) {
     //
     }
@@ -136,6 +136,7 @@ class Home extends React.Component {
               routeName: 'UserPage',
               params: {
                 logInUser: this.state.logInUser,
+                uid: this.state.uid,
                 // user: item,
               },
               key: 'UserPage' + this.state.uid,

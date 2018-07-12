@@ -7,14 +7,42 @@ import {
   Dimensions,
   FlatList,
   Text,
+  ActivityIndicator,
 } from 'react-native';
+import firebase from 'firebase';
 
 class PhotoCollection extends React.Component {
   state = {
-    photos: this.props.photos,
+    // photos: this.props.photos,
     logInUser: this.props.logInUser,
   }
 
+  componentDidMount() {
+    if (this.props.uid) {
+      this.fetchPhotos(this.props.uid);
+    }
+  }
+
+  // eslint-disable-next-line
+  fetchPhotos = (uid) => {
+    const db = firebase.firestore();
+    const maxResults = 30;
+    // eslint-disable-next-line
+    // const photosRef = db.collection('photos').where('uid', '==', this.state.uid).orderBy('createdAt', 'desc').limit(maxResults);
+    const photosRef = db.collection('photos').where('uid', '==', uid);
+
+    const photos = [];
+    photosRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          photos.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        this.setState({ photos });
+      });
+  }
 
   keyExtractor = (item, index) => index.toString();
 
@@ -40,7 +68,15 @@ class PhotoCollection extends React.Component {
 
 
   render() {
-    if (!this.state.photos || !this.state.photos.length) {
+    if (!this.state.photos) {
+      return (
+        <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
+    if (!this.state.photos.length) {
       return (
         <Text style={styles.alert}>
            投稿画像はありません.

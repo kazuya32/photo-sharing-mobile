@@ -7,7 +7,12 @@ class SendButton extends React.Component {
   }
 
   onPress = () => {
-    const nextValue = !this.state.isFollowing;
+    let nextValue;
+    if (typeof this.state.isFollowing === 'undefined') {
+      nextValue = !this.props.isFollowing;
+    } else {
+      nextValue = !this.state.isFollowing;
+    }
     this.setState({ isFollowing: nextValue });
     this.props.handleFollowButton(nextValue);
   }
@@ -20,24 +25,30 @@ class SendButton extends React.Component {
       // isFollowing,
     } = this.props;
 
-    console.log('this.state.isFollowing in button');
-    console.log(this.state.isFollowing);
+    let isFollowing;
+    if (typeof this.state.isFollowing === 'undefined') {
+      // eslint-disable-next-line
+      isFollowing = this.props.isFollowing;
+    } else {
+      // eslint-disable-next-line
+      isFollowing = this.state.isFollowing;
+    }
 
-    const text = this.state.isFollowing ? 'Following' : 'Follow';
+    const text = isFollowing ? 'Following' : 'Follow';
 
     return (
       <TouchableHighlight style={[styles.container, style]} onPress={this.onPress} underlayColor="transparent">
         <View
           style={[
             styles.button,
-            this.state.isFollowing && styles.followingButton,
+            isFollowing && styles.followingButton,
             buttonStyle,
           ]}
         >
           <Text
             style={[
               styles.buttonTitle,
-              this.state.isFollowing && styles.followingButtonTitle,
+              isFollowing && styles.followingButtonTitle,
               textStyle,
             ]}
           >
