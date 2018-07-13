@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // paddingTop: 12,
-    paddingBottom: 12,
+    // paddingBottom: 12,
   },
   photoItem: {
     // width: Dimensions.get('window').width / 3,

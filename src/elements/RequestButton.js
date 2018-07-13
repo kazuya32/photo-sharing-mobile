@@ -12,11 +12,10 @@ class RequestButton extends React.Component {
     const {
       onPress,
       style,
-      hasRequest,
-      requests,
+      badgeNumber,
     } = this.props;
 
-    let num = requests && requests.length;
+    let num = badgeNumber;
     if (num > 99) { num = 99; }
 
     return (
@@ -30,7 +29,7 @@ class RequestButton extends React.Component {
         <View
           style={[
             styles.menuButton,
-            hasRequest && styles.hasRequest,
+            badgeNumber && styles.hasRequest,
           ]}
         >
           <Icon
@@ -38,13 +37,13 @@ class RequestButton extends React.Component {
             size={24}
             style={[
               styles.menuButtonTitle,
-              hasRequest && styles.hasRequestTitle,
+              badgeNumber && styles.hasRequestTitle,
             ]}
           />
           <View
             style={[
               styles.badge,
-              !hasRequest && { display: 'none' },
+              !badgeNumber && { display: 'none' },
             ]}
           >
             <Text

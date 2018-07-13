@@ -25,18 +25,30 @@ class Profile extends React.Component {
     });
   }
 
+  countUnread = (requests) => {
+    let unreadSum = 0;
+    if (requests) {
+      requests.forEach((request) => {
+        if (!request.data.isRead) {
+          unreadSum += 1;
+        }
+      });
+    }
+    return unreadSum;
+  }
+
   render() {
     const {
       onPressEdit,
       onPressRequest,
-      userName,
-      userDesc,
       photoURL,
       handleFollowButton,
       requests,
       isFollowing,
       user,
     } = this.props;
+
+    const unreadSum = this.countUnread(requests);
 
     if (this.state.isMyPage) {
       return (
@@ -48,17 +60,16 @@ class Profile extends React.Component {
           />
           <View style={styles.profileText}>
             <Text style={styles.userName}>
-              {userName}
+              {user && user.data.name}
             </Text>
             <Text style={styles.userDesc}>
-              {userDesc}
+              {user && user.data.desc}
             </Text>
           </View>
           <RequestButton
             style={styles.requestButton}
             onPress={onPressRequest}
-            hasRequest={requests && requests.length}
-            requests={requests}
+            badgeNumber={unreadSum}
           />
           <EditButton
             style={styles.editButton}
@@ -77,10 +88,10 @@ class Profile extends React.Component {
         />
         <View style={styles.profileText}>
           <Text style={styles.userName}>
-            {userName}
+            {user && user.data.name}
           </Text>
           <Text style={styles.userDesc}>
-            {userDesc}
+            {user && user.data.desc}
           </Text>
         </View>
         <FollowButton

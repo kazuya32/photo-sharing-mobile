@@ -6,7 +6,7 @@ import {
   Dimensions,
 } from 'react-native';
 
-import SendButton from '../elements/SendButton';
+import DownloadRequestButton from '../elements/DownloadRequestButton';
 import PhotoTile from '../components/PhotoTile';
 import Header from '../components/Header.js';
 
@@ -38,6 +38,10 @@ class PhotoDetail extends React.Component {
   }
 
   render() {
+    const { photo } = this.props.navigation.state.params;
+    const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUser.id];
+    const isPending = photo.data.pendingRequests && photo.data.pendingRequests[this.state.logInUser.id];
+
     return (
       <View style={styles.container}>
         <Header
@@ -47,22 +51,22 @@ class PhotoDetail extends React.Component {
         />
         <ScrollView>
           <PhotoTile
-            photo={this.props.navigation.state.params.photo}
+            photo={photo}
             onPressUser={this.onPressUser}
             photoStyle={styles.photo}
             logInUser={this.state.logInUser}
             uid={this.state.logInUser && this.state.logInUser.id}
           />
-          <SendButton
+          <DownloadRequestButton
             onPress={this.onPress}
             style={[
               styles.reqBtn,
-              (this.props.navigation.state.params.photo.data.uid === this.state.logInUser.id) && { display: 'none' },
             ]}
+            hasAccess={hasAccess}
+            isMyPage={(photo.data.uid === this.state.logInUser.id)}
+            isPending={isPending}
             textStyle={styles.btnTitle}
-          >
-            ダウンロードリクエスト
-          </SendButton>
+          />
         </ScrollView>
       </View>
     );

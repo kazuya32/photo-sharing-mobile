@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ActivityIndicator,
+  Text,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -14,6 +16,7 @@ import Header from '../components/Header.js';
 class MatchFeed extends React.Component {
   state = {
     headerTitle: 'FLEGO',
+    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
   }
 
   componentWillMount() {
@@ -68,7 +71,7 @@ class MatchFeed extends React.Component {
           routeName: 'PhotoDetail',
           params: {
             photo: item,
-            uid: this.state.uid,
+            logInUser: this.state.logInUser,
           },
         });
       }}
@@ -82,10 +85,36 @@ class MatchFeed extends React.Component {
   );
 
   render() {
+    if (!this.state.photos) {
+      return (
+        <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
+    if (!this.state.photos.length) {
+      return (
+        <Text style={styles.alert}>
+           投稿画像はありません.
+        </Text>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
+          onPressLeft={() => {
+            this.props.navigation.navigate({
+              routeName: 'UserPage',
+              params: {
+                logInUser: this.state.logInUser,
+                uid: this.state.logInUser.id,
+                // user: item,
+              },
+              key: 'UserPage' + this.state.logInUser.id,
+            });
+          }}
           onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle={this.state.headerTitle}
         />
@@ -96,11 +125,26 @@ class MatchFeed extends React.Component {
           numColumns={4}
           // horizontal={true}
           keyExtractor={this.keyExtractor}
+          columnWrapperStyle={styles.column}
         />
+        <View style={styles.whitelineLeft} />
+        <View style={styles.whitelineRight} />
+        <View style={styles.whitelineCenter} />
       </View>
     );
   }
 }
+
+// <View
+//   style={styles.whiteline}
+// >
+//   <View
+//     style={styles.whitelineItem}
+//   />
+//   <View
+//     style={styles.whitelineItem}
+//   />
+// </View>
 
 const styles = StyleSheet.create({
   container: {
@@ -109,10 +153,36 @@ const styles = StyleSheet.create({
     paddingTop: 70,
   },
   photoItem: {
-    width: Dimensions.get('window').width / 4,
+    // width: (Dimensions.get('window').width / 4) - 1,
+    width: (Dimensions.get('window').width / 4),
     height: Dimensions.get('window').width / 4,
-    borderWidth: 1,
-    borderColor: '#fff',
+    marginBottom: 1,
+    // borderWidth: 1,
+    // borderColor: '#fff',
+  },
+  column: {
+    // justifyContent: 'space-between',
+  },
+  whitelineLeft: {
+    position: 'absolute',
+    height: '100%',
+    left: (Dimensions.get('window').width / 4),
+    width: 1,
+    backgroundColor: '#fff',
+  },
+  whitelineRight: {
+    position: 'absolute',
+    height: '100%',
+    right: (Dimensions.get('window').width / 4),
+    width: 1,
+    backgroundColor: '#fff',
+  },
+  whitelineCenter: {
+    position: 'absolute',
+    height: '100%',
+    left: (Dimensions.get('window').width / 2),
+    width: 1,
+    backgroundColor: '#fff',
   },
 });
 

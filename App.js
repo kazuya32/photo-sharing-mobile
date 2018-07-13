@@ -19,7 +19,6 @@ import EditProfile from './src/screens/EditProfile.js';
 import RequestList from './src/screens/RequestList.js';
 import ViewRequest from './src/screens/ViewRequest.js';
 import Signature from './src/screens/Signature.js';
-import PhotoPicker from './src/screens/PhotoPicker.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
 import Schedule from './src/screens/Schedule.js';
 import Match from './src/screens/Match.js';
@@ -84,7 +83,8 @@ firebase.auth().onAuthStateChanged(async (user) => {
   }
 });
 
-const HomeStack = createStackNavigator({
+const App = createStackNavigator({
+  Login: { screen: Login },
   Home: { screen: Home },
   TeamFeed: { screen: TeamFeed },
   MatchFeed: { screen: MatchFeed },
@@ -96,10 +96,12 @@ const HomeStack = createStackNavigator({
   RequestList: { screen: RequestList },
   ViewRequest: { screen: ViewRequest },
   Signature: { screen: Signature },
-  PhotoPicker: { screen: PhotoPicker },
   PhotoUploader: { screen: PhotoUploader },
+  SearchTag: { screen: SearchTag },
+  SearchMatch: { screen: SearchMatch },
 }, {
   headerMode: 'none',
+  initialRouteName: 'Login',
   // mode: 'modal',
   navigationOptions: {
     gesturesEnabled: true,
@@ -150,103 +152,61 @@ const HomeStack = createStackNavigator({
   },
 });
 
-const UploadStack = createStackNavigator({
-  PhotoPicker: { screen: PhotoPicker },
-  PhotoUploader: { screen: PhotoUploader },
-  SearchTag: { screen: SearchTag },
-  SearchMatch: { screen: SearchMatch },
-  Signature: { screen: Signature },
-  UserPage: { screen: UserPage },
-  EditProfile: { screen: EditProfile },
-  Nortification: { screen: Nortification },
-}, {
-  headerMode: 'none',
-});
+// const ServiceStack = createBottomTabNavigator({
+//   Home: {
+//     screen: HomeStack,
+//     navigationOptions: {
+//       tabBarIcon: <MaterialCommunityIcon name="home" size={30} />,
+//       activeTintColor: '#e91e63',
+//     },
+//   },
+//   Match: {
+//     screen: MatchStack,
+//     navigationOptions: {
+//       tabBarIcon: <EntypoIcon name="calendar" size={24} />,
+//     },
+//   },
+//   Player: {
+//     screen: PlayerStack,
+//     navigationOptions: {
+//       tabBarIcon: <EntypoIcon name="users" size={24} />,
+//     },
+//   },
+//   Team: {
+//     screen: TeamStack,
+//     navigationOptions: {
+//       tabBarIcon: <EntypoIcon name="sports-club" size={24} />,
+//     },
+//   },
+//   Upload: {
+//     screen: UploadStack,
+//     navigationOptions: {
+//       tabBarIcon: <FeatherIcon name="plus-circle" size={30} />,
+//     },
+//   },
+// }, {
+//   tabBarOptions: {
+//     labelStyle: {
+//       fontSize: 20,
+//     },
+//     style: {
+//       backgroundColor: '#FCFCFC',
+//     },
+//     showLabel: false,
+//     activeTintColor: '#e91e63',
+//     tabStyle: {
+//       // alignself: 'center',
+//     },
+//   },
+// });
 
-const MatchStack = createStackNavigator({
-  Schedule: { screen: Schedule },
-  Match: { screen: Match },
-  Home: { screen: Home },
-  UserPage: { screen: UserPage },
-  EditProfile: { screen: EditProfile },
-  Nortification: { screen: Nortification },
-}, {
-  headerMode: 'none',
-});
-
-const TeamStack = createStackNavigator({
-  Team: { screen: Team },
-  TeamFeed: { screen: TeamFeed },
-  UserPage: { screen: UserPage },
-  EditProfile: { screen: EditProfile },
-  Nortification: { screen: Nortification },
-}, {
-  headerMode: 'none',
-});
-
-const PlayerStack = createStackNavigator({
-  UserSearch: { screen: UserSearch },
-  UserPage: { screen: UserPage },
-  EditProfile: { screen: EditProfile },
-  Nortification: { screen: Nortification },
-}, {
-  headerMode: 'none',
-});
-
-const ServiceStack = createBottomTabNavigator({
-  Home: {
-    screen: HomeStack,
-    navigationOptions: {
-      tabBarIcon: <MaterialCommunityIcon name="home" size={30} />,
-      activeTintColor: '#e91e63',
-    },
-  },
-  Match: {
-    screen: MatchStack,
-    navigationOptions: {
-      tabBarIcon: <EntypoIcon name="calendar" size={24} />,
-    },
-  },
-  Player: {
-    screen: PlayerStack,
-    navigationOptions: {
-      tabBarIcon: <EntypoIcon name="users" size={24} />,
-    },
-  },
-  Team: {
-    screen: TeamStack,
-    navigationOptions: {
-      tabBarIcon: <EntypoIcon name="sports-club" size={24} />,
-    },
-  },
-  Upload: {
-    screen: UploadStack,
-    navigationOptions: {
-      tabBarIcon: <FeatherIcon name="plus-circle" size={30} />,
-    },
-  },
-}, {
-  tabBarOptions: {
-    labelStyle: {
-      fontSize: 20,
-    },
-    style: {
-      backgroundColor: '#FCFCFC',
-    },
-    showLabel: false,
-    activeTintColor: '#e91e63',
-    tabStyle: {
-      // alignself: 'center',
-    },
-  },
-});
-
-const App = createStackNavigator({
-  Auth: { screen: Login },
-  Home: HomeStack,
-}, {
-  headerMode: 'none',
-});
+// const App = createStackNavigator({
+//   // Login: { screen: Login },
+//   Home: HomeStack,
+//   // PhotoPicker: UploadStack,
+// }, {
+//   headerMode: 'none',
+// });
 
 
 export default App;

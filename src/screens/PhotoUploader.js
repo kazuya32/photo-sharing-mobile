@@ -128,6 +128,7 @@ class PhotoUploader extends React.Component {
       downloadURL,
       uid: this.state.uid,
       createdAt,
+      updatedAt: createdAt,
       tags: this.mapArray(this.state.tags),
       people: this.mapArray(this.state.people),
       matchId: this.state.match && this.state.match.id,

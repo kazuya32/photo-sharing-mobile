@@ -29,11 +29,29 @@ class ViewRequest extends React.Component {
     this.props.navigation.goBack();
   }
 
-  giveAccess = () => {
+  // eslint-disable-next-line
+  giveAccess = async () => {
     const db = firebase.firestore();
     const Ref = db.collection('photos').doc(this.props.navigation.state.params.photo.id);
     Ref.update({
       [`accesses.${this.props.navigation.state.params.user.id}`]: true,
+    })
+      .then(() => {
+        this.setApprove();
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
+  }
+
+  setApprove = async () => {
+    const db = firebase.firestore();
+    const Ref = db.collection('requests').doc(this.props.navigation.state.params.request.id);
+    Ref.update({
+      status: 'approved',
     })
       .then(() => {
         // eslint-disable-next-line

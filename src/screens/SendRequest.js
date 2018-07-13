@@ -13,7 +13,6 @@ import {
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
-import SendButton from '../elements/SendButton';
 import SaveButton from '../elements/SaveButton.js';
 import CancelButton from '../elements/CancelButton.js';
 
@@ -41,17 +40,24 @@ class SendRequest extends React.Component {
     });
   }
 
+  // eslint-disable-next-line
   uploadRequest = () => {
     if (!this.state.isUploading) {
       this.setState({ isUploading: true });
+      const createdAt = Date.now();
       const db = firebase.firestore();
       db.collection('requests').doc().set({
         from: this.state.logInUser.id,
         to: this.state.user.id,
         photoId: this.props.navigation.state.params.photo.id,
         message: this.state.text,
+        isRead: false,
+        status: 'pending',
+        createdAt,
+        updatedAt: createdAt,
       })
         .then(() => {
+          this.setPending();
           Alert.alert('ダウンロードリクエストを送信しました。');
           this.setState({ isUploading: false });
           this.props.navigation.navigate({
@@ -67,6 +73,22 @@ class SendRequest extends React.Component {
           console.error('Error writing document: ', error);
         });
     }
+  }
+
+  setPending = async () => {
+    const db = firebase.firestore();
+    const ref = db.collection('photos').doc(this.props.navigation.state.params.photo.id);
+    ref.update({
+      [`pendingRequests.${this.state.logInUser.id}`]: true,
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
   }
 
 

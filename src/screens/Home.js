@@ -2,10 +2,14 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Text,
+  Alert,
   AsyncStorage,
 } from 'react-native';
-import { Constants } from 'expo';
+import {
+  ImagePicker,
+  Permissions,
+  Constants,
+} from 'expo';
 import firebase from 'firebase';
 
 import PhotoFeed from '../components/PhotoFeed.js';
@@ -113,9 +117,47 @@ class Home extends React.Component {
       params: {
         feedType: 'team',
         itemId: item.data.teamId,
+        logInUser: this.state.logInUser,
       },
     });
   }
+
+  onPressUpload = () => {
+    this.selectImage();
+  }
+
+  selectImage = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status === 'granted') {
+      this.pickImage();
+    } else {
+      // this.props.navigation.navigate({ routeName: 'Home' });
+      Alert.alert('カメラロールの使用が許可されていません。');
+    }
+  }
+
+  pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      // base64: true,
+    });
+    console.log(result);
+
+    if (result.cancelled) {
+      // this.props.navigation.navigate({ routeName: 'Home' });
+      // Alert.alert('カメラロールの使用が許可されていません。');
+    } else {
+      this.props.navigation.navigate({
+        routeName: 'PhotoUploader',
+        params: {
+          image: result,
+          logInUser: this.state.logInUser,
+        },
+      });
+    }
+  };
+
 
   render() {
     console.log(Constants.statusBarHeight);
@@ -159,15 +201,16 @@ class Home extends React.Component {
           // scheduleId={scheduleId}
         />
         <UploadButton
-          onPress={() => {
-            this.props.navigation.navigate({
-              routeName: 'PhotoPicker',
-              params: {
-                logInUser: this.state.logInUser,
-                // user: item,
-              },
-            });
-          }}
+          // onPress={() => {
+          //   this.props.navigation.navigate({
+          //     routeName: 'PhotoPicker',
+          //     params: {
+          //       logInUser: this.state.logInUser,
+          //       // user: item,
+          //     },
+          //   });
+          // }}
+          onPress={this.onPressUpload}
         />
       </View>
     );

@@ -12,8 +12,8 @@ import firebase from 'firebase';
 
 class RequestTile extends React.Component {
   state = {
-    logInUid: this.props.logInUid,
-    isRead: null,
+    // logInUid: this.props.logInUid,
+    isRead: false,
   }
 
   componentWillMount() {
@@ -24,6 +24,7 @@ class RequestTile extends React.Component {
     this.getPhoto(request.data.photoId);
   }
 
+  // eslint-disable-next-line
   getUser = async (uid) => {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(uid);
@@ -46,13 +47,37 @@ class RequestTile extends React.Component {
     });
   }
 
+  setRead = async (request) => {
+    const db = firebase.firestore();
+    const Ref = db.collection('requests').doc(request.id);
+    Ref.update({
+      isRead: true,
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
+  }
+
+  onPress = (request, user, photo) => {
+    this.setState({ isRead: true });
+    this.setRead(request);
+    this.props.onPress(request, user, photo);
+  }
+
   render() {
     const {
-      onPress,
+      // onPress,
       request,
+      isSent,
     } = this.props;
 
     if (!(this.state.user && this.state.photo)) {
+    // if (!(this.state.photo)) {
       return (
         <View style={{ flex: 1, height:30, alignSelf: 'center' }}>
           <ActivityIndicator />
@@ -63,7 +88,7 @@ class RequestTile extends React.Component {
     return (
       <TouchableHighlight
         style={styles.container}
-        onPress={() => onPress(request, this.state.user, this.state.photo)}
+        onPress={() => this.onPress(request, this.state.user, this.state.photo)}
       >
         <View style={{ flexDirection: 'row' }}>
           <Image
@@ -71,11 +96,15 @@ class RequestTile extends React.Component {
             source={{ uri: this.state.photo.data.downloadURL }}
             resizeMode="cover"
           />
-          <View
-            style={styles.contents}
-          >
-            <Text style={styles.userName}>
-              {`${this.state.user.data.name}さんからのダウンロードリクエストが届いています。`}
+          <View style={styles.contents} >
+            <Text
+              style={[
+                styles.userName,
+                isSent && { color: 'black' },
+                (this.state.isRead || request.data.isRead) && { color: 'black' },
+              ]}
+            >
+              {`${this.state.user && this.state.user.data.name}さんからのダウンロードリクエストが届いています。`}
             </Text>
             <Text
               style={[
@@ -95,8 +124,8 @@ class RequestTile extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingTop: 8,
+    paddingBottom: 8,
     paddingLeft: 16,
     paddingRight: 16,
     // justifyContent: 'center',

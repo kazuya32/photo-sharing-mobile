@@ -24,7 +24,7 @@ class PhotoTile extends React.Component {
     uid: this.props.uid,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const {
       photo,
     } = this.props;
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignContent: 'center',
-    paddingTop: 4,
+    paddingTop: 12,
     paddingLeft: 16,
     paddingRight: 16,
     paddingBottom: 12,
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    paddingTop: 4,
+    paddingTop: 8,
     paddingLeft: 16,
     paddingRight: 16,
     paddingBottom: 12,

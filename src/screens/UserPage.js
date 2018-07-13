@@ -5,8 +5,6 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  ActivityIndicator,
-  Text,
   AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
@@ -20,7 +18,6 @@ import FollowingList from '../components/FollowingList.js';
 class UserPage extends React.Component {
   state = {
     uid: this.props.navigation.state.params && this.props.navigation.state.params.uid,
-    // isMyPage: null,
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     // uid:
   }
@@ -81,22 +78,38 @@ class UserPage extends React.Component {
 
   fetchRequest = () => {
     const db = firebase.firestore();
-    const requestRef = db.collection('requests').where('to', '==', this.state.uid);
+    const receivedRef = db.collection('requests')
+      .where('to', '==', this.state.uid);
+      // .orderBy('updatedAt', 'desc');
 
-    const requests = [];
-    requestRef.get()
+    const receivedRequests = [];
+    receivedRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          requests.push({
+          receivedRequests.push({
             id: doc.id,
             data: doc.data(),
           });
         });
-        this.setState({ requests });
+        this.setState({ receivedRequests });
       });
-    if (!requests.length) {
-      this.setState({ requests });
-    }
+
+    const sentRef = db.collection('requests')
+      .where('from', '==', this.state.uid);
+    const sentRequests = [];
+    sentRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          sentRequests.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        this.setState({ sentRequests });
+      });
+    // if (!receivedRequests.length) {
+    //   this.setState({ receivedRequests });
+    // }
   }
 
   // eslint-disable-next-line
@@ -138,7 +151,8 @@ class UserPage extends React.Component {
       params: {
         // uid,
         logInUser: this.state.logInUser,
-        requests: this.state.requests,
+        receivedRequests: this.state.receivedRequests,
+        sentRequests: this.state.sentRequests,
       },
       // key: 'ViewRequest' + uid,
     });
@@ -210,24 +224,6 @@ class UserPage extends React.Component {
   renderTabBar = () => <ScrollableTabBar style={styles.header} activeTab={styles.activeTab} />;
 
   render() {
-    // if (!(this.state.user && this.state.photos)) {
-    // if (!this.state.photos) {
-    //   return (
-    //     <View style={styles.container}>
-    //       <Header
-    //         // onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-    //         onPressLeft={this.navigateToMyPage}
-    //         // onPressLeft={() => { this.setState({ uid: this.state.logInUid }); }}
-    //         onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
-    //         headerTitle="FLEGO"
-    //       />
-    //       <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-    //         <ActivityIndicator />
-    //       </View>
-    //     </View>
-    //   );
-    // }
-
     const followersTitle = `Followers ${this.state.followersArray && this.state.followersArray.length}`;
     const followingTitle = `Following ${this.state.followersArray && this.state.followingArray.length}`;
 
@@ -243,10 +239,8 @@ class UserPage extends React.Component {
         <Profile
           logInUser={this.state.logInUser}
           uid={this.state.uid}
-          requests={this.state.requests}
+          requests={this.state.receivedRequests}
           user={this.state.user}
-          userName={this.state.user && this.state.user.data.name}
-          userDesc={this.state.user && this.state.user.data.desc}
           photoURL={this.state.user && this.state.user.data.photoURL}
           isFollowing={this.state.isFollowing}
           handleFollowButton={this.handleFollowButton}
