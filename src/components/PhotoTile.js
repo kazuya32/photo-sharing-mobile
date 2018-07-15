@@ -8,7 +8,9 @@ import {
   ActivityIndicator,
   Dimensions,
   Alert,
+  ActionSheetIOS,
   CameraRoll,
+  AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,16 +20,20 @@ import DownloadButton from '../elements/DownloadButton.js';
 
 class PhotoTile extends React.Component {
   state = {
+    // eslint-disable-next-line
     stadium: null,
     liked: this.props.photo.data.likes[this.props.uid],
     // logInUser: this.props.logInUser,
     uid: this.props.uid,
+    deleted: false,
   }
 
   componentDidMount() {
     const {
       photo,
     } = this.props;
+
+    this.checkMyPage(photo.data.uid);
 
     // const user = this.getUser(photo.data.uid);
     this.getUser(photo.data.uid);
@@ -48,6 +54,16 @@ class PhotoTile extends React.Component {
       likes,
       // match,
       // team,
+    });
+  }
+
+  // eslint-disable-next-line
+  checkMyPage = async (uid) => {
+    const value = await AsyncStorage.getItem('uid');
+    const isMyPage = (uid === value);
+    // const isMyPage = (this.props.uid === this.props.logInUser.id);
+    this.setState({
+      isMyPage,
     });
   }
 
@@ -139,6 +155,47 @@ class PhotoTile extends React.Component {
       });
   }
 
+  deletePhoto = () => {
+    const { photo } = this.props;
+    const db = firebase.firestore();
+    db.collection('photos').doc(photo.id).delete()
+      .then(() => {
+        // eslint-disable-next-line
+        console.log("Document successfully deleted!");
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error("Error removing document: ", error);
+      });
+    this.setState({ deleted: true });
+  }
+
+  onPressMenu = () => {
+    const options = ['キャンセル', 'リクエスト'];
+    const destructiveButtonIndex = options.length;
+    if (this.state.isMyPage) {
+      options.push('削除');
+    }
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 1) {
+          // eslint-disable-next-line
+          this.props.onPressPhoto && this.props.onPressPhoto();
+        }
+        if (buttonIndex === destructiveButtonIndex) {
+          this.deletePhoto();
+          // eslint-disable-next-line
+          this.props.onDeleted && this.props.onDeleted();
+        }
+      },
+    );
+  }
+
   render() {
     const {
       onPressUser,
@@ -155,31 +212,44 @@ class PhotoTile extends React.Component {
     }
 
     return (
-      <View style={styles.container}>
-        <View style={[styles.match, !this.state.match && { display: 'none' }]}>
-          <Text style={styles.matchPrefix}>
-            In
-          </Text>
+      <View style={[styles.container, this.state.deleted && { display: 'none' }]}>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <View style={[styles.match, !this.state.match && { display: 'none' }]}>
+              <Text style={styles.matchPrefix}>
+                In
+              </Text>
+              <TouchableHighlight
+                // onPress={this.onPressMatch}
+                onPress={this.props.onPressMatch}
+                underlayColor="transparent"
+              >
+                <Text style={styles.matchTitle}>
+                  {this.state.match && `${this.state.match.data.home.teamName} vs ${this.state.match.data.away.teamName}`}
+                </Text>
+              </TouchableHighlight>
+            </View>
+            <View style={[styles.team, !this.state.team && { display: 'none' }]}>
+              <Text style={styles.teamPrefix}>
+                For
+              </Text>
+              <TouchableHighlight
+                onPress={this.props.onPressTeam}
+                underlayColor="transparent"
+              >
+                <Text style={styles.teamTitle}>
+                  {this.state.team && `${this.state.team.data.name}`}
+                </Text>
+              </TouchableHighlight>
+            </View>
+          </View>
           <TouchableHighlight
-            // onPress={this.onPressMatch}
-            onPress={this.props.onPressMatch}
+            onPress={this.onPressMenu}
+            style={styles.menuButton}
             underlayColor="transparent"
           >
-            <Text style={styles.matchTitle}>
-              {this.state.match && `${this.state.match.data.home.teamName} vs ${this.state.match.data.away.teamName}`}
-            </Text>
-          </TouchableHighlight>
-        </View>
-        <View style={[styles.team, !this.state.team && { display: 'none' }]}>
-          <Text style={styles.teamPrefix}>
-            For
-          </Text>
-          <TouchableHighlight
-            onPress={this.props.onPressTeam}
-            underlayColor="transparent"
-          >
-            <Text style={styles.teamTitle}>
-              {this.state.team && `${this.state.team.data.name}`}
+            <Text style={styles.menuButtonTitle}>
+              …
             </Text>
           </TouchableHighlight>
         </View>
@@ -250,6 +320,34 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginBottom: 12,
   },
+  header: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#EBEBEB',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  headerLeft: {
+    paddingTop: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 12,
+  },
+  menuButton: {
+    justifyContent: 'center',
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingBottom: 10,
+    // paddingTop: 12,
+    bottom: 0,
+    height: 44,
+  },
+  menuButtonTitle: {
+    color: 'black',
+    alignSelf: 'center',
+    fontSize: 24,
+    fontWeight: '700',
+  },
   indicator: {
     // height: Dimensions.get('window').height * 0.6,
     // height: 30,
@@ -260,19 +358,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignContent: 'center',
-    paddingTop: 12,
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingBottom: 12,
+    // paddingTop: 12,
+    // paddingLeft: 16,
+    // paddingRight: 16,
+    // paddingBottom: 12,
   },
   team: {
     alignContent: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    paddingTop: 8,
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingBottom: 12,
+    marginTop: 8,
+    // paddingLeft: 16,
+    // paddingRight: 16,
+    // paddingBottom: 12,
   },
   matchTitle: {
     alignSelf: 'center',
@@ -302,8 +400,8 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   photoWrap: {
-    borderTopWidth: 1,
-    borderTopColor: '#EBEBEB',
+    // borderTopWidth: 1,
+    // borderTopColor: '#EBEBEB',
   },
   downloadBtn: {
     left: (Dimensions.get('window').width * 0.5) - 32,

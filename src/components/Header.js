@@ -8,15 +8,18 @@ class Header extends React.Component {
   state = {}
 
   componentWillMount() {
-    this.retrieveUserPhoto();
+    this.retrieveUser();
   }
 
-  retrieveUserPhoto = async () => {
+  retrieveUser = async () => {
     try {
-      const value = await AsyncStorage.getItem('photoURL');
-      if (value !== null) {
-        this.setState({ photoURL: value });
-      }
+      const photoURL = await AsyncStorage.getItem('photoURL');
+      const isAthlete = await AsyncStorage.getItem('isAthlete');
+
+      // if (photoURL !== null && isAthlete !== null) {
+      const value = (isAthlete === 'true');
+      this.setState({ photoURL, isAthlete: value });
+      // }
     } catch (error) {
     //
     }
@@ -28,6 +31,7 @@ class Header extends React.Component {
       onPressRight,
       headerTitle,
     } = this.props;
+
 
     return (
       <View style={styles.container}>
@@ -49,6 +53,7 @@ class Header extends React.Component {
             onPress={onPressRight}
             onPressIcon={onPressLeft}
             photoURL={this.state.photoURL}
+            isAthlete={this.state.isAthlete}
           />
         </View>
       </View>

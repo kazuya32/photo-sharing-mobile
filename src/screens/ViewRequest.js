@@ -22,10 +22,17 @@ class ViewRequest extends React.Component {
     placeholder: '  お返事を書きましょう！（任意）',
   }
 
-  onPress = () => {
+  onPressApprove = () => {
     Alert.alert('ダウンロードリクエストを承認しました。');
+    this.setState({ status: 'approved' });
     this.giveAccess();
-    // this.navigateToMyPage();
+    this.props.navigation.goBack();
+  }
+
+  onPressDecline = () => {
+    Alert.alert('ダウンロードリクエストを見送りました。');
+    this.setState({ status: 'declined' });
+    this.removeAccess();
     this.props.navigation.goBack();
   }
 
@@ -37,7 +44,7 @@ class ViewRequest extends React.Component {
       [`accesses.${this.props.navigation.state.params.user.id}`]: true,
     })
       .then(() => {
-        this.setApprove();
+        this.setApproved();
         // eslint-disable-next-line
         console.log('Document successfully written!');
       })
@@ -47,11 +54,44 @@ class ViewRequest extends React.Component {
       });
   }
 
-  setApprove = async () => {
+  removeAccess = async () => {
+    const db = firebase.firestore();
+    const Ref = db.collection('photos').doc(this.props.navigation.state.params.photo.id);
+    Ref.update({
+      [`accesses.${this.props.navigation.state.params.user.id}`]: false,
+    })
+      .then(() => {
+        this.setDeclined();
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
+  }
+
+  setApproved = async () => {
     const db = firebase.firestore();
     const Ref = db.collection('requests').doc(this.props.navigation.state.params.request.id);
     Ref.update({
       status: 'approved',
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
+  }
+
+  setDeclined = async () => {
+    const db = firebase.firestore();
+    const Ref = db.collection('requests').doc(this.props.navigation.state.params.request.id);
+    Ref.update({
+      status: 'declined',
     })
       .then(() => {
         // eslint-disable-next-line
@@ -82,6 +122,16 @@ class ViewRequest extends React.Component {
       photo,
     } = this.props.navigation.state.params;
 
+    let isApproved;
+
+    if (typeof this.state.status === 'undefined') {
+      // eslint-disable-next-line
+      isApproved = (request.data.status === 'approved');
+    } else {
+      // eslint-disable-next-line
+      isApproved = (this.state.status === 'approved');
+    }
+
     return (
       <View style={styles.container}>
         <Header
@@ -104,7 +154,7 @@ class ViewRequest extends React.Component {
             {request.data.message}
           </Text>
           <TextInput
-            style={[styles.input]}
+            style={[styles.input, { display: 'none' }]}
             // value={value}
             onChangeText={(text) => { this.setState({ text }); }}
             // onBlur={this.addTag}
@@ -116,13 +166,43 @@ class ViewRequest extends React.Component {
             placeholder={this.state.placeholder}
           />
         </ScrollView>
-        <View style={styles.footer}>
-          <CancelButton onPress={() => { this.props.navigation.goBack(); }}>
+        <View
+          style={[
+            styles.footer,
+            (isApproved) && { display: 'none' },
+          ]}
+        >
+          <CancelButton
+            style={{ marginRight: 12 }}
+            onPress={() => { this.props.navigation.goBack(); }}
+          >
             キャンセル
           </CancelButton>
-          <SaveButton onPress={this.onPress}>
+          <CancelButton
+            style={{ marginRight: 12 }}
+            onPress={this.onPressDecline}
+          >
+            承認しない
+          </CancelButton>
+          <SaveButton onPress={this.onPressApprove}>
             承認
           </SaveButton>
+        </View>
+        <View
+          style={[
+            styles.footer,
+            (!isApproved) && { display: 'none' },
+          ]}
+        >
+          <CancelButton
+            style={{ marginRight: 12 }}
+            onPress={() => { this.props.navigation.goBack(); }}
+          >
+            キャンセル
+          </CancelButton>
+          <CancelButton onPress={this.onPressDecline}>
+            取り消す
+          </CancelButton>
         </View>
       </View>
     );

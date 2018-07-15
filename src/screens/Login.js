@@ -85,6 +85,7 @@ class Login extends React.Component {
           desc: '',
           followers: {},
           following: {},
+          isAthlete: false,
         })
           .then(() => {
             this.storeUser(user.uid, `${user.photoURL}?type=normal`);

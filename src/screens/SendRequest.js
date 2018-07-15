@@ -23,6 +23,7 @@ class SendRequest extends React.Component {
     placeholder: '  メッセージを伝えましょう！（任意）',
     maxLength: 200,
     isUploading: false,
+    text: '',
   }
 
   componentWillMount() {
@@ -138,7 +139,10 @@ class SendRequest extends React.Component {
           />
         </ScrollView>
         <View style={styles.footer}>
-          <CancelButton onPress={() => { this.props.navigation.goBack(); }}>
+          <CancelButton
+            onPress={() => { this.props.navigation.goBack(); }}
+            style={{ marginRight: 12 }}
+          >
             キャンセル
           </CancelButton>
           <SaveButton onPress={this.uploadRequest} shadow >

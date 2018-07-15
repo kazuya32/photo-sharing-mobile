@@ -54,16 +54,18 @@ class Home extends React.Component {
         id: doc.id,
         data: doc.data(),
       };
+      this.storeLogInUser(logInUser);
       this.setState({ logInUser });
-      // if (this.state.isMyPage) {
-      //   this.storeUserPhoto(user.photoURL);
-      // }
     });
   }
 
-  storeUserPhoto = async (photoURL) => {
+  storeLogInUser = async (logInUser) => {
     try {
-      await AsyncStorage.setItem('photoURL', photoURL);
+      // await AsyncStorage.setItem('uid', logInUser.id);
+      await AsyncStorage.setItem('photoURL', logInUser.data.photoURL);
+      await AsyncStorage.setItem('name', logInUser.data.name);
+      await AsyncStorage.setItem('desc', logInUser.data.desc);
+      await AsyncStorage.setItem('isAthlete', logInUser.data.isAthlete.toString());
     } catch (error) {
       // Error saving data
     }

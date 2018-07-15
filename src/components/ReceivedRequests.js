@@ -5,7 +5,7 @@ import {
   FlatList,
 } from 'react-native';
 
-import RequestTile from './RequestTile.js';
+import ReceivedRequestTile from './ReceivedRequestTile.js';
 
 class ReceivedRequests extends React.Component {
   state = {
@@ -45,7 +45,7 @@ class ReceivedRequests extends React.Component {
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
-    <RequestTile
+    <ReceivedRequestTile
       request={item}
       onPress={this.onPress}
     />

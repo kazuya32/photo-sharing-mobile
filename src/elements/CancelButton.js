@@ -19,7 +19,6 @@ class SendButton extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    right: 16,
     height: 30,
     alignSelf: 'center',
   },

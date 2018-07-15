@@ -40,6 +40,7 @@ class PhotoDetail extends React.Component {
   render() {
     const { photo } = this.props.navigation.state.params;
     const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUser.id];
+    // eslint-disable-next-line
     const isPending = photo.data.pendingRequests && photo.data.pendingRequests[this.state.logInUser.id];
 
     return (
@@ -53,6 +54,7 @@ class PhotoDetail extends React.Component {
           <PhotoTile
             photo={photo}
             onPressUser={this.onPressUser}
+            onDeleted={() => { this.props.navigation.goBack(); }}
             photoStyle={styles.photo}
             logInUser={this.state.logInUser}
             uid={this.state.logInUser && this.state.logInUser.id}

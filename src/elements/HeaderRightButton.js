@@ -6,7 +6,12 @@ import UserIcon from './UserIcon.js';
 
 class HeaderRightButton extends React.Component {
   render() {
-    const { onPress, photoURL, onPressIcon } = this.props;
+    const {
+      onPress,
+      photoURL,
+      onPressIcon,
+      isAthlete,
+    } = this.props;
 
     return (
       <View style={styles.container}>
@@ -25,6 +30,7 @@ class HeaderRightButton extends React.Component {
           onPress={onPressIcon}
           photoURL={photoURL}
           dia={32}
+          isAthlete={isAthlete}
         />
       </View>
     );

@@ -7,21 +7,16 @@ class SendButton extends React.Component {
   render() {
     const {
       onPress,
-      photoURL,
       dia,
       style,
+      isAthlete,
     } = this.props;
+    let photoURL;
 
-    // if (!photoURL) {
-    //   return (
-    //     <TouchableHighlight
-    //       onPress={onPress}
-    //       underlayColor="transparent"
-    //     >
-    //       <FontAwesomeIcon name="user-circle-o" size={dia} />
-    //     </TouchableHighlight>
-    //   );
-    // }
+    if (this.props.photoURL) {
+      // eslint-disable-next-line
+      photoURL = this.props.photoURL;
+    }
 
     return (
       <TouchableHighlight
@@ -34,7 +29,11 @@ class SendButton extends React.Component {
         underlayColor="transparent"
       >
         <Image
-          style={[styles.photo, { width: dia, height: dia, borderRadius: dia * 0.5 }]}
+          style={[
+            styles.photo,
+            { width: dia, height: dia, borderRadius: dia * 0.5 },
+            isAthlete && { borderWidth: 3, borderColor: '#DB4D5E' },
+          ]}
           source={{ uri: photoURL }}
           resizeMode="contain"
         />
@@ -45,9 +44,9 @@ class SendButton extends React.Component {
 
 const styles = StyleSheet.create({
   profilePhoto: {
-    backgroundColor: 'gray',
   },
   photo: {
+    backgroundColor: 'gray',
     // borderWidth: 1,
     // borderColor: '#EBEBEB',
     shadowColor: '#000',

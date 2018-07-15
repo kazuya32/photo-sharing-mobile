@@ -239,7 +239,8 @@ class UserPage extends React.Component {
         <Profile
           logInUser={this.state.logInUser}
           uid={this.state.uid}
-          requests={this.state.receivedRequests}
+          receivedRequests={this.state.receivedRequests}
+          sentRequests={this.state.sentRequests}
           user={this.state.user}
           photoURL={this.state.user && this.state.user.data.photoURL}
           isFollowing={this.state.isFollowing}
@@ -268,7 +269,7 @@ class UserPage extends React.Component {
           <PhotoCollection
             tabLabel="Posts"
             navigation={this.props.navigation}
-            photos={this.state.photos && this.state.photos}
+            // photos={this.state.photos && this.state.photos}
             uid={this.state.uid}
             logInUser={this.state.logInUser}
             // numColumns={3}

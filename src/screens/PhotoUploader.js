@@ -16,7 +16,7 @@ import TagBox from '../components/TagBox.js';
 class PhotoUploader extends React.Component {
   state = {
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
-    // tags: ['sample1', 'sample2'],
+    tags: [],
     people: null,
     match: null,
     team: null,
@@ -104,14 +104,15 @@ class PhotoUploader extends React.Component {
       const res = await fetch(this.props.navigation.state.params.image.uri);
       const file = await res.blob();
 
-      const path = `photos/${this.state.uid}/${Date.now().toString()}.jpg`;
+      const createdAt = Date.now();
+
+      const path = `photos/${this.state.uid}/${createdAt.toString()}.jpg`;
       const storageRef = firebase.storage().ref();
       const imageRef = storageRef.child(path);
 
       imageRef.put(file).then((snapshot) => {
         // console.log(snapshot);
         if (snapshot.state) {
-          const createdAt = Date.now();
           this.indexToDatabase(path, snapshot.downloadURL, createdAt);
         } else {
           Alert.alert('アップロードに失敗しました。');
@@ -145,9 +146,10 @@ class PhotoUploader extends React.Component {
           routeName: 'UserPage',
           params: {
             logInUser: this.state.logInUser,
+            uid: this.state.logInUser.id,
             // user: item,
           },
-          key: 'UserPage' + this.state.uid,
+          key: 'UserPage' + this.state.logInUser.id,
         });
       })
       .catch((error) => {

@@ -5,7 +5,7 @@ import {
   FlatList,
 } from 'react-native';
 
-import RequestTile from './RequestTile.js';
+import SentRequestTile from './SentRequestTile.js';
 
 class ReceivedRequests extends React.Component {
   state = {
@@ -28,27 +28,22 @@ class ReceivedRequests extends React.Component {
     });
   }
 
-  onPress = (request, user, photo) => {
+  onPress = (photo) => {
     this.props.navigation.navigate({
-      routeName: 'ViewRequest',
+      routeName: 'PhotoDetail',
       params: {
-        request,
-        user,
         photo,
         logInUser: this.state.logInUser,
-        // user: item,
       },
-      key: 'ViewRequest' + request.id,
     });
   }
 
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
-    <RequestTile
+    <SentRequestTile
       request={item}
       onPress={this.onPress}
-      isSent
     />
   );
 

@@ -26,22 +26,22 @@ class PhotoCollection extends React.Component {
   // eslint-disable-next-line
   fetchPhotos = (uid) => {
     const db = firebase.firestore();
+    // eslint-disable-next-line
     const maxResults = 30;
     // eslint-disable-next-line
     // const photosRef = db.collection('photos').where('uid', '==', this.state.uid).orderBy('createdAt', 'desc').limit(maxResults);
     const photosRef = db.collection('photos').where('uid', '==', uid);
 
-    const photos = [];
-    photosRef.get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          photos.push({
-            id: doc.id,
-            data: doc.data(),
-          });
+    photosRef.onSnapshot((querySnapshot) => {
+      const photos = [];
+      querySnapshot.forEach((doc) => {
+        photos.push({
+          id: doc.id,
+          data: doc.data(),
         });
-        this.setState({ photos });
       });
+      this.setState({ photos });
+    });
   }
 
   keyExtractor = (item, index) => index.toString();

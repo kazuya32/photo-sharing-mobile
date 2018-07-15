@@ -10,10 +10,10 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 
-class RequestTile extends React.Component {
+class ReceivedRequestTile extends React.Component {
   state = {
     // logInUid: this.props.logInUid,
-    isRead: false,
+    isReadAfterApproved: false,
   }
 
   componentWillMount() {
@@ -47,11 +47,11 @@ class RequestTile extends React.Component {
     });
   }
 
-  setRead = async (request) => {
+  setReadAfterApproved = async (request) => {
     const db = firebase.firestore();
     const Ref = db.collection('requests').doc(request.id);
     Ref.update({
-      isRead: true,
+      isReadAfterApproved: true,
     })
       .then(() => {
         // eslint-disable-next-line
@@ -64,17 +64,22 @@ class RequestTile extends React.Component {
   }
 
   onPress = (request, user, photo) => {
-    this.setState({ isRead: true });
-    this.setRead(request);
-    this.props.onPress(request, user, photo);
+    if (request.data.status === 'approved') {
+      this.setState({ isReadAfterApproved: true });
+      this.setReadAfterApproved(request);
+    }
+    this.props.onPress(photo);
   }
 
   render() {
     const {
       // onPress,
       request,
-      isSent,
     } = this.props;
+
+    const pendingMessage = 'さんにダウンロードリクエストを送信しました。';
+    const approvedMessage = 'さんからダウンロードリクエストを承認されました。';
+    const text = request.data.status === 'approved' ? approvedMessage : pendingMessage;
 
     if (!(this.state.user && this.state.photo)) {
     // if (!(this.state.photo)) {
@@ -100,11 +105,11 @@ class RequestTile extends React.Component {
             <Text
               style={[
                 styles.userName,
-                isSent && { color: 'black' },
-                (this.state.isRead || request.data.isRead) && { color: 'black' },
+                (request.data.status === 'approved') && { color: '#DB4D5E' },
+                (this.state.isReadAfterApproved || request.data.isReadAfterApproved) && { color: 'black' },
               ]}
             >
-              {`${this.state.user && this.state.user.data.name}さんからのダウンロードリクエストが届いています。`}
+              {`${this.state.user && this.state.user.data.name}${text}`}
             </Text>
             <Text
               style={[
@@ -124,8 +129,8 @@ class RequestTile extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingTop: 4,
+    paddingBottom: 4,
     paddingLeft: 16,
     paddingRight: 16,
     // justifyContent: 'center',
@@ -143,7 +148,7 @@ const styles = StyleSheet.create({
   userName: {
     // alignSelf: 'center',
     fontSize: 16,
-    color: '#DB4D5E',
+    color: 'black',
   },
   contents: {
     flexDirection: 'column',
@@ -153,4 +158,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RequestTile;
+export default ReceivedRequestTile;
