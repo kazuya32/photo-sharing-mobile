@@ -89,6 +89,7 @@ class ReceivedRequestTile extends React.Component {
       <TouchableHighlight
         style={styles.container}
         onPress={() => this.onPress(request, this.state.user, this.state.photo)}
+        underlayColor="transparent"
       >
         <View style={{ flexDirection: 'row' }}>
           <Image

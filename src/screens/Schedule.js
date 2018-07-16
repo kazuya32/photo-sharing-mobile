@@ -4,16 +4,18 @@ import {
   View,
   FlatList,
   Dimensions,
+  ActivityIndicator,
   Image,
 } from 'react-native';
 import firebase from 'firebase';
 
 import ListItem from '../components/ListItem.js';
-import BackgroundImage from '../../assets/image/background/sample3.jpg';
+import BackgroundImage from '../../assets/image/background/sample1.jpg';
 import Header from '../components/Header.js';
 
 class Schedule extends React.Component {
   state = {
+    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     schedules: [],
   }
 
@@ -37,27 +39,44 @@ class Schedule extends React.Component {
 
   keyExtractor = (item, index) => index.toString();
 
-  renderItem({ item }) {
-    return (
-      <ListItem
-        onPress={() => {
-          this.props.navigation.navigate({
-            routeName: 'Match',
-            params: item,
-          });
-        }}
-        text={item.data.date.toDateString()}
-      />
-    );
-  }
+  renderItem = ({ item }) => (
+    <ListItem
+      onPress={() => {
+        this.props.navigation.navigate({
+          routeName: 'Match',
+          params: {
+            id: item.id,
+            data: item.data,
+            logInUser: this.state.logInUser,
+          },
+        });
+      }}
+      text={item.data.date.toDateString()}
+    />
+  );
 
   render() {
+    if (!this.state.schedules) {
+      return (
+        <View style={styles.container}>
+          <Header
+            navigation={this.props.navigation}
+            logInUser={this.state.logInUser}
+            headerTitle="Match Schedule"
+          />
+          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+            <ActivityIndicator />
+          </View>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="Match Schedule"
+          navigation={this.props.navigation}
+          logInUser={this.state.logInUser}
         />
         <Image
           style={styles.bgImage}
@@ -68,7 +87,7 @@ class Schedule extends React.Component {
         <View style={styles.feedArea}>
           <FlatList
             data={this.state.schedules}
-            renderItem={this.renderItem.bind(this)}
+            renderItem={this.renderItem}
             keyExtractor={this.keyExtractor}
           />
         </View>
@@ -80,7 +99,7 @@ class Schedule extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 70,
+    paddingTop: 80,
   },
   bgImage: {
     opacity: 0.8,

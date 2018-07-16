@@ -18,18 +18,6 @@ class RequestList extends React.Component {
     // const { followingObject } = this.props;
   }
 
-  // eslint-disable-next-line
-  navigateToMyPage = () => {
-    this.props.navigation.navigate({
-      routeName: 'UserPage',
-      params: {
-        uid: this.state.logInUser.id,
-        logInUser: this.state.logInUser,
-      },
-      key: 'UserPage' + this.state.logInUser.id,
-    });
-  }
-
   onPress = (request, user, photo) => {
     this.props.navigation.navigate({
       routeName: 'ViewRequest',
@@ -51,11 +39,9 @@ class RequestList extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          // onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-          onPressLeft={this.navigateToMyPage}
-          // onPressLeft={() => { this.setState({ uid: this.state.logInUid }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="FLEGO"
+          navigation={this.props.navigation}
+          // logInUser={this.state.logInUser}
         />
         <ScrollableTabView
           // renderTabBar={this.renderTabBar}
@@ -70,14 +56,14 @@ class RequestList extends React.Component {
           <ReceivedRequests
             tabLabel="受信"
             navigation={this.props.navigation}
-            logInUser={this.state.logInUser}
+            // logInUser={this.state.logInUser}
             // numColumns={3}
             // horizontal={true}
           />
           <SentRequests
             tabLabel="送信"
             navigation={this.props.navigation}
-            logInUser={this.state.logInUser}
+            // logInUser={this.state.logInUser}
             // numColumns={3}
             // horizontal={true}
           />

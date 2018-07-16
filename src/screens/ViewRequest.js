@@ -103,18 +103,6 @@ class ViewRequest extends React.Component {
       });
   }
 
-  navigateToMyPage = () => {
-    this.props.navigation.navigate({
-      routeName: 'UserPage',
-      params: {
-        uid: this.state.logInUser.id,
-        logInUser: this.state.logInUser,
-      },
-      key: 'UserPage' + this.state.logInUser.id,
-    });
-  }
-
-
   render() {
     const {
       request,
@@ -135,10 +123,7 @@ class ViewRequest extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          // onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-          onPressLeft={this.navigateToMyPage}
-          // onPressLeft={() => { this.setState({ uid: this.state.logInUid }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+          navigation={this.props.navigation}
           headerTitle="FLEGO"
         />
         <ScrollView>

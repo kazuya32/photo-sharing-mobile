@@ -64,6 +64,7 @@ class PhotoTile extends React.Component {
     // const isMyPage = (this.props.uid === this.props.logInUser.id);
     this.setState({
       isMyPage,
+      logInUid: value,
     });
   }
 
@@ -267,7 +268,7 @@ class PhotoTile extends React.Component {
         <DownloadButton
           style={styles.downloadBtn}
           onPress={this.onPressDownload}
-          hasAccess={photo.data.accesses && photo.data.accesses[this.state.uid]}
+          hasAccess={photo.data.accesses && photo.data.accesses[this.state.logInUid]}
         />
         <View style={styles.bar}>
           <View style={styles.likes}>

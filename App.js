@@ -3,9 +3,6 @@ import firebase from 'firebase';
 import { AsyncStorage, Easing, Animated } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 // import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import Login from './src/screens/Login.js';
 import Home from './src/screens/Home.js';
@@ -26,6 +23,8 @@ import Team from './src/screens/Team.js';
 import UserSearch from './src/screens/UserSearch.js';
 import SearchTag from './src/screens/SearchTag.js';
 import SearchMatch from './src/screens/SearchMatch.js';
+import Search from './src/screens/Search.js';
+import PlayerList from './src/screens/PlayerList.js';
 
 import ENV from './env.json';
 
@@ -59,23 +58,12 @@ firebase.auth().onAuthStateChanged(async (user) => {
       providerData,
     } = user;
 
-    // this.setState({
-    //   displayName,
-    //   email,
-    //   emailVerified,
-    //   photoURL,
-    //   isAnonymous,
-    //   uid,
-    //   providerData,
-    // });
-
     try {
       await AsyncStorage.setItem('uid', uid);
       // await AsyncStorage.setItem('facebookId', providerData[0].uid);
     } catch (error) {
       console.log('failed to saving AsyncStorage');
     }
-
   // eslint-disable-next-line
   } else {
     console.log('not login');
@@ -99,9 +87,14 @@ const App = createStackNavigator({
   PhotoUploader: { screen: PhotoUploader },
   SearchTag: { screen: SearchTag },
   SearchMatch: { screen: SearchMatch },
+  Search: { screen: Search },
+  PlayerList: { screen: PlayerList },
+  Team: { screen: Team },
+  Schedule: { screen: Schedule },
+  Match: { screen: Match },
 }, {
   headerMode: 'none',
-  initialRouteName: 'Login',
+  // initialRouteName: 'Login',
   // mode: 'modal',
   navigationOptions: {
     gesturesEnabled: true,

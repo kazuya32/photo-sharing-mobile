@@ -104,19 +104,9 @@ class MatchFeed extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => {
-            this.props.navigation.navigate({
-              routeName: 'UserPage',
-              params: {
-                logInUser: this.state.logInUser,
-                uid: this.state.logInUser.id,
-                // user: item,
-              },
-              key: 'UserPage' + this.state.logInUser.id,
-            });
-          }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle={this.state.headerTitle}
+          navigation={this.props.navigation}
+          logInUser={this.state.logInUser}
         />
         <FlatList
           navigation={this.props.navigation}

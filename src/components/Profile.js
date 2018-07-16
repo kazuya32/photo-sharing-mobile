@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import UserIcon from '../elements/UserIcon.js';
 import EditButton from '../elements/EditButton.js';

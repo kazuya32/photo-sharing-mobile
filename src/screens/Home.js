@@ -163,31 +163,11 @@ class Home extends React.Component {
 
   render() {
     console.log(Constants.statusBarHeight);
-
-    // if (!this.state.logInUser) {
-    //   return (
-    //     <Text style={{ flex: 1, padding: 20, alignSelf: 'center' }}>
-    //       ログイン中・・・
-    //     </Text>
-    //   );
-    // }
-
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => {
-            this.props.navigation.navigate({
-              routeName: 'UserPage',
-              params: {
-                logInUser: this.state.logInUser,
-                uid: this.state.uid,
-                // user: item,
-              },
-              key: 'UserPage' + this.state.uid,
-            });
-          }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle={this.state.headerTitle}
+          navigation={this.props.navigation}
         />
         <PhotoFeed
           logInUser={this.state.logInUser}
@@ -202,18 +182,7 @@ class Home extends React.Component {
           navigation={this.props.navigation}
           // scheduleId={scheduleId}
         />
-        <UploadButton
-          // onPress={() => {
-          //   this.props.navigation.navigate({
-          //     routeName: 'PhotoPicker',
-          //     params: {
-          //       logInUser: this.state.logInUser,
-          //       // user: item,
-          //     },
-          //   });
-          // }}
-          onPress={this.onPressUpload}
-        />
+        <UploadButton onPress={this.onPressUpload} />
       </View>
     );
   }

@@ -16,7 +16,7 @@ import Header from '../components/Header.js';
 class TeamFeed extends React.Component {
   state = {
     headerTitle: 'FLEGO',
-    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
+    // logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
   }
 
   componentWillMount() {
@@ -103,18 +103,8 @@ class TeamFeed extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => {
-            this.props.navigation.navigate({
-              routeName: 'UserPage',
-              params: {
-                logInUser: this.state.logInUser,
-                uid: this.state.logInUser.id,
-                // user: item,
-              },
-              key: 'UserPage' + this.state.logInUser.id,
-            });
-          }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+          navigation={this.props.navigation}
+          logInUser={this.state.logInUser}
           headerTitle={this.state.headerTitle}
         />
         <FlatList

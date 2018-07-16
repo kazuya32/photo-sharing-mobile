@@ -21,13 +21,13 @@ class Nortification extends React.Component {
 
   keyExtractor = (item, index) => index.toString();
 
-  renderItem({ item, index, section }) {
+  renderItem = (item) => {
     return (
       <NortificationItem item={item} />
     );
   }
 
-  renderSectionHeader({ section }) {
+  renderSectionHeader = (section) => {
     return (
       <NortificationHeader title={section.title} />
     );
@@ -37,9 +37,9 @@ class Nortification extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="FLEGO"
+          navigation={this.props.navigation}
+          logInUser={this.state.logInUser}
         />
         <SectionList
           renderItem={this.renderItem.bind(this)}

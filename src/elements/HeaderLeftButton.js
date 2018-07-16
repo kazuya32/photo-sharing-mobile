@@ -5,11 +5,11 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class HeaderLeftButton extends React.Component {
   render() {
-    const { onPressLeft } = this.props;
+    const { onPress } = this.props;
 
     return (
       <TouchableHighlight
-        onPress={onPressLeft}
+        onPress={onPress}
         underlayColor="transparent"
       >
         <Icon

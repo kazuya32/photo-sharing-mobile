@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
-class NortificationHeader extends React.Component {
+class UserSectionHeader extends React.Component {
   render() {
     const { title } = this.props;
 
@@ -16,8 +16,9 @@ class NortificationHeader extends React.Component {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingBottom: 20,
+    paddingBottom: 12,
     paddingLeft: 16,
+    paddingRight: 16,
     paddingTop: 12,
     borderTopWidth: 2,
     borderColor: '#EBEBEB',
@@ -28,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NortificationHeader;
+export default UserSectionHeader;

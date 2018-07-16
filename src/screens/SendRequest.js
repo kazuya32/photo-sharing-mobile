@@ -9,6 +9,7 @@ import {
   TextInput,
   ScrollView,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -28,6 +29,23 @@ class SendRequest extends React.Component {
 
   componentWillMount() {
     this.getUser(this.props.navigation.state.params.photo.data.uid);
+    this.retrieveLogInUser();
+  }
+
+  // eslint-disable-next-line
+  retrieveLogInUser = async () => {
+    try {
+      const logInUid = await AsyncStorage.getItem('uid');
+      // const photoURL = await AsyncStorage.getItem('photoURL');
+      // const isAthlete = await AsyncStorage.getItem('isAthlete');
+
+      // if (photoURL !== null && isAthlete !== null) {
+      // const value = (isAthlete === 'true');
+      this.setState({ logInUid });
+      // }
+    } catch (error) {
+    //
+    }
   }
 
   // eslint-disable-next-line
@@ -48,7 +66,7 @@ class SendRequest extends React.Component {
       const createdAt = Date.now();
       const db = firebase.firestore();
       db.collection('requests').doc().set({
-        from: this.state.logInUser.id,
+        from: this.state.logInUid,
         to: this.state.user.id,
         photoId: this.props.navigation.state.params.photo.id,
         message: this.state.text,
@@ -64,10 +82,10 @@ class SendRequest extends React.Component {
           this.props.navigation.navigate({
             routeName: 'Home',
             params: {
-              uid: this.state.logInUser.id,
+              uid: this.state.logInUid,
               // user: item,
             },
-            key: 'Home' + this.state.logInUser.id,
+            key: 'Home',
           });
         })
         .catch((error) => {
@@ -98,8 +116,7 @@ class SendRequest extends React.Component {
       return (
         <View style={styles.container}>
           <Header
-            onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-            onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+            navigation={this.props.navigation}
             headerTitle={this.state.headerTitle}
           />
           <View style={styles.indicator}>
@@ -112,8 +129,8 @@ class SendRequest extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+          navigation={this.props.navigation}
+          logInUser={this.state.logInUser}
           headerTitle={this.state.headerTitle}
         />
         <ScrollView>

@@ -22,7 +22,7 @@ class ReceivedRequests extends React.Component {
       routeName: 'UserPage',
       params: {
         uid: this.state.logInUser.id,
-        logInUser: this.state.logInUser,
+        // logInUser: this.state.logInUser,
       },
       key: 'UserPage' + this.state.logInUser.id,
     });

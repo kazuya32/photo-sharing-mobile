@@ -5,6 +5,7 @@ import {
   Image,
   FlatList,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -15,6 +16,7 @@ import BackgroundImage from '../../assets/image/background/sample3.jpg';
 
 class Team extends React.Component {
   state = {
+    // logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     teams: [],
   }
 
@@ -37,6 +39,7 @@ class Team extends React.Component {
   keyExtractor = (item, index) => index.toString();
 
   renderItem({ item }) {
+    // console.log(this.props.navigation.state.params && this.props.navigation.state.params.logInUser);
     return (
       <ListItem
         onPress={() => {
@@ -45,6 +48,7 @@ class Team extends React.Component {
             params: {
               feedType: 'team',
               itemId: item.id,
+              logInUser: this.state.logInUser,
             },
           });
         }}
@@ -54,11 +58,26 @@ class Team extends React.Component {
   }
 
   render() {
+    if (!this.state.teams) {
+      return (
+        <View style={styles.container}>
+          <Header
+            navigation={this.props.navigation}
+            logInUser={this.state.logInUser}
+            headerTitle="Team"
+          />
+          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+            <ActivityIndicator />
+          </View>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
+          navigation={this.props.navigation}
+          logInUser={this.state.logInUser}
           headerTitle="Team"
         />
         <Image

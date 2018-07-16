@@ -90,7 +90,10 @@ class EditProfile extends React.Component {
           />
         </ScrollView>
         <View style={styles.footer}>
-          <CancelButton onPress={this.onPressCancel}>
+          <CancelButton
+            onPress={this.onPressCancel}
+            style={{ marginRight: 12 }}
+          >
             キャンセル
           </CancelButton>
           <SaveButton onPress={this.onPressSave}>

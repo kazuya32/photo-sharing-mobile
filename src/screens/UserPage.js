@@ -137,7 +137,7 @@ class UserPage extends React.Component {
       routeName: 'UserPage',
       params: {
         uid,
-        logInUser: this.state.logInUser,
+        // logInUser: this.state.logInUser
         // user: item,
       },
       key: 'UserPage' + uid,
@@ -150,7 +150,7 @@ class UserPage extends React.Component {
       routeName: 'RequestList',
       params: {
         // uid,
-        logInUser: this.state.logInUser,
+        // logInUser: this.state.logInUser,
         receivedRequests: this.state.receivedRequests,
         sentRequests: this.state.sentRequests,
       },
@@ -188,17 +188,6 @@ class UserPage extends React.Component {
       });
   }
 
-  navigateToMyPage = () => {
-    this.props.navigation.navigate({
-      routeName: 'UserPage',
-      params: {
-        uid: this.state.logInUid,
-        logInUser: this.state.logInUser,
-      },
-      key: 'UserPage' + this.state.logInUid,
-    });
-  }
-
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
@@ -230,11 +219,9 @@ class UserPage extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          // onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-          onPressLeft={this.navigateToMyPage}
-          // onPressLeft={() => { this.setState({ uid: this.state.logInUid }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="FLEGO"
+          navigation={this.props.navigation}
+          logInUser={this.state.logInUser}
         />
         <Profile
           logInUser={this.state.logInUser}

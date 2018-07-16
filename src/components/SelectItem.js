@@ -4,16 +4,36 @@ import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 
 class SelectItem extends React.Component {
   render() {
-    const { onPress, title } = this.props;
+    const {
+      onPress,
+      title,
+      style,
+      itemColor,
+    } = this.props;
 
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          style,
+        ]}
+      >
         <TouchableHighlight onPress={onPress} underlayColor="transparent">
-          <View style={styles.item}>
+          <View
+            style={[
+              styles.item,
+              // { borderColor: itemColor },
+            ]}
+          >
             <Text style={styles.itemTitle}>
               {title}
             </Text>
-            <Text style={styles.button}>
+            <Text
+              style={[
+                styles.button,
+                itemColor && { color: itemColor },
+              ]}
+            >
               <IoniconsIcon name="ios-arrow-forward-outline" size={24} />
             </Text>
           </View>
@@ -33,8 +53,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingTop: 12,
     paddingBottom: 12,
-    paddingLeft: 12,
-    paddingRight: 12,
+    paddingLeft: 16,
+    paddingRight: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

@@ -1,11 +1,20 @@
 import React from 'react';
-import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  AsyncStorage,
+  TouchableHighlight,
+} from 'react-native';
 
 import HeaderLeftButton from '../elements/HeaderLeftButton.js';
 import HeaderRightButton from '../elements/HeaderRightButton.js';
 
 class Header extends React.Component {
-  state = {}
+  state = {
+    // uid: this.props.navigation.state.params && this.props.navigation.state.params.uid,
+    // logInUser: this.props.logInUser,
+  }
 
   componentWillMount() {
     this.retrieveUser();
@@ -13,22 +22,52 @@ class Header extends React.Component {
 
   retrieveUser = async () => {
     try {
+      const uid = await AsyncStorage.getItem('uid');
       const photoURL = await AsyncStorage.getItem('photoURL');
       const isAthlete = await AsyncStorage.getItem('isAthlete');
 
       // if (photoURL !== null && isAthlete !== null) {
       const value = (isAthlete === 'true');
-      this.setState({ photoURL, isAthlete: value });
+      this.setState({ uid, photoURL, isAthlete: value });
       // }
     } catch (error) {
     //
     }
   }
 
+  navigateToMyPage = () => {
+    this.props.navigation.navigate({
+      routeName: 'UserPage',
+      params: {
+        uid: this.state.uid,
+        // logInUser: this.state.logInUser,
+      },
+      key: 'UserPage' + this.state.uid,
+    });
+  }
+
+  navigateToSearch = () => {
+    this.props.navigation.navigate({
+      routeName: 'Search',
+      params: {
+        logInUser: this.state.logInUser,
+      },
+    });
+  }
+
+  navigateToHome = () => {
+    this.props.navigation.navigate({
+      routeName: 'Home',
+      params: {
+      },
+      // key: 'Home' + Date.now().toString(),
+    });
+  }
+
   render() {
     const {
-      onPressLeft,
-      onPressRight,
+      // onPressLeft,
+      // onPressRight,
       headerTitle,
     } = this.props;
 
@@ -37,21 +76,20 @@ class Header extends React.Component {
       <View style={styles.container}>
         <View style={styles.button}>
           <HeaderLeftButton
-            onPress={onPressLeft}
-            photoURL={this.state.photoURL}
+            onPress={this.navigateToSearch}
           />
         </View>
         <View style={styles.appbar}>
-          <View>
+          <TouchableHighlight onPress={this.navigateToHome} underlayColor="transparent">
             <Text style={styles.appbarTitle}>
               {headerTitle}
             </Text>
-          </View>
+          </TouchableHighlight>
         </View>
         <View style={styles.button}>
           <HeaderRightButton
-            onPress={onPressRight}
-            onPressIcon={onPressLeft}
+            // onPress={onPressRight}
+            onPressIcon={this.navigateToMyPage}
             photoURL={this.state.photoURL}
             isAthlete={this.state.isAthlete}
           />
@@ -93,8 +131,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   button: {
-    paddingLeft: 14,
-    paddingRight: 14,
+    paddingLeft: 18,
+    paddingRight: 18,
   },
 });
 

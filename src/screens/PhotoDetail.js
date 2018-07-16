@@ -4,6 +4,7 @@ import {
   View,
   ScrollView,
   Dimensions,
+  AsyncStorage,
 } from 'react-native';
 
 import DownloadRequestButton from '../elements/DownloadRequestButton';
@@ -12,7 +13,27 @@ import Header from '../components/Header.js';
 
 class PhotoDetail extends React.Component {
   state = {
-    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
+    // logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
+  }
+
+  componentWillMount() {
+    this.retrieveLogInUser();
+  }
+
+  // eslint-disable-next-line
+  retrieveLogInUser = async () => {
+    try {
+      const logInUid = await AsyncStorage.getItem('uid');
+      // const photoURL = await AsyncStorage.getItem('photoURL');
+      // const isAthlete = await AsyncStorage.getItem('isAthlete');
+
+      // if (photoURL !== null && isAthlete !== null) {
+      // const value = (isAthlete === 'true');
+      this.setState({ logInUid });
+      // }
+    } catch (error) {
+    //
+    }
   }
 
   onPress = () => {
@@ -21,7 +42,30 @@ class PhotoDetail extends React.Component {
       routeName: 'SendRequest',
       params: {
         photo: this.props.navigation.state.params.photo,
-        logInUser: this.state.logInUser,
+        // logInUser: this.state.logInUser,
+      },
+    });
+  }
+
+  onPressMatch = () => {
+    const { photo } = this.props.navigation.state.params;
+    this.props.navigation.navigate({
+      routeName: 'MatchFeed',
+      params: {
+        feedType: 'match',
+        itemId: photo.data.matchId,
+        matchPath: photo.data.matchPath,
+      },
+    });
+  }
+
+  onPressTeam = () => {
+    const { photo } = this.props.navigation.state.params;
+    this.props.navigation.navigate({
+      routeName: 'TeamFeed',
+      params: {
+        feedType: 'team',
+        itemId: photo.data.teamId,
       },
     });
   }
@@ -31,7 +75,7 @@ class PhotoDetail extends React.Component {
       routeName: 'UserPage',
       params: {
         uid: this.props.navigation.state.params.photo.data.uid,
-        logInUser: this.state.logInUser,
+        // logInUser: this.state.logInUser,
       },
       key: 'UserPage' + this.props.navigation.state.params.photo.data.uid,
     });
@@ -39,25 +83,26 @@ class PhotoDetail extends React.Component {
 
   render() {
     const { photo } = this.props.navigation.state.params;
-    const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUser.id];
+    const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
     // eslint-disable-next-line
-    const isPending = photo.data.pendingRequests && photo.data.pendingRequests[this.state.logInUser.id];
+    const isPending = photo.data.pendingRequests && photo.data.pendingRequests[this.state.logInUid];
 
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="FLEGO"
+          navigation={this.props.navigation}
         />
         <ScrollView>
           <PhotoTile
             photo={photo}
             onPressUser={this.onPressUser}
+            onPressTeam={this.onPressTeam}
+            onPressMatch={this.onPressMatch}
             onDeleted={() => { this.props.navigation.goBack(); }}
             photoStyle={styles.photo}
-            logInUser={this.state.logInUser}
-            uid={this.state.logInUser && this.state.logInUser.id}
+            // logInUser={this.state.logInUser}
+            uid={this.state.logInUid}
           />
           <DownloadRequestButton
             onPress={this.onPress}
@@ -65,7 +110,7 @@ class PhotoDetail extends React.Component {
               styles.reqBtn,
             ]}
             hasAccess={hasAccess}
-            isMyPage={(photo.data.uid === this.state.logInUser.id)}
+            isMyPage={(photo.data.uid === this.state.logInUid)}
             isPending={isPending}
             textStyle={styles.btnTitle}
           />

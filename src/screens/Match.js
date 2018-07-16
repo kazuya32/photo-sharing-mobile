@@ -4,6 +4,7 @@ import {
   View,
   Image,
   FlatList,
+  ActivityIndicator,
   Dimensions,
 } from 'react-native';
 import firebase from 'firebase';
@@ -14,6 +15,7 @@ import BackgroundImage from '../../assets/image/background/sample1.jpg';
 
 class Match extends React.Component {
   state = {
+    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     matches: [],
   }
 
@@ -55,6 +57,7 @@ class Match extends React.Component {
           params: {
             feedType: 'match',
             itemId: item.id,
+            logInUser: this.state.logInUser,
             // scheduleId: this.props.navigation.state.params.id,
           },
         });
@@ -64,12 +67,27 @@ class Match extends React.Component {
   );
 
   render() {
+    if (!this.state.matches) {
+      return (
+        <View style={styles.container}>
+          <Header
+            navigation={this.props.navigation}
+            logInUser={this.state.logInUser}
+            headerTitle="Match"
+          />
+          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+            <ActivityIndicator />
+          </View>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'UserPage' }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
           headerTitle="Match"
+          navigation={this.props.navigation}
+          logInUser={this.state.logInUser}
         />
         <Image
           style={styles.bgImage}
@@ -92,7 +110,7 @@ class Match extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 70,
+    paddingTop: 80,
   },
   bgImage: {
     opacity: 0.8,
