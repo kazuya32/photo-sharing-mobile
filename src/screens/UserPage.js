@@ -6,14 +6,21 @@ import {
   Image,
   Dimensions,
   AsyncStorage,
+  Alert,
 } from 'react-native';
+import {
+  ImagePicker,
+  Permissions,
+} from 'expo';
 import firebase from 'firebase';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 
 import Profile from '../components/Profile.js';
 import Header from '../components/Header.js';
 import PhotoCollection from '../components/PhotoCollection.js';
+import PhotoCollectionTagged from '../components/PhotoCollectionTagged.js';
 import FollowingList from '../components/FollowingList.js';
+import PhotoGivingButton from '../elements/PhotoGivingButton.js';
 
 class UserPage extends React.Component {
   state = {
@@ -188,6 +195,43 @@ class UserPage extends React.Component {
       });
   }
 
+  onPressUpload = () => {
+    this.selectImage();
+  }
+
+  selectImage = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status === 'granted') {
+      this.pickImage();
+    } else {
+      // this.props.navigation.navigate({ routeName: 'Home' });
+      Alert.alert('カメラロールの使用が許可されていません。');
+    }
+  }
+
+  pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      // base64: true,
+    });
+    console.log(result);
+
+    if (result.cancelled) {
+      // this.props.navigation.navigate({ routeName: 'Home' });
+      // Alert.alert('カメラロールの使用が許可されていません。');
+    } else {
+      this.props.navigation.navigate({
+        routeName: 'PhotoUploader',
+        params: {
+          image: result,
+          logInUser: this.state.logInUser,
+          taggedUser: this.state.user,
+        },
+      });
+    }
+  };
+
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
@@ -243,9 +287,13 @@ class UserPage extends React.Component {
             });
           }}
         />
+
         <ScrollableTabView
           // renderTabBar={this.renderTabBar}
-          style={styles.header}
+          style={[
+            styles.header,
+            (this.state.user && this.state.user.data.isAthlete) && { display: 'none' },
+          ]}
           tabBarUnderlineStyle={styles.underline}
           tabBarBackgroundColor="#fff"
           tabBarActiveTextColor="#DB4D5E"
@@ -283,6 +331,65 @@ class UserPage extends React.Component {
             // horizontal={true}
           />
         </ScrollableTabView>
+
+        <ScrollableTabView
+          // renderTabBar={this.renderTabBar}
+          style={[
+            styles.header,
+            (this.state.user && !this.state.user.data.isAthlete) && { display: 'none' },
+          ]}
+          tabBarUnderlineStyle={styles.underline}
+          tabBarBackgroundColor="#fff"
+          tabBarActiveTextColor="#DB4D5E"
+          tabBarInactiveTextColor="black"
+          tabBarTextStyle={styles.tabBarText}
+          tabStyle={{ paddingBottom: 0 }}
+        >
+          <PhotoCollectionTagged
+            tabLabel="Tagged"
+            navigation={this.props.navigation}
+            // photos={this.state.photos && this.state.photos}
+            uid={this.state.uid}
+            logInUser={this.state.logInUser}
+            // numColumns={3}
+            // horizontal={true}
+          />
+          <PhotoCollection
+            tabLabel="Posts"
+            navigation={this.props.navigation}
+            // photos={this.state.photos && this.state.photos}
+            uid={this.state.uid}
+            logInUser={this.state.logInUser}
+            // numColumns={3}
+            // horizontal={true}
+          />
+          <FollowingList
+            tabLabel={followersTitle}
+            navigation={this.props.navigation}
+            followingArray={this.state.followersArray}
+            logInUser={this.state.logInUser}
+            logInUid={this.state.logInUid}
+            onPressUser={this.onPressUser}
+            // numColumns={3}
+            // horizontal={true}
+          />
+          <FollowingList
+            tabLabel={followingTitle}
+            navigation={this.props.navigation}
+            followingArray={this.state.followingArray}
+            logInUser={this.state.logInUser}
+            logInUid={this.state.logInUid}
+            onPressUser={this.onPressUser}
+            // numColumns={3}
+            // horizontal={true}
+          />
+        </ScrollableTabView>
+
+        <PhotoGivingButton
+          isAthlete={this.state.user && this.state.user.data.isAthlete}
+          isMyPage={this.state.isMyPage}
+          onPress={this.onPressUpload}
+        />
       </View>
     );
   }

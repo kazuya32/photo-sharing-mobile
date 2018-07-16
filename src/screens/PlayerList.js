@@ -106,7 +106,13 @@ class Nortification extends React.Component {
   renderItem = ({ item }) => (
     <UserSectionItem
       user={item}
-      onPress={() => { this.onPressUser(item); }}
+      onPress={() => {
+        if (this.props.navigation.state.params && this.props.navigation.state.params.onPress) {
+          this.props.navigation.state.params.onPress(item);
+        } else {
+          this.onPressUser(item);
+        }
+      }}
     />
   );
 
@@ -123,7 +129,6 @@ class Nortification extends React.Component {
           <Header
             headerTitle="FLEGO"
             navigation={this.props.navigation}
-            logInUser={this.state.logInUser}
           />
           <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
             <ActivityIndicator />
@@ -137,7 +142,6 @@ class Nortification extends React.Component {
         <Header
           headerTitle="FLEGO"
           navigation={this.props.navigation}
-          logInUser={this.state.logInUser}
         />
         <SectionList
           renderItem={this.renderItem}

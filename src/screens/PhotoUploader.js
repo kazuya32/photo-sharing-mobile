@@ -17,7 +17,7 @@ class PhotoUploader extends React.Component {
   state = {
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     tags: [],
-    people: null,
+    people: [],
     match: null,
     team: null,
     isUploading: false,
@@ -25,6 +25,9 @@ class PhotoUploader extends React.Component {
 
   componentWillMount() {
     this.fetchData();
+    if (this.props.navigation.state.params && this.props.navigation.state.params.taggedUser) {
+      this.setState({ people: [this.props.navigation.state.params.taggedUser] });
+    }
   }
 
   // eslint-disable-next-line
@@ -131,7 +134,7 @@ class PhotoUploader extends React.Component {
       createdAt,
       updatedAt: createdAt,
       tags: this.mapArray(this.state.tags),
-      people: this.mapArray(this.state.people),
+      people: this.mapArrayPeople(this.state.people),
       matchId: this.state.match && this.state.match.id,
       matchPath: this.state.match && `matchSchedules/${this.state.match.scheduleId}/matches/${this.state.match.id}`,
       teamId: this.state.team && this.state.team.id,
@@ -165,6 +168,18 @@ class PhotoUploader extends React.Component {
       });
   }
 
+  mapArrayPeople = (peopleArray) => {
+    if (peopleArray) {
+      // eslint-disable-next-line
+      let obj = {};
+      peopleArray.forEach((user) => {
+        obj[user.id] = true;
+      });
+      return obj;
+    }
+    return peopleArray;
+  }
+
   mapArray = (array) => {
     if (array) {
       // eslint-disable-next-line
@@ -182,8 +197,38 @@ class PhotoUploader extends React.Component {
     this.setState({ tags });
   }
 
+  onPressUser = (item) => {
+    const { people } = this.state;
+    let count = 0;
+    people.forEach((user) => {
+      if (user.id !== item.id) { count += 1; }
+    });
+    if (count === people.length) { people.push(item); }
+    this.setState({ people });
+    return this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+  }
+
+  tagPeople = () => {
+    this.props.navigation.navigate({
+      routeName: 'PlayerList',
+      params: {
+        onPress: this.onPressUser,
+      },
+    });
+  }
 
   render() {
+    let textPeople = '';
+
+    if (this.state.people.length) {
+      this.state.people.forEach((user) => {
+        textPeople += user.data.name;
+        textPeople += ', ';
+      });
+    } else {
+      textPeople = 'Tag People';
+    }
+
     return (
       <View style={styles.container}>
         <PhotoHeader
@@ -207,13 +252,11 @@ class PhotoUploader extends React.Component {
             />
           </View>
           <SelectItem
-            onPress={this.onPressAlert}
-            title="Tag People"
-            selected=""
+            onPress={this.tagPeople}
+            title={textPeople}
           />
           <SelectItem
             onPress={this.addTeam}
-            // title="Add Team"
             title={[
               !this.state.team && 'Add Team',
               this.state.team && this.state.team.data.name,
