@@ -8,7 +8,7 @@ class PhotoGivingButton extends React.Component {
       buttonStyle,
       textStyle,
       isMyPage,
-      isAthlete,
+      // isAthlete,
       onPress,
     } = this.props;
 
@@ -19,7 +19,8 @@ class PhotoGivingButton extends React.Component {
         style={[
           styles.container,
           style,
-          (!isAthlete || isMyPage) && { display: 'none' },
+          // (!isAthlete || isMyPage) && { display: 'none' },
+          isMyPage && { display: 'none' },
         ]}
         onPress={onPress}
         underlayColor="transparent"

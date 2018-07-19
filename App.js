@@ -67,13 +67,13 @@ firebase.auth().onAuthStateChanged(async (user) => {
   // eslint-disable-next-line
   } else {
     console.log('not login');
-    // this.props.navigation.navigate({ routeName: 'Login' });
+    this.props.navigation.navigate({ routeName: 'Login' });
   }
 });
 
 const App = createStackNavigator({
-  Login: { screen: Login },
   Home: { screen: Home },
+  Login: { screen: Login },
   TeamFeed: { screen: TeamFeed },
   MatchFeed: { screen: MatchFeed },
   Nortification: { screen: Nortification },

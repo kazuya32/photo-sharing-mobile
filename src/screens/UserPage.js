@@ -76,11 +76,24 @@ class UserPage extends React.Component {
         followersArray,
         followingArray,
         isFollowing: !this.state.isMyPage && user.data.followers[this.state.logInUid],
-      });
-      // if (this.state.isMyPage) {
-      //   this.storeUserPhoto(user.photoURL);
-      // }
+      })
+
+      if (this.state.isMyPage) {
+        this.storeLogInUser(user);
+      }
     });
+  }
+
+  storeLogInUser = async (logInUser) => {
+    try {
+      // await AsyncStorage.setItem('uid', logInUser.id);
+      await AsyncStorage.setItem('photoURL', logInUser.data.photoURL);
+      await AsyncStorage.setItem('name', logInUser.data.name);
+      await AsyncStorage.setItem('desc', logInUser.data.desc);
+      await AsyncStorage.setItem('isAthlete', logInUser.data.isAthlete.toString());
+    } catch (error) {
+      // Error saving data
+    }
   }
 
   fetchRequest = () => {
@@ -260,6 +273,8 @@ class UserPage extends React.Component {
     const followersTitle = `Followers ${this.state.followersArray && this.state.followersArray.length}`;
     const followingTitle = `Following ${this.state.followersArray && this.state.followingArray.length}`;
 
+    const initialPage = (this.state.user && this.state.user.data.isAthlete) ? 1 : 0;
+
     return (
       <View style={styles.container}>
         <Header
@@ -292,7 +307,6 @@ class UserPage extends React.Component {
           // renderTabBar={this.renderTabBar}
           style={[
             styles.header,
-            (this.state.user && this.state.user.data.isAthlete) && { display: 'none' },
           ]}
           tabBarUnderlineStyle={styles.underline}
           tabBarBackgroundColor="#fff"
@@ -300,6 +314,8 @@ class UserPage extends React.Component {
           tabBarInactiveTextColor="black"
           tabBarTextStyle={styles.tabBarText}
           tabStyle={{ paddingBottom: 0 }}
+          // initialPage={initialPage}
+          page={initialPage}
         >
           <PhotoCollection
             tabLabel="Posts"
@@ -310,52 +326,8 @@ class UserPage extends React.Component {
             // numColumns={3}
             // horizontal={true}
           />
-          <FollowingList
-            tabLabel={followersTitle}
-            navigation={this.props.navigation}
-            followingArray={this.state.followersArray}
-            logInUser={this.state.logInUser}
-            logInUid={this.state.logInUid}
-            onPressUser={this.onPressUser}
-            // numColumns={3}
-            // horizontal={true}
-          />
-          <FollowingList
-            tabLabel={followingTitle}
-            navigation={this.props.navigation}
-            followingArray={this.state.followingArray}
-            logInUser={this.state.logInUser}
-            logInUid={this.state.logInUid}
-            onPressUser={this.onPressUser}
-            // numColumns={3}
-            // horizontal={true}
-          />
-        </ScrollableTabView>
-
-        <ScrollableTabView
-          // renderTabBar={this.renderTabBar}
-          style={[
-            styles.header,
-            (this.state.user && !this.state.user.data.isAthlete) && { display: 'none' },
-          ]}
-          tabBarUnderlineStyle={styles.underline}
-          tabBarBackgroundColor="#fff"
-          tabBarActiveTextColor="#DB4D5E"
-          tabBarInactiveTextColor="black"
-          tabBarTextStyle={styles.tabBarText}
-          tabStyle={{ paddingBottom: 0 }}
-        >
           <PhotoCollectionTagged
             tabLabel="Tagged"
-            navigation={this.props.navigation}
-            // photos={this.state.photos && this.state.photos}
-            uid={this.state.uid}
-            logInUser={this.state.logInUser}
-            // numColumns={3}
-            // horizontal={true}
-          />
-          <PhotoCollection
-            tabLabel="Posts"
             navigation={this.props.navigation}
             // photos={this.state.photos && this.state.photos}
             uid={this.state.uid}
@@ -386,7 +358,7 @@ class UserPage extends React.Component {
         </ScrollableTabView>
 
         <PhotoGivingButton
-          isAthlete={this.state.user && this.state.user.data.isAthlete}
+          // isAthlete={this.state.user && this.state.user.data.isAthlete}
           isMyPage={this.state.isMyPage}
           onPress={this.onPressUpload}
         />

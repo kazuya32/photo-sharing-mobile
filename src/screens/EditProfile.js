@@ -5,6 +5,10 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
+import {
+  ImagePicker,
+  Permissions,
+} from 'expo';
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
@@ -16,18 +20,21 @@ import CancelButton from '../elements/CancelButton.js';
 class EditProfile extends React.Component {
   state = {
     uid: this.props.navigation.state.params.uid,
-    user: this.props.navigation.state.params.user,
+    // user: this.props.navigation.state.params.user,
     name: this.props.navigation.state.params.user.data.name,
     desc: this.props.navigation.state.params.user.data.desc,
+    photoURL: this.props.navigation.state.params.user.data.photoURL,
   }
 
   // eslint-disable-next-line
   updateProfile = () => {
+
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(this.state.uid);
     userRef.update({
       name: this.state.name || '',
       desc: this.state.desc || '',
+      photoURL: this.state.photoURL || '',
     })
       .then(() => {
         this.props.navigation.goBack();
@@ -59,6 +66,51 @@ class EditProfile extends React.Component {
     this.props.navigation.goBack();
   }
 
+  onPressPhoto = () => {
+    this.getPermission();
+  }
+
+  getPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status === 'granted') {
+      this.pickImage();
+    } else {
+      // this.props.navigation.navigate({ routeName: 'Home' });
+      Alert.alert('カメラロールの使用が許可されていません。');
+    }
+  }
+
+  pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+    });
+    console.log(result);
+
+    if (result.cancelled) {
+      // this.props.navigation.navigate({ routeName: 'Home' });
+      // Alert.alert('カメラロールの使用が許可されていません。');
+    } else {
+      const { uri } = result;
+      // this.setState({ photoURL: uri, photoChanged: true })
+      // eslint-disable-next-line
+      const res = await fetch(uri);
+      const file = await res.blob();
+
+      const path = `photos/${this.state.uid}/profile.jpg`;
+      const storageRef = firebase.storage().ref();
+      const imageRef = storageRef.child(path);
+
+      imageRef.put(file).then((snapshot) => {
+        if (snapshot.state) {
+          this.setState({ photoURL: snapshot.downloadURL });
+        } else {
+          // Alert.alert('アップロードに失敗しました。');
+        }
+      });
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -69,8 +121,8 @@ class EditProfile extends React.Component {
         />
         <ScrollView>
           <UserIcon
-            // onPress
-            photoURL={this.state.user.data.photoURL}
+            onPress={this.onPressPhoto}
+            photoURL={this.state.photoURL}
             dia={80}
             style={styles.icon}
           />

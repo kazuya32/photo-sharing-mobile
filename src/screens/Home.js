@@ -125,10 +125,10 @@ class Home extends React.Component {
   }
 
   onPressUpload = () => {
-    this.selectImage();
+    this.getPermission();
   }
 
-  selectImage = async () => {
+  getPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (status === 'granted') {
       this.pickImage();

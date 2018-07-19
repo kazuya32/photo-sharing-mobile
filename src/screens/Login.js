@@ -126,20 +126,6 @@ class Login extends React.Component {
             raised
             onPress={this.logInWithFacebook}
           />
-          <SocialIcon
-            title="ファンテストユーザー"
-            button
-            type="facebook"
-            raised
-            onPress={() => { this.logInTest('testuser@example.com'); }}
-          />
-          <SocialIcon
-            title="アスリートテストユーザー"
-            button
-            type="facebook"
-            raised
-            onPress={() => { this.logInTest('testuser2@example.com'); }}
-          />
         </View>
       </View>
     );
@@ -147,11 +133,18 @@ class Login extends React.Component {
 }
 
 // <SocialIcon
-//   title="Facebookでログイン"
+//   title="ファンテストユーザー"
 //   button
 //   type="facebook"
 //   raised
-//   onPress={this.onPress}
+//   onPress={() => { this.logInTest('testuser@example.com'); }}
+// />
+// <SocialIcon
+//   title="アスリートテストユーザー"
+//   button
+//   type="facebook"
+//   raised
+//   onPress={() => { this.logInTest('testuser2@example.com'); }}
 // />
 
 const styles = StyleSheet.create({
