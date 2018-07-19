@@ -33,6 +33,7 @@ class SendButton extends React.Component {
             styles.photo,
             { width: dia, height: dia, borderRadius: dia * 0.5 },
             isAthlete && { borderWidth: 3, borderColor: '#DB4D5E' },
+            // isAthlete && { borderWidth: 3, borderColor: '#dab300' },
           ]}
           source={{ uri: photoURL }}
           resizeMode="contain"
