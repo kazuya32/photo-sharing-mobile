@@ -20,7 +20,7 @@ class ReceivedRequestTile extends React.Component {
     const {
       request,
     } = this.props;
-    this.getUser(request.data.from);
+    this.getUser(request.data.to);
     this.getPhoto(request.data.photoId);
   }
 
