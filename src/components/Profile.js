@@ -5,6 +5,7 @@ import {
   Text,
   AsyncStorage,
   ActionSheetIOS,
+  Alert,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -31,6 +32,7 @@ class Profile extends React.Component {
     // const isMyPage = (this.props.uid === this.props.logInUser.id);
     this.setState({
       isMyPage,
+      logInUid: value,
     });
   }
 
@@ -81,7 +83,7 @@ class Profile extends React.Component {
     });
   }
 
-  onPressMenu = () => {
+  onPressMenuMyPage = () => {
     const options = ['キャンセル', 'プロフィールを編集'];
     const destructiveButtonIndex = options.length;
     if (this.state.isMyPage) {
@@ -100,6 +102,66 @@ class Profile extends React.Component {
         }
         if (buttonIndex === destructiveButtonIndex) {
           this.signOut();
+        }
+      },
+    );
+  }
+
+  blockingTransaction = () => {
+    const db = firebase.firestore();
+    const logInUserRef = db.collection('users').doc(this.state.logInUid);
+    logInUserRef.update({
+      [`followers.${this.props.uid}`]: false,
+      [`blocking.${this.props.uid}`]: true,
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
+
+    const userRef = db.collection('users').doc(this.props.uid);
+    userRef.update({
+      [`following.${this.state.logInUid}`]: false,
+      [`blockedBy.${this.state.logInUid}`]: true,
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
+  }
+
+  block = () => {
+    this.blockingTransaction();
+    const {
+      user,
+    } = this.props;
+    const text = `${user && user.data.name}さんをブロックしました。`;
+    Alert.alert(text);
+  }
+
+  onPressMenu = () => {
+    const options = ['キャンセル', 'ブロック', '不適切アカウントとして報告'];
+    const destructiveButtonIndex = 1;
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 1) {
+          this.block();
+        }
+        if (buttonIndex === 2) {
+          Alert.alert('この機能は現在調整中です。');
         }
       },
     );
@@ -141,18 +203,24 @@ class Profile extends React.Component {
                 ]}
               />
             </View>
-            <View style={[styles.buttonArea, !this.state.isMyPage && { display: 'none' }]}>
+            <View style={[styles.buttonAreaMypage, !this.state.isMyPage && { display: 'none' }]}>
               <RequestButton
                 style={styles.requestButton}
                 onPress={onPressRequest}
                 badgeNumber={sum}
               />
               <MenuButton
-                style={styles.editButton}
-                onPress={this.onPressMenu}
+                style={styles.menuButtonMyPage}
+                onPress={this.onPressMenuMyPage}
+                isMyPage={this.state.isMyPage}
               />
             </View>
             <View style={[styles.buttonArea, this.state.isMyPage && { display: 'none' }]}>
+              <MenuButton
+                style={styles.menuButton}
+                onPress={this.onPressMenu}
+                isMyPage={this.state.isMyPage}
+              />
               <FollowButton
                 style={[
                   styles.followButton,
@@ -230,15 +298,21 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   buttonArea: {
+    // flexDirection: 'row',
+    alignContent: 'flex-start',
+  },
+  buttonAreaMypage: {
     flexDirection: 'row',
     // justifyContent: 'space-between',
     alignContent: 'flex-start',
     // flex: 1,
     // width: 190,
   },
-  editButton: {
-    // position: 'absolute',
-    // height: 30,
+  menuButton: {
+    alignSelf: 'flex-end',
+    marginBottom: 16,
+  },
+  menuButtonMyPage: {
     alignSelf: 'flex-start',
   },
   requestButton: {
