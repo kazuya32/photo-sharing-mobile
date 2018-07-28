@@ -8,6 +8,35 @@ import BackgroundImage from '../../assets/splash.png';
 import ENV from '../../env.json';
 
 class Login extends React.Component {
+  componentWillMount() {
+    // firebase.auth().onAuthStateChanged(async (user) => {
+    //   if (user) {
+    //     console.log('We are authenticated now!');
+    //
+    //     const { // eslint-disable-next-line
+    //       displayName,    // eslint-disable-next-line
+    //       email, // eslint-disable-next-line
+    //       emailVerified, // eslint-disable-next-line
+    //       photoURL, // eslint-disable-next-line
+    //       isAnonymous,
+    //       uid, // eslint-disable-next-line
+    //       providerData,
+    //     } = user;
+    //
+    //     try {
+    //       await AsyncStorage.setItem('uid', uid);
+    //       // await AsyncStorage.setItem('facebookId', providerData[0].uid);
+    //     } catch (error) {
+    //       console.log('failed to saving AsyncStorage');
+    //     }
+    //     this.props.navigation.navigate({ routeName: 'Home' });
+    //   // eslint-disable-next-line
+    //   } else {
+    //     console.log('not login');
+    //   }
+    // });
+  }
+
   logInTest = (testEmail) => {
     // const testEmail = 'testuser@example.com';
     const testPassword = 'testuser';
@@ -125,6 +154,14 @@ class Login extends React.Component {
             type="facebook"
             raised
             onPress={this.logInWithFacebook}
+          />
+          <SocialIcon
+            style={{ display: 'none' }}
+            title="アスリートテストユーザー"
+            button
+            type="facebook"
+            raised
+            onPress={() => { this.logInTest('testuser2@example.com'); }}
           />
         </View>
       </View>

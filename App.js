@@ -44,36 +44,36 @@ const config = {
 };
 firebase.initializeApp(config);
 
-firebase.auth().onAuthStateChanged(async (user) => {
-  if (user) {
-    console.log('We are authenticated now!');
+// firebase.auth().onAuthStateChanged(async (user) => {
+//   if (user) {
+//     console.log('We are authenticated now!');
+//
+//     const { // eslint-disable-next-line
+//       displayName,    // eslint-disable-next-line
+//       email, // eslint-disable-next-line
+//       emailVerified, // eslint-disable-next-line
+//       photoURL, // eslint-disable-next-line
+//       isAnonymous,
+//       uid, // eslint-disable-next-line
+//       providerData,
+//     } = user;
+//
+//     try {
+//       await AsyncStorage.setItem('uid', uid);
+//       // await AsyncStorage.setItem('facebookId', providerData[0].uid);
+//     } catch (error) {
+//       console.log('failed to saving AsyncStorage');
+//     }
+//   // eslint-disable-next-line
+//   } else {
+//     console.log('not login');
+//     // this.props.navigation.navigate({ routeName: 'Login' });ß
+//   }
+// });
 
-    const { // eslint-disable-next-line
-      displayName,    // eslint-disable-next-line
-      email, // eslint-disable-next-line
-      emailVerified, // eslint-disable-next-line
-      photoURL, // eslint-disable-next-line
-      isAnonymous,
-      uid, // eslint-disable-next-line
-      providerData,
-    } = user;
-
-    try {
-      await AsyncStorage.setItem('uid', uid);
-      // await AsyncStorage.setItem('facebookId', providerData[0].uid);
-    } catch (error) {
-      console.log('failed to saving AsyncStorage');
-    }
-  // eslint-disable-next-line
-  } else {
-    console.log('not login');
-    this.props.navigation.navigate({ routeName: 'Login' });
-  }
-});
-
-const App = createStackNavigator({
+const HomeStack = createStackNavigator({
+  // Login: { screen: Login },
   Home: { screen: Home },
-  Login: { screen: Login },
   TeamFeed: { screen: TeamFeed },
   MatchFeed: { screen: MatchFeed },
   Nortification: { screen: Nortification },
@@ -193,13 +193,17 @@ const App = createStackNavigator({
 //   },
 // });
 
-// const App = createStackNavigator({
-//   // Login: { screen: Login },
-//   Home: HomeStack,
-//   // PhotoPicker: UploadStack,
-// }, {
-//   headerMode: 'none',
-// });
+const App = createStackNavigator({
+  Home: HomeStack,
+  Login: { screen: Login },
+  // PhotoPicker: UploadStack,
+}, {
+  headerMode: 'none',
+  mode: 'modal',
+  navigationOptions: {
+    gesturesEnabled: false,
+  },
+});
 
 
 export default App;

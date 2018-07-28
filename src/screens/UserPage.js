@@ -283,6 +283,7 @@ class UserPage extends React.Component {
           logInUser={this.state.logInUser}
         />
         <Profile
+          navigation={this.props.navigation}
           logInUser={this.state.logInUser}
           uid={this.state.uid}
           receivedRequests={this.state.receivedRequests}
@@ -292,15 +293,6 @@ class UserPage extends React.Component {
           isFollowing={this.state.isFollowing}
           handleFollowButton={this.handleFollowButton}
           onPressRequest={this.onPressRequest}
-          onPressEdit={() => {
-            this.props.navigation.navigate({
-              routeName: 'EditProfile',
-              params: {
-                user: this.state.user,
-                uid: this.state.uid,
-              },
-            });
-          }}
         />
 
         <ScrollableTabView

@@ -31,6 +31,33 @@ class Home extends React.Component {
   // }
   componentWillMount() {
     this.fetchData();
+
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (user) {
+        console.log('We are authenticated now!');
+
+        const { // eslint-disable-next-line
+          displayName,    // eslint-disable-next-line
+          email, // eslint-disable-next-line
+          emailVerified, // eslint-disable-next-line
+          photoURL, // eslint-disable-next-line
+          isAnonymous,
+          uid, // eslint-disable-next-line
+          providerData,
+        } = user;
+
+        try {
+          await AsyncStorage.setItem('uid', uid);
+          // await AsyncStorage.setItem('facebookId', providerData[0].uid);
+        } catch (error) {
+          console.log('failed to saving AsyncStorage');
+        }
+      // eslint-disable-next-line
+      } else {
+        console.log('not login');
+        this.props.navigation.navigate({ routeName: 'Login' });
+      }
+    });
   }
 
   // eslint-disable-next-line

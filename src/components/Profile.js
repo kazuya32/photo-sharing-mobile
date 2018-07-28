@@ -1,8 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  AsyncStorage,
+  ActionSheetIOS,
+} from 'react-native';
+import firebase from 'firebase';
 
 import UserIcon from '../elements/UserIcon.js';
-import EditButton from '../elements/EditButton.js';
+import MenuButton from '../elements/MenuButton.js';
 import RequestButton from '../elements/RequestButton.js';
 import FollowButton from '../elements/FollowButton.js';
 import CheckMark from '../elements/CheckMark.js';
@@ -17,6 +24,7 @@ class Profile extends React.Component {
     this.checkMyPage();
   }
 
+  // eslint-disable-next-line
   checkMyPage = async () => {
     const value = await AsyncStorage.getItem('uid');
     const isMyPage = (this.props.uid === value);
@@ -50,9 +58,55 @@ class Profile extends React.Component {
     return approvedSum;
   }
 
+  signOut = () => {
+    firebase.auth().signOut()
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Signed Out');
+        this.props.navigation.navigate('Login');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Sign Out Error', error);
+      });
+  }
+
+  onPressEdit = () => {
+    this.props.navigation.navigate({
+      routeName: 'EditProfile',
+      params: {
+        user: this.props.user,
+        uid: this.props.uid,
+      },
+    });
+  }
+
+  onPressMenu = () => {
+    const options = ['キャンセル', 'プロフィールを編集'];
+    const destructiveButtonIndex = options.length;
+    if (this.state.isMyPage) {
+      options.push('ログアウト');
+    }
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 1) {
+          // eslint-disable-next-line
+          this.onPressEdit();
+        }
+        if (buttonIndex === destructiveButtonIndex) {
+          this.signOut();
+        }
+      },
+    );
+  }
+
   render() {
     const {
-      onPressEdit,
       onPressRequest,
       photoURL,
       handleFollowButton,
@@ -93,9 +147,9 @@ class Profile extends React.Component {
                 onPress={onPressRequest}
                 badgeNumber={sum}
               />
-              <EditButton
+              <MenuButton
                 style={styles.editButton}
-                onPress={onPressEdit}
+                onPress={this.onPressMenu}
               />
             </View>
             <View style={[styles.buttonArea, this.state.isMyPage && { display: 'none' }]}>
