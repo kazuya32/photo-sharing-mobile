@@ -10,7 +10,7 @@ import UserTile from '../components/UserTile.js';
 class FollowingList extends React.Component {
   state = {
     logInUser: this.props.logInUser,
-    // followingArray: this.props.followingArray,
+    followingArray: this.props.followingArray,
   }
 
   componentWillMount() {
@@ -31,14 +31,14 @@ class FollowingList extends React.Component {
   );
 
   render() {
-    console.log('this.props.logInUid in list');
-    console.log(this.props.logInUid);
+    console.log('this.props.followingList in list');
+    console.log(this.props.followingArray);
 
     return (
       <View style={[styles.container, this.props.style]}>
         <FlatList
-          // data={this.state.followingArray}
-          data={this.props.followingArray}
+          data={this.state.followingArray}
+          // data={this.props.followingArray}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           onEndReachedThreshold={0.2}
@@ -46,7 +46,7 @@ class FollowingList extends React.Component {
           getItemLayout={(data, index) => (
            { length: 400, offset: 400 * index, index }
           )}
-          // extraData={this.state}
+          extraData={this.state}
         />
       </View>
     );

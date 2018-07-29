@@ -25,6 +25,8 @@ import SearchTag from './src/screens/SearchTag.js';
 import SearchMatch from './src/screens/SearchMatch.js';
 import Search from './src/screens/Search.js';
 import PlayerList from './src/screens/PlayerList.js';
+import ReportPhoto from './src/screens/ReportPhoto.js';
+import ReportUser from './src/screens/ReportUser.js';
 
 import ENV from './env.json';
 
@@ -92,6 +94,8 @@ const HomeStack = createStackNavigator({
   Team: { screen: Team },
   Schedule: { screen: Schedule },
   Match: { screen: Match },
+  ReportPhoto: { screen: ReportPhoto },
+  ReportUser: { screen: ReportUser },
 }, {
   headerMode: 'none',
   // initialRouteName: 'Login',

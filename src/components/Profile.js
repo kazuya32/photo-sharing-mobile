@@ -147,6 +147,15 @@ class Profile extends React.Component {
     Alert.alert(text);
   }
 
+  report = () => {
+    this.props.navigation.navigate({
+      routeName: 'ReportUser',
+      params: {
+        user: this.props.user,
+      },
+    });
+  }
+
   onPressMenu = () => {
     const options = ['キャンセル', 'ブロック', '不適切アカウントとして報告'];
     const destructiveButtonIndex = 1;
@@ -161,7 +170,7 @@ class Profile extends React.Component {
           this.block();
         }
         if (buttonIndex === 2) {
-          Alert.alert('この機能は現在調整中です。');
+          this.report();
         }
       },
     );

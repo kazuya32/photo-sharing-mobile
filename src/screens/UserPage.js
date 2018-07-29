@@ -26,6 +26,7 @@ class UserPage extends React.Component {
   state = {
     uid: this.props.navigation.state.params && this.props.navigation.state.params.uid,
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
+    initialized: false,
     // uid:
   }
 
@@ -71,12 +72,19 @@ class UserPage extends React.Component {
       const followersArray = this.makeListFromObject(user.data.followers);
       const followingArray = this.makeListFromObject(user.data.following);
 
-      this.setState({
-        user,
-        followersArray,
-        followingArray,
-        isFollowing: !this.state.isMyPage && user.data.followers[this.state.logInUid],
-      })
+      if (this.state.initialized) {
+        if (this.state.isMyPage) {
+          this.setState({ user });
+        }
+      } else {
+        this.setState({
+          user,
+          followersArray,
+          followingArray,
+          isFollowing: !this.state.isMyPage && user.data.followers[this.state.logInUid],
+          // initialized: true,
+        });
+      }
 
       if (this.state.isMyPage) {
         this.storeLogInUser(user);

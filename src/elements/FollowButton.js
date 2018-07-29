@@ -34,7 +34,7 @@ class SendButton extends React.Component {
       isFollowing = this.state.isFollowing;
     }
 
-    const text = isFollowing ? 'Following' : 'Follow';
+    const text = isFollowing ? 'フォロー中' : 'フォローする';
 
     return (
       <TouchableHighlight style={[styles.container, style]} onPress={this.onPress} underlayColor="transparent">
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 88,
+    width: 105,
     height: 28,
     borderColor: '#DB4D5E',
     borderWidth: 1,

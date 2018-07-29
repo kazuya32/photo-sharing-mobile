@@ -171,12 +171,47 @@ class PhotoTile extends React.Component {
     this.setState({ deleted: true });
   }
 
+  onPressReport = () => {
+    this.props.navigation.navigate({
+      routeName: 'ReportPhoto',
+      params: {
+        photo: this.props.photo,
+      },
+    });
+  }
+
   onPressMenu = () => {
-    const options = ['キャンセル', 'リクエスト'];
-    const destructiveButtonIndex = options.length;
-    if (this.state.isMyPage) {
-      options.push('削除');
-    }
+    const options = [
+      'キャンセル',
+      'リクエスト',
+      'ブロック',
+      '不適切な投稿として通報する',
+    ];
+
+    const destructiveButtonIndex = options.length - 1;
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 1) {
+          // eslint-disable-next-line
+          this.props.onPressPhoto && this.props.onPressPhoto();
+        }
+
+        if (buttonIndex === destructiveButtonIndex) {
+          // eslint-disable-next-line
+          this.onPressReport();
+        }
+      },
+    );
+  }
+
+  onPressMenuMyPage = () => {
+    const options = ['キャンセル', '削除'];
+    const destructiveButtonIndex = options.length - 1;
     ActionSheetIOS.showActionSheetWithOptions(
       {
         options,
@@ -204,13 +239,8 @@ class PhotoTile extends React.Component {
       photo,
     } = this.props;
 
-    let iconName;
-
-    if (this.state.liked) {
-      iconName = 'heart';
-    } else {
-      iconName = 'heart-outline';
-    }
+    const iconName = this.state.liked ? 'heart' : 'heart-outline';
+    const onPressMenu = this.state.isMyPage ? this.onPressMenuMyPage : this.onPressMenu;
 
     return (
       <View style={[styles.container, this.state.deleted && { display: 'none' }]}>
@@ -245,13 +275,17 @@ class PhotoTile extends React.Component {
             </View>
           </View>
           <TouchableHighlight
-            onPress={this.onPressMenu}
+            onPress={onPressMenu}
             style={styles.menuButton}
             underlayColor="transparent"
           >
-            <Text style={styles.menuButtonTitle}>
-              …
-            </Text>
+            <MaterialCommunityIcon
+              name="dots-horizontal"
+              size={24}
+              style={[
+                styles.menuButtonTitle,
+              ]}
+            />
           </TouchableHighlight>
         </View>
         <TouchableHighlight
@@ -338,10 +372,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingRight: 16,
     paddingLeft: 16,
-    paddingBottom: 10,
+    marginBottom: 8,
     // paddingTop: 12,
-    bottom: 0,
-    height: 44,
+    // height: 44,
+    alignSelf: 'flex-end',
   },
   menuButtonTitle: {
     color: 'black',

@@ -4,6 +4,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 class CheckMark extends React.Component {
   render() {
@@ -24,59 +25,18 @@ class CheckMark extends React.Component {
             styles.menuButton,
           ]}
         >
+          <FontAwesomeIcon
+            name="certificate"
+            size={16}
+            style={[
+              styles.back,
+            ]}
+          />
           <Icon
             name="check"
             size={8}
             style={[
-              styles.menuButtonTitle,
-            ]}
-          />
-          <View
-            style={[
-              styles.badge,
-              { right: 10, top: -3 },
-            ]}
-          />
-          <View
-            style={[
-              styles.badge,
-              { left: 10, top: -3 },
-            ]}
-          />
-          <View
-            style={[
-              styles.badge,
-              { right: 10, bottom: -3 },
-            ]}
-          />
-          <View
-            style={[
-              styles.badge,
-              { left: 10, bottom: -3 },
-            ]}
-          />
-          <View
-            style={[
-              styles.badge,
-              { top: 10, right: -3 },
-            ]}
-          />
-          <View
-            style={[
-              styles.badge,
-              { bottom: 10, right: -3 },
-            ]}
-          />
-          <View
-            style={[
-              styles.badge,
-              { top: 10, left: -3 },
-            ]}
-          />
-          <View
-            style={[
-              styles.badge,
-              { bottom: 10, left: -3 },
+              styles.check,
             ]}
           />
 
@@ -89,7 +49,37 @@ class CheckMark extends React.Component {
 // <View
 //   style={[
 //     styles.badge,
+//     { right: 10, top: -3 },
+//   ]}
+// />
+// <View
+//   style={[
+//     styles.badge,
+//     { left: 10, top: -3 },
+//   ]}
+// />
+// <View
+//   style={[
+//     styles.badge,
+//     { right: 10, bottom: -3 },
+//   ]}
+// />
+// <View
+//   style={[
+//     styles.badge,
+//     { left: 10, bottom: -3 },
+//   ]}
+// />
+// <View
+//   style={[
+//     styles.badge,
 //     { top: 10, right: -3 },
+//   ]}
+// />
+// <View
+//   style={[
+//     styles.badge,
+//     { bottom: 10, right: -3 },
 //   ]}
 // />
 // <View
@@ -101,13 +91,7 @@ class CheckMark extends React.Component {
 // <View
 //   style={[
 //     styles.badge,
-//     { left: 14, top: -3 },
-//   ]}
-// />
-// <View
-//   style={[
-//     styles.badge,
-//     { right: 14, bottom: -3 },
+//     { bottom: 10, left: -3 },
 //   ]}
 // />
 
@@ -116,16 +100,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 20,
     width: 20,
-    backgroundColor: '#DB4D5E',
+    // backgroundColor: '#DB4D5E',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  menuButtonTitle: {
+  back: {
+    position: 'absolute',
+    color: '#DB4D5E',
+    alignSelf: 'center',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+  },
+  check: {
+    position: 'absolute',
     color: '#fff',
     alignSelf: 'center',
     textAlignVertical: 'center',
     textAlign: 'center',
-    // fontSize: 8,
+    zIndex: 20,
   },
   badge: {
     position: 'absolute',
