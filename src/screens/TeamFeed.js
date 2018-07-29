@@ -61,6 +61,12 @@ class TeamFeed extends React.Component {
       });
   }
 
+  sortDesc = (array) => {
+    array.sort((a, b) => (a.data.createdAt - b.data.createdAt));
+    array.reverse();
+    return array;
+  }
+
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
@@ -109,7 +115,7 @@ class TeamFeed extends React.Component {
         />
         <FlatList
           navigation={this.props.navigation}
-          data={this.state.photos}
+          data={this.sortDesc(this.state.photos)}
           renderItem={this.renderItem}
           numColumns={4}
           // horizontal={true}
@@ -128,7 +134,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 70,
+    paddingTop: 80,
   },
   photoItem: {
     width: (Dimensions.get('window').width / 4),
@@ -142,21 +148,21 @@ const styles = StyleSheet.create({
   },
   whitelineLeft: {
     position: 'absolute',
-    height: '100%',
+    height: Dimensions.get('window').height,
     left: (Dimensions.get('window').width / 4),
     width: 1,
     backgroundColor: '#fff',
   },
   whitelineRight: {
     position: 'absolute',
-    height: '100%',
+    height: Dimensions.get('window').height,
     right: (Dimensions.get('window').width / 4),
     width: 1,
     backgroundColor: '#fff',
   },
   whitelineCenter: {
     position: 'absolute',
-    height: '100%',
+    height: Dimensions.get('window').height,
     left: (Dimensions.get('window').width / 2),
     width: 1,
     backgroundColor: '#fff',
