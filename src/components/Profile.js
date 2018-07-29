@@ -269,10 +269,8 @@ const styles = StyleSheet.create({
   athleteMark: {
     // color: '#DB4D5E',
     // textAlignVertical: 'bottom',
-    paddingLeft: 12,
-    paddingRight: 12,
-    marginBottom: 8,
-    alignSelf: 'flex-end',
+    margin: 8,
+    alignSelf: 'flex-start',
     // marginLeft: 12,
   },
   profileText: {
