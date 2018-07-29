@@ -1,5 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableHighlight,
+  ActionSheetIOS,
+} from 'react-native';
 
 class SendButton extends React.Component {
   state = {
@@ -13,8 +19,26 @@ class SendButton extends React.Component {
     } else {
       nextValue = !this.state.isFollowing;
     }
-    this.setState({ isFollowing: nextValue });
-    this.props.handleFollowButton(nextValue);
+
+    if (nextValue) {
+      this.setState({ isFollowing: nextValue });
+      this.props.handleFollowButton(nextValue);
+    } else {
+      const options = ['キャンセル', 'フォローを外す'];
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options,
+          destructiveButtonIndex: 1,
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 1) {
+            this.setState({ isFollowing: nextValue });
+            this.props.handleFollowButton(nextValue);
+          }
+        },
+      );
+    }
   }
 
   render() {
