@@ -103,6 +103,7 @@ class Report extends React.Component {
             // textShadowColor="gray"
             // maxLength={this.state.maxLength}
             placeholder={this.state.email}
+            keyboardType="email-address"
           />
           <Text style={styles.text}>
             理由
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
   name: {
     // flex: 2,
     fontSize: 16,
-    marginLeft: 16, 
+    marginLeft: 16,
     // paddingTop: 8,
     // paddingBottom: 8,
   },

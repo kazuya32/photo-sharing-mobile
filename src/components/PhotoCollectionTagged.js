@@ -32,16 +32,23 @@ class PhotoCollection extends React.Component {
     // const photosRef = db.collection('photos').where('uid', '==', this.state.uid).orderBy('createdAt', 'desc').limit(maxResults);
     const photosRef = db.collection('photos').where(`people.${uid}`, '==', true);
 
-    photosRef.onSnapshot((querySnapshot) => {
-      const photos = [];
-      querySnapshot.forEach((doc) => {
-        photos.push({
-          id: doc.id,
-          data: doc.data(),
+    photosRef.get()
+      .then((querySnapshot) => {
+        const photos = [];
+        querySnapshot.forEach((doc) => {
+          photos.push({
+            id: doc.id,
+            data: doc.data(),
+          });
         });
+        this.setState({ photos });
       });
-      this.setState({ photos });
-    });
+  }
+
+  sortDesc = (array) => {
+    array.sort((a, b) => (a.data.createdAt - b.data.createdAt));
+    array.reverse();
+    return array;
   }
 
   keyExtractor = (item, index) => index.toString();
@@ -87,7 +94,7 @@ class PhotoCollection extends React.Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.state.photos}
+          data={this.sortDesc(this.state.photos)}
           renderItem={this.renderItem}
           numColumns={3}
           // horizontal={true}

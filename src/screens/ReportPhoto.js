@@ -108,6 +108,7 @@ class Report extends React.Component {
             // textShadowColor="gray"
             // maxLength={this.state.maxLength}
             placeholder={this.state.email}
+            keyboardType="email-address"
           />
           <Text style={styles.text}>
             理由

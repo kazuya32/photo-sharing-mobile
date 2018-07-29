@@ -320,20 +320,14 @@ class UserPage extends React.Component {
           <PhotoCollection
             tabLabel="Posts"
             navigation={this.props.navigation}
-            // photos={this.state.photos && this.state.photos}
             uid={this.state.uid}
             logInUser={this.state.logInUser}
-            // numColumns={3}
-            // horizontal={true}
           />
           <PhotoCollectionTagged
             tabLabel="Tagged"
             navigation={this.props.navigation}
-            // photos={this.state.photos && this.state.photos}
             uid={this.state.uid}
             logInUser={this.state.logInUser}
-            // numColumns={3}
-            // horizontal={true}
           />
           <FollowingList
             tabLabel={followersTitle}

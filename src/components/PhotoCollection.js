@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 
+import Icon from 'react-native-vector-icons/Ionicons';
+
 class PhotoCollection extends React.Component {
   state = {
     // photos: this.props.photos,
@@ -25,6 +27,9 @@ class PhotoCollection extends React.Component {
 
   // eslint-disable-next-line
   fetchPhotos = (uid) => {
+    const photos = [];
+    this.setState({ photos });
+
     const db = firebase.firestore();
     // eslint-disable-next-line
     const maxResults = 30;
@@ -32,16 +37,33 @@ class PhotoCollection extends React.Component {
     // const photosRef = db.collection('photos').where('uid', '==', this.state.uid).orderBy('createdAt', 'desc').limit(maxResults);
     const photosRef = db.collection('photos').where('uid', '==', uid);
 
-    photosRef.onSnapshot((querySnapshot) => {
-      const photos = [];
-      querySnapshot.forEach((doc) => {
-        photos.push({
-          id: doc.id,
-          data: doc.data(),
+    photosRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          photos.push({
+            id: doc.id,
+            data: doc.data(),
+          });
         });
       });
-      this.setState({ photos });
-    });
+
+    const givenPhotosRef = db.collection('photos').where(`accesses.${uid}`, '==', true);
+    givenPhotosRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          photos.push({
+            id: doc.id,
+            data: doc.data(),
+            isCertificated: true,
+          });
+        });
+      });
+  }
+
+  sortDesc = (array) => {
+    array.sort((a, b) => (a.data.createdAt - b.data.createdAt));
+    array.reverse();
+    return array;
   }
 
   keyExtractor = (item, index) => index.toString();
@@ -58,11 +80,21 @@ class PhotoCollection extends React.Component {
         });
       }}
     >
-      <Image
-        style={styles.photoItem}
-        source={{ uri: item.data.downloadURL }}
-        resizeMode="cover"
-      />
+      <View>
+        <Image
+          style={styles.photoItem}
+          source={{ uri: item.data.downloadURL }}
+          resizeMode="cover"
+        />
+        <Icon
+          name="md-ribbon"
+          size={24}
+          style={[
+            styles.ribbon,
+            !item.isCertificated && { display: 'none' },
+          ]}
+        />
+      </View>
     </TouchableOpacity>
   );
 
@@ -87,7 +119,7 @@ class PhotoCollection extends React.Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.state.photos}
+          data={this.sortDesc(this.state.photos)}
           renderItem={this.renderItem}
           numColumns={3}
           // horizontal={true}
@@ -106,6 +138,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  ribbon: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    color: '#DB4D5E',
+    marginBottom: 1,
+    zIndex: 50,
   },
   photoItem: {
     // width: (Dimensions.get('window').width / 3) - 1,
