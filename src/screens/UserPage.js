@@ -292,8 +292,8 @@ class UserPage extends React.Component {
           tabBarInactiveTextColor="black"
           tabBarTextStyle={styles.tabBarText}
           tabStyle={{ paddingBottom: 0 }}
-          // initialPage={initialPage}
-          page={initialPage}
+          initialPage={initialPage}
+          // page={initialPage}
         >
           <PhotoCollection
             tabLabel="Posts"
