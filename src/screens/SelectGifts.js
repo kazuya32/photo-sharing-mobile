@@ -8,45 +8,39 @@ import {
   Dimensions,
   ActivityIndicator,
   Text,
+  Alert,
+  AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
 
-class TeamFeed extends React.Component {
+class SelectGifts extends React.Component {
   state = {
-    headerTitle: 'FLEGO',
-    // logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
+    headerTitle: 'フォトギフトを選ぶ',
   }
 
   componentWillMount() {
-    if (this.props.navigation.state.params && this.props.navigation.state.params.feedType) {
-      const { feedType, itemId } = this.props.navigation.state.params;
-      // this.setState({ feedType, itemId });
-      this.getTeam(itemId);
-      this.fetchPhotos();
-    }
-  }
-
-  getTeam = (teamId) => {
-    const db = firebase.firestore();
-    const Ref = db.collection('teams').doc(teamId);
-    Ref.get().then((doc) => {
-      const team = { id: doc.id, data: doc.data() };
-      this.setState({ team, headerTitle: team.data.name });
-    });
+    this.fetchLogInUser();
   }
 
   // eslint-disable-next-line
-  fetchPhotos = () => {
-    const teamId = this.props.navigation.state.params.itemId;
-    const db = firebase.firestore();
-    // const maxResults = 5;
+  fetchLogInUser = async () => {
+    try {
+      const value = await AsyncStorage.getItem('uid');
+      // this.setState({ logInUid: value });
+      this.fetchPhotos(value);
+    } catch (error) {
+    //
+    }
+  }
 
-    const photosRef = db.collection('photos')
-      .where('teamId', '==', teamId);
-
+  // eslint-disable-next-line
+  fetchPhotos = (uid) => {
     const photos = [];
+    const db = firebase.firestore();
+    const photosRef = db.collection('photos').where('uid', '==', uid);
+
     photosRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -55,9 +49,7 @@ class TeamFeed extends React.Component {
             data: doc.data(),
           });
         });
-        const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        this.setState({ photos, lastVisible });
-        // this.setState({ photosRef, lastVisible });
+        this.setState({ photos });
       });
   }
 
@@ -67,19 +59,24 @@ class TeamFeed extends React.Component {
     return array;
   }
 
+  onPress = (photo) => {
+    const { user } = this.props.navigation.state.params;
+    const timestamp = Date.now().toString();
+    this.props.navigation.navigate({
+      routeName: 'SendGift',
+      params: {
+        user,
+        photo,
+      },
+      key: 'SendGift' + timestamp,
+    });
+  }
+
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
     <TouchableOpacity
-      onPress={() => {
-        this.props.navigation.navigate({
-          routeName: 'PhotoDetail',
-          params: {
-            photo: item,
-            logInUser: this.state.logInUser,
-          },
-        });
-      }}
+      onPress={() => { this.onPress(item); }}
     >
       <Image
         style={styles.photoItem}
@@ -169,4 +166,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TeamFeed;
+export default SelectGifts;

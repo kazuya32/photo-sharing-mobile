@@ -171,6 +171,18 @@ class PhotoTile extends React.Component {
     this.setState({ deleted: true });
   }
 
+  onPressEdit = () => {
+    const timestamp = Date.now().toString();
+    this.props.navigation.navigate({
+      routeName: 'EditPhoto',
+      params: {
+        photo: this.props.photo,
+        key: 'EditPhoto' + timestamp,
+      },
+      key: 'EditPhoto' + timestamp,
+    });
+  }
+
   onPressReport = () => {
     this.props.navigation.navigate({
       routeName: 'ReportPhoto',
@@ -210,7 +222,7 @@ class PhotoTile extends React.Component {
   }
 
   onPressMenuMyPage = () => {
-    const options = ['キャンセル', '削除'];
+    const options = ['キャンセル', '編集', '削除'];
     const destructiveButtonIndex = options.length - 1;
     ActionSheetIOS.showActionSheetWithOptions(
       {
@@ -221,7 +233,7 @@ class PhotoTile extends React.Component {
       (buttonIndex) => {
         if (buttonIndex === 1) {
           // eslint-disable-next-line
-          this.props.onPressPhoto && this.props.onPressPhoto();
+          this.onPressEdit();
         }
         if (buttonIndex === destructiveButtonIndex) {
           this.deletePhoto();
@@ -373,6 +385,7 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     paddingLeft: 16,
     marginBottom: 8,
+    marginTop: 8,
     // paddingTop: 12,
     // height: 44,
     alignSelf: 'flex-end',

@@ -43,9 +43,9 @@ class FollowingList extends React.Component {
           keyExtractor={this.keyExtractor}
           onEndReachedThreshold={0.2}
           // onEndReached={this.reloadPhotos}
-          getItemLayout={(data, index) => (
-           { length: 400, offset: 400 * index, index }
-          )}
+          // getItemLayout={(data, index) => (
+          //  { length: 400, offset: 400 * index, index }
+          // )}
           extraData={this.state}
         />
       </View>

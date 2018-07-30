@@ -103,6 +103,7 @@ class PhotoDetail extends React.Component {
             photoStyle={styles.photo}
             // logInUser={this.state.logInUser}
             uid={this.state.logInUid}
+            navigation={this.props.navigation}
           />
           <DownloadRequestButton
             onPress={this.onPress}

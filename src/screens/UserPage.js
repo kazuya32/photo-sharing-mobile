@@ -59,6 +59,10 @@ class UserPage extends React.Component {
   }
 
   fetchUser = () => {
+    this.setState({
+      followersArray: [],
+      followingArray: [],
+    });
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(this.state.uid);
     userRef.onSnapshot((doc) => {
@@ -217,41 +221,15 @@ class UserPage extends React.Component {
   }
 
   onPressUpload = () => {
-    this.selectImage();
-  }
-
-  selectImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (status === 'granted') {
-      this.pickImage();
-    } else {
-      // this.props.navigation.navigate({ routeName: 'Home' });
-      Alert.alert('カメラロールの使用が許可されていません。');
-    }
-  }
-
-  pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-      // base64: true,
+    const timestamp = Date.now().toString();
+    this.props.navigation.navigate({
+      routeName: 'SelectGifts',
+      params: {
+        user: this.state.user,
+      },
+      key: 'SelectGifts' + timestamp,
     });
-    console.log(result);
-
-    if (result.cancelled) {
-      // this.props.navigation.navigate({ routeName: 'Home' });
-      // Alert.alert('カメラロールの使用が許可されていません。');
-    } else {
-      this.props.navigation.navigate({
-        routeName: 'PhotoUploader',
-        params: {
-          image: result,
-          logInUser: this.state.logInUser,
-          taggedUser: this.state.user,
-        },
-      });
-    }
-  };
+  }
 
   keyExtractor = (item, index) => index.toString();
 

@@ -54,7 +54,7 @@ class SearchTag extends React.Component {
     const itemWithParent = item;
     const { tagType, onPress } = this.props.navigation.state.params;
     // 親のidを付加しないと後にfull pathを参照できなくなる
-    itemWithParent.scheduleId = this.props.navigation.state.params.scheduleId;
+    itemWithParent.data.scheduleId = this.props.navigation.state.params.scheduleId;
     const title = `${item.data.home.teamName} vs ${item.data.away.teamName}`;
 
     return (

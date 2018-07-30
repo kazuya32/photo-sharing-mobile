@@ -11,7 +11,7 @@ import Tag from '../elements/Tag.js';
 
 class TagBox extends React.Component {
   state = {
-    tags: [],
+    tags: this.props.tags,
     text: '',
   }
 

@@ -13,10 +13,10 @@ class SearchTag extends React.Component {
   state = {}
 
   componentDidMount() {
-    this.fetchTeams();
+    this.fetchData();
   }
 
-  fetchTeams = () => {
+  fetchData = () => {
     const { tagType } = this.props.navigation.state.params;
     const db = firebase.firestore();
     let ref;
@@ -26,7 +26,6 @@ class SearchTag extends React.Component {
         ref = db.collection('teams');
         break;
       case 'matchSchedules':
-        console.log('matchSchedules');
         ref = db.collection('matchSchedules');
         break;
       case 'matches':
@@ -77,6 +76,7 @@ class SearchTag extends React.Component {
     return (
       <View style={styles.container}>
         <SearchBar
+          style={{ display: 'none' }}
           lightTheme
           onChangeText={searchText => this.setState({ searchText })}
           onClear={searchText => this.onPressTest({ searchText })}

@@ -13,9 +13,8 @@ import PhotoHeader from '../components/PhotoHeader.js';
 import SelectItem from '../components/SelectItem.js';
 import TagBox from '../components/TagBox.js';
 
-class PhotoUploader extends React.Component {
+class EditPhoto extends React.Component {
   state = {
-    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     tags: [],
     people: [],
     match: null,
@@ -24,23 +23,79 @@ class PhotoUploader extends React.Component {
   }
 
   componentWillMount() {
-    this.fetchData();
-    if (this.props.navigation.state.params && this.props.navigation.state.params.taggedUser) {
-      this.setState({ people: [this.props.navigation.state.params.taggedUser] });
+    if (this.props.navigation.state.params && this.props.navigation.state.params.photo) {
+      const { photo } = this.props.navigation.state.params;
+      this.setState({ photo });
+
+      const {
+        tags,
+        people,
+        matchPath,
+        teamId,
+      } = photo.data;
+
+      if (tags) {
+        const tagsArray = this.makeListFromObject(tags);
+        this.setState({ tags: tagsArray });
+      }
+
+      if (people) {
+        const peopleIdArray = this.makeListFromObject(people);
+        peopleIdArray.forEach((item) => { this.fetchUser(item); });
+      }
+
+      if (matchPath) { this.fetchMatch(matchPath); }
+
+      if (teamId) { this.fetchTeam(teamId); }
     }
   }
 
   // eslint-disable-next-line
-  fetchData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('uid');
-      if (value !== null) {
-        this.setState({ uid: value });
-        // this.fetchUser();
-        // this.fetchPhotos();
+  fetchUser = (userId) => {
+    const db = firebase.firestore();
+    const Ref = db.collection('users').doc(userId);
+    Ref.get().then((doc) => {
+      const user = { id: doc.id, data: doc.data() };
+      const { people } = this.state;
+      people.push(user);
+      this.setState({ people });
+    });
+  }
+
+  fetchTeam = (teamId) => {
+    const db = firebase.firestore();
+    const Ref = db.collection('teams').doc(teamId);
+    Ref.get().then((doc) => {
+      const team = { id: doc.id, data: doc.data() };
+      this.setState({ team });
+    });
+  }
+
+  fetchMatch = (matchPath) => {
+    const db = firebase.firestore();
+    const Ref = db.doc(matchPath);
+    Ref.get().then((doc) => {
+      const match = { id: doc.id, data: doc.data() };
+      this.setState({ match });
+    });
+  }
+
+  // eslint-disable-next-line
+  makeListFromObject = (obj) => {
+    const array = [];
+    Object.keys(obj).forEach((prop) => {
+      if (obj[prop]) {
+        array.push(prop);
       }
+    });
+    return array;
+  };
+
+  storeUserPhoto = async (photoURL) => {
+    try {
+      await AsyncStorage.setItem('photoURL', photoURL);
     } catch (error) {
-    //
+      // Error saving data
     }
   }
 
@@ -52,7 +107,10 @@ class PhotoUploader extends React.Component {
     switch (tagType) {
       case 'teams':
         this.setState({ team: item });
-        this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+        this.props.navigation.navigate({
+          routeName: 'EditPhoto',
+          key: this.props.navigation.state.params.key,
+        });
         break;
       case 'matchSchedules':
         this.props.navigation.navigate({
@@ -66,7 +124,10 @@ class PhotoUploader extends React.Component {
         break;
       case 'matches':
         this.setState({ match: item });
-        this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+        this.props.navigation.navigate({
+          routeName: 'EditPhoto',
+          key: this.props.navigation.state.params.key,
+        });
         break;
 
       default:
@@ -77,7 +138,10 @@ class PhotoUploader extends React.Component {
 
   onPressMatch = (tagType, item) => {
     this.setState({ match: item });
-    this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+    this.props.navigation.navigate({
+      routeName: 'EditPhoto',
+      key: this.props.navigation.state.params.key,
+    });
   }
 
   addTeam = () => {
@@ -100,72 +164,28 @@ class PhotoUploader extends React.Component {
     });
   }
 
-  uploadPhoto = async () => {
+  updatePhoto = () => {
     if (!this.state.isUploading) {
-      this.setState({ isUploading: true });
-      // eslint-disable-next-line
-      const res = await fetch(this.props.navigation.state.params.image.uri);
-      const file = await res.blob();
-
-      const createdAt = Date.now();
-
-      const path = `photos/${this.state.uid}/${createdAt.toString()}.jpg`;
-      const storageRef = firebase.storage().ref();
-      const imageRef = storageRef.child(path);
-
-      imageRef.put(file).then((snapshot) => {
-        // console.log(snapshot);
-        if (snapshot.state) {
-          this.indexToDatabase(path, snapshot.downloadURL, createdAt);
-        } else {
-          Alert.alert('アップロードに失敗しました。');
-        }
-      });
-    }
-  }
-
-  indexToDatabase = (storagePath, downloadURL, createdAt) => {
-    const db = firebase.firestore();
-    const ref = db.collection('photos').doc();
-    ref.set({
-      storagePath,
-      downloadURL,
-      uid: this.state.uid,
-      createdAt,
-      updatedAt: createdAt,
-      tags: this.mapArray(this.state.tags),
-      people: this.mapArrayPeople(this.state.people),
-      matchId: this.state.match && this.state.match.id,
-      matchPath: this.state.match && `matchSchedules/${this.state.match.data.scheduleId}/matches/${this.state.match.id}`,
-      teamId: this.state.team && this.state.team.id,
-      width: this.props.navigation.state.params.image.width,
-      height: this.props.navigation.state.params.image.height,
-      likes: {},
-      accesses: {},
-    })
-      .then(() => {
-        this.setState({ isUploading: true });
-        this.props.navigation.navigate({
-          routeName: 'UserPage',
-          params: {
-            logInUser: this.state.logInUser,
-            uid: this.state.logInUser.id,
-            // user: item,
-          },
-          key: 'UserPage' + this.state.logInUser.id,
-        });
+      const updatedAt = Date.now();
+      const db = firebase.firestore();
+      const photoRef = db.collection('photos').doc(this.state.photo.id);
+      photoRef.update({
+        updatedAt,
+        tags: this.mapArray(this.state.tags),
+        people: this.mapArrayPeople(this.state.people),
+        matchId: this.state.match && this.state.match.id,
+        matchPath: this.state.match && `matchSchedules/${this.state.match.data.scheduleId}/matches/${this.state.match.id}`,
+        teamId: this.state.team && this.state.team.id,
       })
-      .catch((error) => {
-        console.error('Error writing document: ', error);
-        this.props.navigation.navigate({
-          routeName: 'UserPage',
-          params: {
-            logInUser: this.state.logInUser,
-            // user: item,
-          },
-          key: 'UserPage' + this.state.uid,
+        .then(() => {
+          this.props.navigation.goBack();
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error('Error updating document: ', error);
+          Alert.alert('データ更新に失敗しました。時間をおいてから再度実行してください。');
         });
-      });
+    }
   }
 
   mapArrayPeople = (peopleArray) => {
@@ -205,7 +225,11 @@ class PhotoUploader extends React.Component {
     });
     if (count === people.length) { people.push(item); }
     this.setState({ people });
-    return this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+    // return this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+    return this.props.navigation.navigate({
+      routeName: 'EditPhoto',
+      key: this.props.navigation.state.params.key,
+    });
   }
 
   tagPeople = () => {
@@ -233,15 +257,15 @@ class PhotoUploader extends React.Component {
       <View style={styles.container}>
         <PhotoHeader
           onPressLeft={() => { this.props.navigation.goBack(); }}
-          onPressRight={this.uploadPhoto}
-          headerTitle="New Photo"
-          rightButtonTitle="Post"
+          onPressRight={this.updatePhoto}
+          headerTitle="Edit Photo"
+          rightButtonTitle="Save"
         />
         <View style={styles.body}>
           <View style={styles.top}>
             <Image
               style={styles.image}
-              source={{ uri: this.props.navigation.state.params.image.uri }}
+              source={{ uri: this.props.navigation.state.params.photo.data.downloadURL }}
               resizeMode="cover"
             />
             <TagBox
@@ -306,4 +330,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PhotoUploader;
+export default EditPhoto;

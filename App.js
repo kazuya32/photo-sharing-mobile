@@ -27,6 +27,9 @@ import Search from './src/screens/Search.js';
 import PlayerList from './src/screens/PlayerList.js';
 import ReportPhoto from './src/screens/ReportPhoto.js';
 import ReportUser from './src/screens/ReportUser.js';
+import SelectGifts from './src/screens/SelectGifts.js';
+import SendGift from './src/screens/SendGift.js';
+import EditPhoto from './src/screens/EditPhoto.js';
 
 import ENV from './env.json';
 
@@ -96,6 +99,9 @@ const HomeStack = createStackNavigator({
   Match: { screen: Match },
   ReportPhoto: { screen: ReportPhoto },
   ReportUser: { screen: ReportUser },
+  SelectGifts: { screen: SelectGifts },
+  SendGift: { screen: SendGift },
+  EditPhoto: { screen: EditPhoto },
 }, {
   headerMode: 'none',
   // initialRouteName: 'Login',
