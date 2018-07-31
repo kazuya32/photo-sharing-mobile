@@ -6,12 +6,7 @@ import {
   Image,
   Dimensions,
   AsyncStorage,
-  Alert,
 } from 'react-native';
-import {
-  ImagePicker,
-  Permissions,
-} from 'expo';
 import firebase from 'firebase';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 
@@ -259,7 +254,7 @@ class UserPage extends React.Component {
     const followersTitle = `Followers ${this.state.followersArray && this.state.followersArray.length}`;
     const followingTitle = `Following ${this.state.followersArray && this.state.followingArray.length}`;
 
-    const initialPage = (this.state.user && this.state.user.data.isAthlete) ? 1 : 0;
+    // const initialPage = (this.state.user && this.state.user.data.isAthlete) ? 1 : 0;
 
     return (
       <View style={styles.container}>
@@ -292,8 +287,7 @@ class UserPage extends React.Component {
           tabBarInactiveTextColor="black"
           tabBarTextStyle={styles.tabBarText}
           tabStyle={{ paddingBottom: 0 }}
-          initialPage={initialPage}
-          // page={initialPage}
+          // initialPage={initialPage}
         >
           <PhotoCollection
             tabLabel="Posts"

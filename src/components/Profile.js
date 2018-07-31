@@ -7,6 +7,10 @@ import {
   ActionSheetIOS,
   Alert,
 } from 'react-native';
+import {
+  ImagePicker,
+  Permissions,
+} from 'expo';
 import firebase from 'firebase';
 
 import UserIcon from '../elements/UserIcon.js';
@@ -73,6 +77,42 @@ class Profile extends React.Component {
       });
   }
 
+  onPressUpload = () => {
+    this.getPermission();
+  }
+
+  getPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status === 'granted') {
+      this.pickImage();
+    } else {
+      // this.props.navigation.navigate({ routeName: 'Home' });
+      Alert.alert('カメラロールの使用が許可されていません。');
+    }
+  }
+
+  pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      // base64: true,
+    });
+    console.log(result);
+
+    if (result.cancelled) {
+      // this.props.navigation.navigate({ routeName: 'Home' });
+      // Alert.alert('カメラロールの使用が許可されていません。');
+    } else {
+      this.props.navigation.navigate({
+        routeName: 'PhotoUploader',
+        params: {
+          image: result,
+          logInUser: this.state.logInUser,
+        },
+      });
+    }
+  };
+
   onPressEdit = () => {
     this.props.navigation.navigate({
       routeName: 'EditProfile',
@@ -84,7 +124,7 @@ class Profile extends React.Component {
   }
 
   onPressMenuMyPage = () => {
-    const options = ['キャンセル', 'プロフィールを編集'];
+    const options = ['キャンセル', '写真を投稿', 'プロフィールを編集'];
     const destructiveButtonIndex = options.length;
     if (this.state.isMyPage) {
       options.push('ログアウト');
@@ -97,6 +137,10 @@ class Profile extends React.Component {
       },
       (buttonIndex) => {
         if (buttonIndex === 1) {
+          // eslint-disable-next-line
+          this.onPressUpload();
+        }
+        if (buttonIndex === 2) {
           // eslint-disable-next-line
           this.onPressEdit();
         }

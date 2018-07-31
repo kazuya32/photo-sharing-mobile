@@ -15,7 +15,6 @@ import TagBox from '../components/TagBox.js';
 
 class PhotoUploader extends React.Component {
   state = {
-    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     tags: [],
     people: [],
     match: null,
@@ -144,23 +143,23 @@ class PhotoUploader extends React.Component {
       accesses: {},
     })
       .then(() => {
-        this.setState({ isUploading: true });
+        this.setState({ isUploading: false });
         this.props.navigation.navigate({
           routeName: 'UserPage',
           params: {
-            logInUser: this.state.logInUser,
-            uid: this.state.logInUser.id,
+            uid: this.state.uid,
             // user: item,
           },
-          key: 'UserPage' + this.state.logInUser.id,
+          key: 'UserPage' + this.state.uid,
         });
       })
       .catch((error) => {
+        this.setState({ isUploading: false });
         console.error('Error writing document: ', error);
         this.props.navigation.navigate({
           routeName: 'UserPage',
           params: {
-            logInUser: this.state.logInUser,
+            uid: this.state.uid,
             // user: item,
           },
           key: 'UserPage' + this.state.uid,

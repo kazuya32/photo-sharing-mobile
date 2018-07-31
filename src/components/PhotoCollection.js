@@ -15,38 +15,37 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 class PhotoCollection extends React.Component {
   state = {
-    // photos: this.props.photos,
     logInUser: this.props.logInUser,
   }
 
-  componentDidMount() {
-    if (this.props.uid) {
-      this.fetchPhotos(this.props.uid);
-    }
+  componentWillMount() {
+    if (this.props.uid) { this.fetchPhotos(this.props.uid); }
   }
 
-  // eslint-disable-next-line
   fetchPhotos = (uid) => {
-    const photos = [];
-    this.setState({ photos });
-
     const db = firebase.firestore();
-    // eslint-disable-next-line
-    const maxResults = 30;
-    // eslint-disable-next-line
-    // const photosRef = db.collection('photos').where('uid', '==', this.state.uid).orderBy('createdAt', 'desc').limit(maxResults);
     const photosRef = db.collection('photos').where('uid', '==', uid);
-
-    photosRef.get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          photos.push({
-            id: doc.id,
-            data: doc.data(),
-          });
+    photosRef.onSnapshot((querySnapshot) => {
+      const photos = [];
+      querySnapshot.forEach((doc) => {
+        photos.push({
+          id: doc.id,
+          data: doc.data(),
         });
       });
+      this.addGifts(uid, photos);
+    });
+  }
 
+  // componentDidMount() {
+  //   if (this.props.uid) {
+  //     this.fetchPhotos(this.props.uid);
+  //   }
+  // }
+
+  // eslint-disable-next-line
+  addGifts = (uid, photos) => {
+    const db = firebase.firestore();
     const givenPhotosRef = db.collection('photos').where(`accesses.${uid}`, '==', true);
     givenPhotosRef.get()
       .then((querySnapshot) => {
@@ -57,8 +56,47 @@ class PhotoCollection extends React.Component {
             isCertificated: true,
           });
         });
+        this.setState({ photos });
       });
   }
+
+  // // eslint-disable-next-line
+  // fetchPhotos = (uid) => {
+  //   console.log('fetchPhotos');
+  //   const photos = [];
+  //
+  //   const db = firebase.firestore();
+  //   // eslint-disable-next-line
+  //   const maxResults = 30;
+  //   // eslint-disable-next-line
+  //   // const photosRef = db.collection('photos').where('uid', '==', this.state.uid)
+  //   //   .orderBy('createdAt', 'desc')
+  //   //   .limit(maxResults);
+  //   const photosRef = db.collection('photos').where('uid', '==', uid);
+  //
+  //   photosRef.get()
+  //     .then((querySnapshot) => {
+  //       querySnapshot.forEach((doc) => {
+  //         photos.push({
+  //           id: doc.id,
+  //           data: doc.data(),
+  //         });
+  //       });
+  //     });
+  //
+  //   const givenPhotosRef = db.collection('photos').where(`accesses.${uid}`, '==', true);
+  //   givenPhotosRef.get()
+  //     .then((querySnapshot) => {
+  //       querySnapshot.forEach((doc) => {
+  //         photos.push({
+  //           id: doc.id,
+  //           data: doc.data(),
+  //           isCertificated: true,
+  //         });
+  //       });
+  //     });
+  //   this.setState({ photos });
+  // }
 
   sortDesc = (array) => {
     array.sort((a, b) => (a.data.createdAt - b.data.createdAt));
