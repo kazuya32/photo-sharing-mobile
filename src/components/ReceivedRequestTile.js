@@ -12,8 +12,8 @@ import firebase from 'firebase';
 
 class ReceivedRequestTile extends React.Component {
   state = {
-    // logInUid: this.props.logInUid,
     isReadAfterReceived: false,
+    photoDeleted: false,
   }
 
   componentWillMount() {
@@ -39,11 +39,15 @@ class ReceivedRequestTile extends React.Component {
   getPhoto = async (photoId) => {
     const db = firebase.firestore();
     const photoRef = db.collection('photos').doc(photoId);
-    photoRef.get().then((doc) => {
-      const photo = { id: doc.id, data: doc.data() };
-      this.setState({
-        photo,
-      });
+    photoRef.get().then((DocumentSnapshot) => {
+      if (DocumentSnapshot.exists) {
+        const photo = { id: DocumentSnapshot.id, data: DocumentSnapshot.data() };
+        this.setState({
+          photo,
+        });
+      } else {
+        this.setState({ photoDeleted: true });
+      }
     });
   }
 
@@ -71,10 +75,14 @@ class ReceivedRequestTile extends React.Component {
 
   render() {
     const {
-      // onPress,
       request,
-      isSent,
     } = this.props;
+
+    if (this.state.photoDeleted) {
+      return (
+        <View style={{ display: 'none' }} />
+      );
+    }
 
     if (!(this.state.user && this.state.photo)) {
     // if (!(this.state.photo)) {
@@ -101,7 +109,6 @@ class ReceivedRequestTile extends React.Component {
             <Text
               style={[
                 styles.userName,
-                isSent && { color: 'black' },
                 (this.state.isReadAfterReceived || request.data.isReadAfterReceived) && { color: 'black' },
               ]}
             >

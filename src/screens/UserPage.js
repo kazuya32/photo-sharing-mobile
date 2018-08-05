@@ -22,6 +22,8 @@ class UserPage extends React.Component {
     uid: this.props.navigation.state.params && this.props.navigation.state.params.uid,
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     initialized: false,
+    receivedItems: [],
+    sentItems: [],
     // uid:
   }
 
@@ -47,6 +49,7 @@ class UserPage extends React.Component {
 
       if (isMyPage) {
         this.fetchRequest();
+        this.fetchGifts();
       }
     } catch (error) {
     //
@@ -107,36 +110,71 @@ class UserPage extends React.Component {
     const db = firebase.firestore();
     const receivedRef = db.collection('requests')
       .where('to', '==', this.state.uid);
-      // .orderBy('updatedAt', 'desc');
 
-    const receivedRequests = [];
+    const { receivedItems } = this.state;
     receivedRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          receivedRequests.push({
+          receivedItems.push({
             id: doc.id,
             data: doc.data(),
+            type: 'request',
           });
         });
-        this.setState({ receivedRequests });
+        this.setState({ receivedItems });
       });
 
     const sentRef = db.collection('requests')
       .where('from', '==', this.state.uid);
-    const sentRequests = [];
+    const { sentItems } = this.state;
     sentRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          sentRequests.push({
+          sentItems.push({
             id: doc.id,
             data: doc.data(),
+            type: 'request',
           });
         });
-        this.setState({ sentRequests });
+        this.setState({ sentItems });
       });
     // if (!receivedRequests.length) {
     //   this.setState({ receivedRequests });
     // }
+  }
+
+  fetchGifts = () => {
+    const db = firebase.firestore();
+    const receivedRef = db.collection('gifts')
+      .where('to', '==', this.state.uid);
+
+    const { receivedItems } = this.state;
+    receivedRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          receivedItems.push({
+            id: doc.id,
+            data: doc.data(),
+            type: 'gift',
+          });
+        });
+        this.setState({ receivedItems });
+      });
+
+    const sentRef = db.collection('gifts')
+      .where('from', '==', this.state.uid);
+    const { sentItems } = this.state;
+    sentRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          sentItems.push({
+            id: doc.id,
+            data: doc.data(),
+            type: 'gift',
+          });
+        });
+        this.setState({ sentItems });
+      });
   }
 
   // eslint-disable-next-line
@@ -176,10 +214,8 @@ class UserPage extends React.Component {
     this.props.navigation.navigate({
       routeName: 'RequestList',
       params: {
-        // uid,
-        // logInUser: this.state.logInUser,
-        receivedRequests: this.state.receivedRequests,
-        sentRequests: this.state.sentRequests,
+        receivedItems: this.state.receivedItems,
+        sentItems: this.state.sentItems,
       },
       // key: 'ViewRequest' + uid,
     });
@@ -267,8 +303,8 @@ class UserPage extends React.Component {
           navigation={this.props.navigation}
           logInUser={this.state.logInUser}
           uid={this.state.uid}
-          receivedRequests={this.state.receivedRequests}
-          sentRequests={this.state.sentRequests}
+          receivedItems={this.state.receivedItems}
+          sentItems={this.state.sentItems}
           user={this.state.user}
           photoURL={this.state.user && this.state.user.data.photoURL}
           isFollowing={this.state.isFollowing}
@@ -290,7 +326,7 @@ class UserPage extends React.Component {
           // initialPage={initialPage}
         >
           <PhotoCollection
-            tabLabel="Posts"
+            tabLabel="Photos"
             navigation={this.props.navigation}
             uid={this.state.uid}
             logInUser={this.state.logInUser}

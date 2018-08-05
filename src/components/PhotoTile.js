@@ -192,10 +192,19 @@ class PhotoTile extends React.Component {
     });
   }
 
+  onPressSignature = () => {
+    this.props.navigation.navigate({
+      routeName: 'Signature',
+      params: {
+        photo: this.props.photo,
+      },
+    });
+  }
+
   onPressMenu = () => {
     const options = [
       'キャンセル',
-      'リクエスト',
+      'サインする',
       'ブロック',
       '不適切な投稿として通報する',
     ];
@@ -210,7 +219,7 @@ class PhotoTile extends React.Component {
       (buttonIndex) => {
         if (buttonIndex === 1) {
           // eslint-disable-next-line
-          this.props.onPressPhoto && this.props.onPressPhoto();
+          this.onPressSignature();
         }
 
         if (buttonIndex === destructiveButtonIndex) {
@@ -247,6 +256,7 @@ class PhotoTile extends React.Component {
   render() {
     const {
       onPressUser,
+      style,
       photoStyle,
       photo,
     } = this.props;
@@ -254,8 +264,12 @@ class PhotoTile extends React.Component {
     const iconName = this.state.liked ? 'heart' : 'heart-outline';
     const onPressMenu = this.state.isMyPage ? this.onPressMenuMyPage : this.onPressMenu;
 
+    const photoWidth = Dimensions.get('window').width;
+    const XYRate = photo.data.height / photo.data.width;
+    const photoHeight = photoWidth * XYRate;
+
     return (
-      <View style={[styles.container, this.state.deleted && { display: 'none' }]}>
+      <View style={[styles.container, this.state.deleted && { display: 'none' }, style]}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <View style={[styles.match, !this.state.match && { display: 'none' }]}>
@@ -306,7 +320,11 @@ class PhotoTile extends React.Component {
           style={styles.photoWrap}
         >
           <Image
-            style={[styles.photo, photoStyle]}
+            style={[
+              styles.photo,
+              { height: photoHeight, width: photoWidth },
+              photoStyle,
+            ]}
             source={{ uri: photo.data.downloadURL }}
             resizeMode="contain"
           />
@@ -438,9 +456,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   photo: {
-    height: Dimensions.get('window').width,
-    width: Dimensions.get('window').width,
-    flex: 1,
     alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 0 },

@@ -6,8 +6,8 @@ import {
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 
 import Header from '../components/Header.js';
-import ReceivedRequests from '../components/ReceivedRequests.js';
-import SentRequests from '../components/SentRequests.js';
+import ReceivedItems from '../components/ReceivedItems.js';
+import SentItems from '../components/SentItems.js';
 
 class RequestList extends React.Component {
   state = {
@@ -53,19 +53,13 @@ class RequestList extends React.Component {
           tabBarTextStyle={styles.tabBarText}
           tabStyle={{ paddingBottom: 0 }}
         >
-          <ReceivedRequests
+          <ReceivedItems
             tabLabel="受信"
             navigation={this.props.navigation}
-            // logInUser={this.state.logInUser}
-            // numColumns={3}
-            // horizontal={true}
           />
-          <SentRequests
+          <SentItems
             tabLabel="送信"
             navigation={this.props.navigation}
-            // logInUser={this.state.logInUser}
-            // numColumns={3}
-            // horizontal={true}
           />
         </ScrollableTabView>
       </View>

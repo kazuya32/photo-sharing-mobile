@@ -10,19 +10,18 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 
-class SentRequestTile extends React.Component {
+class ReceivedGiftTile extends React.Component {
   state = {
-    // logInUid: this.props.logInUid,
-    isReadAfterApproved: false,
+    isReadAfterReceived: false,
     photoDeleted: false,
   }
 
   componentWillMount() {
     const {
-      request,
+      gift,
     } = this.props;
-    this.getUser(request.data.to);
-    this.getPhoto(request.data.photoId);
+    this.getUser(gift.data.from);
+    this.getPhoto(gift.data.photoId);
   }
 
   // eslint-disable-next-line
@@ -48,16 +47,15 @@ class SentRequestTile extends React.Component {
         });
       } else {
         this.setState({ photoDeleted: true });
-        this.setReadAfterApproved(this.props.request);
       }
     });
   }
 
-  setReadAfterApproved = async (request) => {
+  setReadAfterReceived = async (request) => {
     const db = firebase.firestore();
     const Ref = db.collection('requests').doc(request.id);
     Ref.update({
-      isReadAfterApproved: true,
+      isReadAfterReceived: true,
     })
       .then(() => {
         // eslint-disable-next-line
@@ -69,17 +67,15 @@ class SentRequestTile extends React.Component {
       });
   }
 
-  onPress = (request, user, photo) => {
-    if (request.data.status === 'approved') {
-      this.setState({ isReadAfterApproved: true });
-      this.setReadAfterApproved(request);
-    }
+  onPress = (gift, user, photo) => {
+    this.setState({ isReadAfterReceived: true });
+    this.setReadAfterReceived(gift);
     this.props.onPress(photo);
   }
 
   render() {
     const {
-      request,
+      gift,
     } = this.props;
 
     if (this.state.photoDeleted) {
@@ -89,7 +85,6 @@ class SentRequestTile extends React.Component {
     }
 
     if (!(this.state.user && this.state.photo)) {
-    // if (!(this.state.photo)) {
       return (
         <View style={{ flex: 1, height:30, alignSelf: 'center' }}>
           <ActivityIndicator />
@@ -97,14 +92,14 @@ class SentRequestTile extends React.Component {
       );
     }
 
-    const pendingMessage = 'さんにダウンロードリクエストを送信しました。';
-    const approvedMessage = 'さんからダウンロードリクエストを承認されました。';
-    const text = request.data.status === 'approved' ? approvedMessage : pendingMessage;
+    const originalMessage = 'さんからフォトギフトが届いています。';
+    const signatureMessage = 'さんからデジタルサインが届いています。';
+    const text = gift.data.type === 'signature' ? signatureMessage : originalMessage;
 
     return (
       <TouchableHighlight
         style={styles.container}
-        onPress={() => this.onPress(request, this.state.user, this.state.photo)}
+        onPress={() => this.onPress(gift, this.state.user, this.state.photo)}
         underlayColor="transparent"
       >
         <View style={{ flexDirection: 'row' }}>
@@ -117,8 +112,7 @@ class SentRequestTile extends React.Component {
             <Text
               style={[
                 styles.userName,
-                (request.data.status === 'approved') && { color: '#DB4D5E' },
-                (this.state.isReadAfterApproved || request.data.isReadAfterApproved) && { color: 'black' },
+                (this.state.isReadAfterReceived || gift.data.isReadAfterReceived) && { color: 'black' },
               ]}
             >
               {`${this.state.user && this.state.user.data.name}${text}`}
@@ -126,11 +120,11 @@ class SentRequestTile extends React.Component {
             <Text
               style={[
                 styles.message,
-                !request.data.message && { display: 'none' },
+                !gift.data.message && { display: 'none' },
                 { display: 'none' },
               ]}
             >
-              {request.data.message}
+              {gift.data.message}
             </Text>
           </View>
         </View>
@@ -160,7 +154,7 @@ const styles = StyleSheet.create({
   userName: {
     // alignSelf: 'center',
     fontSize: 16,
-    color: 'black',
+    color: '#DB4D5E',
   },
   contents: {
     flexDirection: 'column',
@@ -170,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SentRequestTile;
+export default ReceivedGiftTile;

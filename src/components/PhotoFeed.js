@@ -166,6 +166,7 @@ class Feed extends React.Component {
   renderItem = ({ item }) => (
     <PhotoTile
       photo={item}
+      style={item.data.hasArranged && { display: 'none' }}
       onPressPhoto={() => { this.props.onPressPhoto(item); }}
       // onPressUser={() => { this.props.onPressUser(item.data.uid); }}
       onPressUser={this.props.onPressUser}

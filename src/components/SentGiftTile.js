@@ -10,19 +10,18 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 
-class SentRequestTile extends React.Component {
+class SentGiftTile extends React.Component {
   state = {
-    // logInUid: this.props.logInUid,
     isReadAfterApproved: false,
     photoDeleted: false,
   }
 
   componentWillMount() {
     const {
-      request,
+      gift,
     } = this.props;
-    this.getUser(request.data.to);
-    this.getPhoto(request.data.photoId);
+    this.getUser(gift.data.to);
+    this.getPhoto(gift.data.photoId);
   }
 
   // eslint-disable-next-line
@@ -48,38 +47,17 @@ class SentRequestTile extends React.Component {
         });
       } else {
         this.setState({ photoDeleted: true });
-        this.setReadAfterApproved(this.props.request);
       }
     });
   }
 
-  setReadAfterApproved = async (request) => {
-    const db = firebase.firestore();
-    const Ref = db.collection('requests').doc(request.id);
-    Ref.update({
-      isReadAfterApproved: true,
-    })
-      .then(() => {
-        // eslint-disable-next-line
-        console.log('Document successfully written!');
-      })
-      .catch((error) => {
-        // eslint-disable-next-line
-        console.error('Error updating document: ', error);
-      });
-  }
-
-  onPress = (request, user, photo) => {
-    if (request.data.status === 'approved') {
-      this.setState({ isReadAfterApproved: true });
-      this.setReadAfterApproved(request);
-    }
+  onPress = (gift, user, photo) => {
     this.props.onPress(photo);
   }
 
   render() {
     const {
-      request,
+      gift,
     } = this.props;
 
     if (this.state.photoDeleted) {
@@ -97,14 +75,14 @@ class SentRequestTile extends React.Component {
       );
     }
 
-    const pendingMessage = 'さんにダウンロードリクエストを送信しました。';
-    const approvedMessage = 'さんからダウンロードリクエストを承認されました。';
-    const text = request.data.status === 'approved' ? approvedMessage : pendingMessage;
+    const originalMessage = 'さんにフォトギフトを贈りました。';
+    const signatureMessage = 'さんにデジタルサインを贈りました。';
+    const text = gift.data.type === 'signature' ? signatureMessage : originalMessage;
 
     return (
       <TouchableHighlight
         style={styles.container}
-        onPress={() => this.onPress(request, this.state.user, this.state.photo)}
+        onPress={() => this.onPress(gift, this.state.user, this.state.photo)}
         underlayColor="transparent"
       >
         <View style={{ flexDirection: 'row' }}>
@@ -117,8 +95,8 @@ class SentRequestTile extends React.Component {
             <Text
               style={[
                 styles.userName,
-                (request.data.status === 'approved') && { color: '#DB4D5E' },
-                (this.state.isReadAfterApproved || request.data.isReadAfterApproved) && { color: 'black' },
+                (gift.data.status === 'approved') && { color: '#DB4D5E' },
+                (this.state.isReadAfterApproved || gift.data.isReadAfterApproved) && { color: 'black' },
               ]}
             >
               {`${this.state.user && this.state.user.data.name}${text}`}
@@ -126,11 +104,11 @@ class SentRequestTile extends React.Component {
             <Text
               style={[
                 styles.message,
-                !request.data.message && { display: 'none' },
+                !gift.data.message && { display: 'none' },
                 { display: 'none' },
               ]}
             >
-              {request.data.message}
+              {gift.data.message}
             </Text>
           </View>
         </View>
@@ -170,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SentRequestTile;
+export default SentGiftTile;

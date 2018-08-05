@@ -53,9 +53,11 @@ class SendGift extends React.Component {
         to: this.state.user.id,
         photoId: this.state.photo.id,
         message: this.state.text,
-        isRead: false,
+        isReadAfterReceived: false,
+        isReadAfterApproved: true,
         createdAt,
         updatedAt: createdAt,
+        type: 'original',
       })
         .then(() => {
           this.giveAccess();

@@ -102,7 +102,7 @@ class Login extends React.Component {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(user.uid);
     userRef.get().then((DocumentSnapshot) => {
-      if (DocumentSnapshot.exist) {
+      if (DocumentSnapshot.exists) {
         console.log(DocumentSnapshot.data());
       } else {
         console.log('No exist');

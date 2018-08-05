@@ -225,14 +225,14 @@ class Profile extends React.Component {
       onPressRequest,
       photoURL,
       handleFollowButton,
-      receivedRequests,
-      sentRequests,
+      receivedItems,
+      sentItems,
       isFollowing,
       user,
     } = this.props;
 
-    const unreadSum = this.countUnread(receivedRequests);
-    const approvedSum = this.countApproved(sentRequests);
+    const unreadSum = this.countUnread(receivedItems);
+    const approvedSum = this.countApproved(sentItems);
     const sum = unreadSum + approvedSum;
 
     return (

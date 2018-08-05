@@ -5,56 +5,71 @@ import {
   FlatList,
 } from 'react-native';
 
-import SentRequestTile from './SentRequestTile.js';
+import ReceivedRequestTile from './ReceivedRequestTile.js';
+import ReceivedGiftTile from './ReceivedGiftTile.js';
 
 class ReceivedRequests extends React.Component {
-  state = {
-    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
-  }
+  state = {}
 
   componentWillMount() {
     // const { followingObject } = this.props;
   }
 
-  // eslint-disable-next-line
-  navigateToMyPage = () => {
+  onPressRequest = (request, user, photo) => {
     this.props.navigation.navigate({
-      routeName: 'UserPage',
+      routeName: 'ViewRequest',
       params: {
-        uid: this.state.logInUser.id,
-        // logInUser: this.state.logInUser,
+        request,
+        user,
+        photo,
       },
-      key: 'UserPage' + this.state.logInUser.id,
+      key: 'ViewRequest' + request.id,
     });
   }
 
-  onPress = (photo) => {
+  onPressGift = (photo) => {
     this.props.navigation.navigate({
       routeName: 'PhotoDetail',
       params: {
         photo,
-        logInUser: this.state.logInUser,
       },
     });
   }
 
+  sortDescUpdatedAt = (array) => {
+    array.sort((a, b) => (a.data.updatedAt - b.data.updatedAt));
+    array.reverse();
+    return array;
+  }
+
   keyExtractor = (item, index) => index.toString();
 
-  renderItem = ({ item }) => (
-    <SentRequestTile
-      request={item}
-      onPress={this.onPress}
-    />
-  );
+  renderItem = ({ item }) => {
+    if (item.type === 'gift') {
+      return (
+        <ReceivedGiftTile
+          gift={item}
+          onPress={this.onPressGift}
+        />
+      );
+    }
+
+    return (
+      <ReceivedRequestTile
+        request={item}
+        onPress={this.onPressRequest}
+      />
+    );
+  }
 
   render() {
     // eslint-disable-next-line
-    const requests = this.props.navigation.state.params && this.props.navigation.state.params.sentRequests;
+    const items = this.props.navigation.state.params && this.props.navigation.state.params.receivedItems;
 
     return (
       <View style={styles.container}>
         <FlatList
-          data={requests}
+          data={this.sortDescUpdatedAt(items)}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           onEndReachedThreshold={0.2}

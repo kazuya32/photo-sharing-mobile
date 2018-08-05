@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  Dimensions,
   AsyncStorage,
 } from 'react-native';
 
@@ -12,9 +11,7 @@ import PhotoTile from '../components/PhotoTile';
 import Header from '../components/Header.js';
 
 class PhotoDetail extends React.Component {
-  state = {
-    // logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
-  }
+  state = {}
 
   componentWillMount() {
     this.retrieveLogInUser();
@@ -128,8 +125,8 @@ const styles = StyleSheet.create({
     paddingTop: 80,
   },
   photo: {
-    marginTop: 12,
-    height: Dimensions.get('window').height * 0.6,
+    // marginTop: 12,
+    // height: Dimensions.get('window').height * 0.6,
   },
   reqBtn: {
     marginBottom: 16,

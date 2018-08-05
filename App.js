@@ -16,6 +16,7 @@ import EditProfile from './src/screens/EditProfile.js';
 import RequestList from './src/screens/RequestList.js';
 import ViewRequest from './src/screens/ViewRequest.js';
 import Signature from './src/screens/Signature.js';
+import SendSignature from './src/screens/SendSignature.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
 import Schedule from './src/screens/Schedule.js';
 import Match from './src/screens/Match.js';
@@ -89,6 +90,7 @@ const HomeStack = createStackNavigator({
   RequestList: { screen: RequestList },
   ViewRequest: { screen: ViewRequest },
   Signature: { screen: Signature },
+  SendSignature: { screen: SendSignature },
   PhotoUploader: { screen: PhotoUploader },
   SearchTag: { screen: SearchTag },
   SearchMatch: { screen: SearchMatch },

@@ -32,6 +32,8 @@ then, in new terminal tab
 
     $ npm install --save firebase@4.6.2
 
+    $ npm install -g firebase-tools
+
 ### Facebook Login in Expo
 
 <https://docs.expo.io/versions/latest/sdk/facebook.html#registering-your-app-with-facebook>

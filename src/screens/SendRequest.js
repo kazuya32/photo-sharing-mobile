@@ -143,7 +143,10 @@ class SendRequest extends React.Component {
             resizeMode="contain"
           />
           <TextInput
-            style={[styles.input]}
+            style={[
+              styles.input,
+              { display: 'none' },
+            ]}
             // value={value}
             onChangeText={(text) => { this.setState({ text }); }}
             // onBlur={this.addTag}
@@ -181,8 +184,8 @@ const styles = StyleSheet.create({
     margin: 16,
   },
   image: {
-    width: Dimensions.get('window').width / 3,
-    height: Dimensions.get('window').width / 3,
+    width: Dimensions.get('window').width / 1,
+    height: Dimensions.get('window').width / 1,
     alignSelf: 'center',
     // marginTop: 16,
     marginBottom: 16,
