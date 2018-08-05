@@ -51,9 +51,9 @@ class ReceivedGiftTile extends React.Component {
     });
   }
 
-  setReadAfterReceived = async (request) => {
+  setReadAfterReceived = async (gift) => {
     const db = firebase.firestore();
-    const Ref = db.collection('requests').doc(request.id);
+    const Ref = db.collection('gifts').doc(gift.id);
     Ref.update({
       isReadAfterReceived: true,
     })
