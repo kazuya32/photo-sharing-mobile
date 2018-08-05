@@ -10,8 +10,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import firebase from 'firebase';
+// import Icon from 'react-native-vector-icons/Ionicons';
 
-import Icon from 'react-native-vector-icons/Ionicons';
+import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
+import UserIcon from '../elements/UserIcon.js';
 
 class PhotoCollection extends React.Component {
   state = {
@@ -58,6 +60,18 @@ class PhotoCollection extends React.Component {
         });
         this.setState({ photos });
       });
+  }
+
+  getUser = (uid) => {
+    let user;
+    const db = firebase.firestore();
+    const userRef = db.collection('users').doc(uid);
+    userRef.get().then((doc) => {
+      // const user = doc.data();
+      user = { id: doc.id, data: doc.data() };
+      this.setState({ user });
+    });
+    // return user;
   }
 
   // // eslint-disable-next-line
@@ -107,35 +121,15 @@ class PhotoCollection extends React.Component {
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => {
-        this.props.navigation.navigate({
-          routeName: 'PhotoDetail',
-          params: {
-            photo: item,
-            logInUser: this.state.logInUser,
-          },
-        });
-      }}
-    >
-      <View>
-        <Image
-          style={styles.photoItem}
-          source={{ uri: item.data.downloadURL }}
-          resizeMode="cover"
-        />
-        <Icon
-          name="md-ribbon"
-          size={24}
-          style={[
-            styles.ribbon,
-            !item.isCertificated && { display: 'none' },
-          ]}
-        />
-      </View>
-    </TouchableOpacity>
+    <PhotoCollectionItem
+      navigation={this.props.navigation}
+      photo={item}
+      isCertificated={item.isCertificated}
+      photoStyle={styles.photoItem}
+      iconStyle={styles.ribbon}
+      iconDia={24}
+    />
   );
-
 
   render() {
     if (!this.state.photos) {
@@ -179,9 +173,9 @@ const styles = StyleSheet.create({
   },
   ribbon: {
     position: 'absolute',
-    top: 6,
-    right: 6,
-    color: '#DB4D5E',
+    top: 4,
+    right: 4,
+    // color: '#DB4D5E',
     marginBottom: 1,
     zIndex: 50,
   },

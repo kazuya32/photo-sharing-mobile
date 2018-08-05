@@ -168,7 +168,8 @@ class Home extends React.Component {
   pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
+      // aspect: [4, 3],
       // base64: true,
     });
     console.log(result);

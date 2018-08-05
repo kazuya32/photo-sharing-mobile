@@ -128,7 +128,10 @@ class SendGift extends React.Component {
             resizeMode="contain"
           />
           <TextInput
-            style={[styles.input]}
+            style={[
+              styles.input,
+              { display: 'none' },
+            ]}
             // value={value}
             onChangeText={(text) => { this.setState({ text }); }}
             // onBlur={this.addTag}

@@ -238,6 +238,7 @@ class SendSignature extends React.Component {
           <TextInput
             style={[
               styles.input,
+              { display: 'none' },
             ]}
             // value={value}
             onChangeText={(text) => { this.setState({ text }); }}

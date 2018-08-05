@@ -18,6 +18,9 @@ class SendButton extends React.Component {
       photoURL = this.props.photoURL;
     }
 
+    const borderWidth = this.props.borderWidth || 3;
+    const borderColor = this.props.borderColor || '#DB4D5E';
+
     return (
       <TouchableHighlight
         style={[
@@ -32,7 +35,7 @@ class SendButton extends React.Component {
           style={[
             styles.photo,
             { width: dia, height: dia, borderRadius: dia * 0.5 },
-            isAthlete && { borderWidth: 3, borderColor: '#DB4D5E' },
+            isAthlete && { borderWidth, borderColor },
             // isAthlete && { borderWidth: 3, borderColor: '#dab300' },
           ]}
           source={{ uri: photoURL }}
