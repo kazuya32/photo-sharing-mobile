@@ -8,6 +8,7 @@ import {
   FlatList,
   Text,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -18,8 +19,19 @@ class PhotoCollection extends React.Component {
   }
 
   componentDidMount() {
+    this.fetchLogInUid();
     if (this.props.uid) {
       this.fetchPhotos(this.props.uid);
+    }
+  }
+
+  // eslint-disable-next-line
+  fetchLogInUid = async () => {
+    try {
+      const value = await AsyncStorage.getItem('uid');
+      this.setState({ logInUid: value });
+    } catch (error) {
+    //
     }
   }
 
@@ -36,10 +48,13 @@ class PhotoCollection extends React.Component {
       .then((querySnapshot) => {
         const photos = [];
         querySnapshot.forEach((doc) => {
-          photos.push({
-            id: doc.id,
-            data: doc.data(),
-          });
+          const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
+          if (!isBlocked) {
+            photos.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          }
         });
         this.setState({ photos });
       });
@@ -60,8 +75,9 @@ class PhotoCollection extends React.Component {
           routeName: 'PhotoDetail',
           params: {
             photo: item,
-            logInUser: this.state.logInUser,
+            // logInUser: this.state.logInUser,
           },
+          key: 'PhotoDetail' + item.id,
         });
       }}
     >

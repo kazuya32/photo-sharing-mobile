@@ -51,11 +51,13 @@ class PhotoCollectionItem extends React.Component {
         photo,
         logInUser: this.state.logInUser,
       },
+      key: 'PhotoDetail' + photo.id,
     });
   }
 
   render() {
     const {
+      style,
       photoStyle,
       iconStyle,
       photo,
@@ -67,7 +69,7 @@ class PhotoCollectionItem extends React.Component {
       <TouchableOpacity
         onPress={this.onPressPhoto}
       >
-        <View>
+        <View style={style}>
           <Image
             style={photoStyle}
             source={{ uri: photo.data.downloadURL }}

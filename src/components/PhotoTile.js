@@ -26,6 +26,7 @@ class PhotoTile extends React.Component {
     // logInUser: this.props.logInUser,
     uid: this.props.uid,
     deleted: false,
+    blocked: false,
   }
 
   componentDidMount() {
@@ -192,6 +193,47 @@ class PhotoTile extends React.Component {
     });
   }
 
+  blockingTransaction = () => {
+    const { photo } = this.props;
+
+    const db = firebase.firestore();
+    const logInUserRef = db.collection('users').doc(this.state.logInUid);
+    logInUserRef.update({
+      [`blockingPhoto.${photo.id}`]: true,
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
+
+    const photoRef = db.collection('photos').doc(photo.id);
+    photoRef.update({
+      [`blockedBy.${this.state.logInUid}`]: true,
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
+  }
+
+  onPressBlock = () => {
+    this.blockingTransaction();
+    const {
+      user,
+    } = this.props;
+    const text = `${user && user.data.name}さんの投稿写真を1枚ブロックしました。`;
+    Alert.alert(text);
+    this.setState({ blocked: true });
+  }
+
   onPressSignature = () => {
     this.props.navigation.navigate({
       routeName: 'Signature',
@@ -221,7 +263,10 @@ class PhotoTile extends React.Component {
           // eslint-disable-next-line
           this.onPressSignature();
         }
-
+        if (buttonIndex === 2) {
+          // eslint-disable-next-line
+          this.onPressBlock();
+        }
         if (buttonIndex === destructiveButtonIndex) {
           // eslint-disable-next-line
           this.onPressReport();
@@ -269,7 +314,13 @@ class PhotoTile extends React.Component {
     const photoHeight = photoWidth * XYRate;
 
     return (
-      <View style={[styles.container, this.state.deleted && { display: 'none' }, style]}>
+      <View style={[
+          styles.container,
+          this.state.deleted && { display: 'none' },
+          this.state.blocked && { display: 'none' },
+          style,
+        ]}
+      >
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <View style={[styles.match, !this.state.match && { display: 'none' }]}>

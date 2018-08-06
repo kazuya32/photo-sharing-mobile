@@ -2,38 +2,54 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  TouchableOpacity,
-  Image,
   Dimensions,
   FlatList,
   Text,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
 // import Icon from 'react-native-vector-icons/Ionicons';
 
 import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
-import UserIcon from '../elements/UserIcon.js';
 
 class PhotoCollection extends React.Component {
   state = {
-    logInUser: this.props.logInUser,
+    // logInUser: this.props.logInUser,
   }
 
   componentWillMount() {
+    this.fetchLogInUid();
     if (this.props.uid) { this.fetchPhotos(this.props.uid); }
   }
 
+  // eslint-disable-next-line
+  fetchLogInUid = async () => {
+    try {
+      const value = await AsyncStorage.getItem('uid');
+      this.setState({ logInUid: value });
+    } catch (error) {
+    //
+    }
+  }
+
+  // eslint-disable-next-line
   fetchPhotos = (uid) => {
     const db = firebase.firestore();
-    const photosRef = db.collection('photos').where('uid', '==', uid);
+    const photosRef = db.collection('photos')
+      .where('uid', '==', uid);
+
     photosRef.onSnapshot((querySnapshot) => {
       const photos = [];
       querySnapshot.forEach((doc) => {
-        photos.push({
-          id: doc.id,
-          data: doc.data(),
-        });
+        const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
+        if (!isBlocked) {
+        // if (!doc.data().hasArranged) {
+          photos.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        }
       });
       this.addGifts(uid, photos);
     });
@@ -48,7 +64,9 @@ class PhotoCollection extends React.Component {
   // eslint-disable-next-line
   addGifts = (uid, photos) => {
     const db = firebase.firestore();
-    const givenPhotosRef = db.collection('photos').where(`accesses.${uid}`, '==', true);
+    const givenPhotosRef = db.collection('photos')
+      .where(`accesses.${uid}`, '==', true);
+
     givenPhotosRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -125,6 +143,7 @@ class PhotoCollection extends React.Component {
       navigation={this.props.navigation}
       photo={item}
       isCertificated={item.isCertificated}
+      // style={item.data.hasArranged && { display: 'none' }}
       photoStyle={styles.photoItem}
       iconStyle={styles.ribbon}
       iconDia={24}

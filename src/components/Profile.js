@@ -156,7 +156,7 @@ class Profile extends React.Component {
     const logInUserRef = db.collection('users').doc(this.state.logInUid);
     logInUserRef.update({
       [`followers.${this.props.uid}`]: false,
-      [`blocking.${this.props.uid}`]: true,
+      [`blockingUser.${this.props.uid}`]: true,
     })
       .then(() => {
         // eslint-disable-next-line

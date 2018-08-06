@@ -64,8 +64,7 @@ class UserPage extends React.Component {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(this.state.uid);
     userRef.onSnapshot((doc) => {
-      const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
-      console.log(source, ' data: ', doc.data());
+      // const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
       const user = {
         id: doc.id,
         data: doc.data(),
@@ -329,13 +328,13 @@ class UserPage extends React.Component {
             tabLabel="Photos"
             navigation={this.props.navigation}
             uid={this.state.uid}
-            logInUser={this.state.logInUser}
+            // logInUser={this.state.logInUser}
           />
           <PhotoCollectionTagged
             tabLabel="Tagged"
             navigation={this.props.navigation}
             uid={this.state.uid}
-            logInUser={this.state.logInUser}
+            // logInUser={this.state.logInUser}
           />
           <FollowingList
             tabLabel={followersTitle}

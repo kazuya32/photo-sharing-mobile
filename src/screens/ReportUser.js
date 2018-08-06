@@ -2,13 +2,11 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Image,
   Alert,
   Dimensions,
   Text,
   TextInput,
   ScrollView,
-  ActivityIndicator,
   AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
@@ -30,39 +28,92 @@ class Report extends React.Component {
   }
 
   componentWillMount() {
-    // this.getUser(this.props.navigation.state.params.photo.data.uid);
-    // this.retrieveLogInUser();
+    this.retrieveLogInUser();
   }
 
   // eslint-disable-next-line
   retrieveLogInUser = async () => {
     try {
       const logInUid = await AsyncStorage.getItem('uid');
-      // const photoURL = await AsyncStorage.getItem('photoURL');
-      // const isAthlete = await AsyncStorage.getItem('isAthlete');
-
-      // if (photoURL !== null && isAthlete !== null) {
-      // const value = (isAthlete === 'true');
       this.setState({ logInUid });
-      // }
+      this.getLogInUser(logInUid);
     } catch (error) {
     //
     }
   }
 
   // eslint-disable-next-line
-  getUser = (uid) => {
+  getLogInUser = (logInUid) => {
     const db = firebase.firestore();
-    const userRef = db.collection('users').doc(uid);
+    const userRef = db.collection('users').doc(logInUid);
     userRef.get().then((doc) => {
-      // const user = doc.data();
-      const user = { id: doc.id, data: doc.data() };
-      this.setState({ user });
+      const logInUser = { id: doc.id, data: doc.data() };
+      this.setState({ logInUser });
     });
   }
 
-  report = () => {
-    Alert.alert('この機能は調整中です。');
+  // eslint-disable-next-line
+  autoReply = async () => {
+    const { email, logInUser } = this.state;
+    const functionURL = `https://us-central1-do-project-4eec7.cloudfunctions.net/autoReply?recipientEmail=${email}&recipientName=${logInUser.data.name}`;
+    // eslint-disable-next-line
+    const res = await fetch(functionURL);
+    // eslint-disable-next-line
+    console.log(res);
+  }
+
+  validateEmail = () => {
+    // eslint-disable-next-line
+    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(this.state.email) === true) {
+      this.setState({ emailValidated : true });
+    } else {
+      this.setState({ emailValidated : false });
+    }
+  }
+
+  // eslint-disable-next-line
+  makeReport = () => {
+    if (this.state.emailValidated) {
+      if (!this.state.isUploading) {
+        const { user } = this.props.navigation.state.params;
+        this.setState({ isUploading: true });
+        const createdAt = Date.now();
+        const db = firebase.firestore();
+        db.collection('reports').doc().set({
+          type: 'user',
+          uid: user.id,
+          reportedBy: this.state.logInUid,
+          email: this.state.email,
+          desc: this.state.text,
+          isRead: false,
+          status: 'pending',
+          createdAt,
+          updatedAt: createdAt,
+        })
+          .then(() => {
+            this.autoReply();
+            Alert.alert('不適切なユーザーをサポートチームに報告しました。');
+            this.setState({ isUploading: false });
+            this.props.navigation.navigate({
+              routeName: 'Home',
+              params: {
+                uid: this.state.logInUid,
+                // user: item,
+              },
+              key: 'Home',
+            });
+          })
+          .catch((error) => {
+            // eslint-disable-next-line
+            console.error('Error writing document: ', error);
+            Alert.alert('通信に失敗しました。');
+            this.setState({ isUploading: false });
+          });
+      }
+    } else {
+      Alert.alert('Emailの形式が正しくありません。');
+    }
   }
 
   render() {
@@ -77,7 +128,7 @@ class Report extends React.Component {
         />
         <ScrollView>
           <Text style={[styles.text, { color: 'red' }]}>
-            不適切ユーザーとして運営サポートに連絡します。
+            {`${user.data.name}さんを不適切ユーザーとしてサポートチームに連絡します。`}
           </Text>
           <View style={styles.profile}>
             <UserIcon
@@ -97,7 +148,7 @@ class Report extends React.Component {
             style={[styles.email]}
             // value={value}
             onChangeText={(text) => { this.setState({ email: text }); }}
-            // onBlur={this.addTag}
+            onBlur={this.validateEmail}
             autoCapitalize="none"
             autoCorrect={false}
             // textShadowColor="gray"
@@ -106,7 +157,7 @@ class Report extends React.Component {
             keyboardType="email-address"
           />
           <Text style={styles.text}>
-            理由
+            理由（お手数をおかけしますが、不適切な理由をお聞かせください。）
           </Text>
           <TextInput
             style={[styles.input]}
@@ -128,7 +179,7 @@ class Report extends React.Component {
           >
             キャンセル
           </CancelButton>
-          <SaveButton onPress={this.report} shadow >
+          <SaveButton onPress={this.makeReport} shadow >
             連絡
           </SaveButton>
         </View>
