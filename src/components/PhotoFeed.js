@@ -30,7 +30,7 @@ class Feed extends React.Component {
       if (value !== null) {
         this.setState({ uid: value });
         // this.fetchUser();
-        this.fetchPhotos();
+        this.fetchPhotos(value);
       }
     } catch (error) {
     //
@@ -75,10 +75,13 @@ class Feed extends React.Component {
     photosRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          photos.push({
-            id: doc.id,
-            data: doc.data(),
-          });
+          const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.uid];
+          if (!isBlocked) {
+            photos.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          }
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
         this.setState({ photos, lastVisible });
@@ -91,9 +94,8 @@ class Feed extends React.Component {
     if (!this.state.isReloading && this.state.lastVisible) {
       this.setState({ isReloading: true });
 
-      console.log('reload');
       const db = firebase.firestore();
-      const maxResults = 2;
+      const maxResults = 3;
 
       // 画像URLの取得だけは最初に一度におこない、レンダリングだけ順番に行う機能を実装するべき
 
@@ -135,10 +137,13 @@ class Feed extends React.Component {
       photosRef.get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            photos.push({
-              id: doc.id,
-              data: doc.data(),
-            });
+            const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.uid];
+            if (!isBlocked) {
+              photos.push({
+                id: doc.id,
+                data: doc.data(),
+              });
+            }
           });
           const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
           this.setState({ photos, lastVisible, isReloading: false });
