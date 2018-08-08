@@ -228,9 +228,10 @@ class PhotoTile extends React.Component {
     this.blockingTransaction();
     const {
       user,
-    } = this.props;
+    } = this.state;
     const text = `${user && user.data.name}さんの投稿写真を1枚ブロックしました。`;
     Alert.alert(text);
+    if (this.props.onPressBlock) { this.props.onPressBlock(); }
     this.setState({ blocked: true });
   }
 
@@ -243,13 +244,45 @@ class PhotoTile extends React.Component {
     });
   }
 
+  blind = () => {
+    const { photo } = this.props;
+    const { invisibleInMyPage } = photo.data;
+    const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
+
+    const db = firebase.firestore();
+    const photoRef = db.collection('photos').doc(photo.id);
+    photoRef.update({
+      [`invisibleInMyPage.${this.state.logInUid}`]: !isInvisible,
+    });
+
+    const timestamp = Date.now().toString();
+    this.props.navigation.navigate({
+      routeName: 'UserPage',
+      params: {
+        uid: this.state.logInUid,
+      },
+      key: 'UserPage' + timestamp,
+    });
+  }
+
   onPressMenu = () => {
+    const { photo } = this.props;
+    const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
+    const { invisibleInMyPage } = photo.data;
+    const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
+
     const options = [
       'キャンセル',
       'サインする',
       'ブロック',
-      '不適切な投稿として通報する',
     ];
+
+    if (hasAccess) {
+      const text = isInvisible ? 'マイページに表示する' : 'マイページで非表示にする';
+      options.push(text);
+    }
+
+    options.push('不適切な投稿として通報する');
 
     const destructiveButtonIndex = options.length - 1;
     ActionSheetIOS.showActionSheetWithOptions(
@@ -266,6 +299,11 @@ class PhotoTile extends React.Component {
         if (buttonIndex === 2) {
           // eslint-disable-next-line
           this.onPressBlock();
+        }
+        if (buttonIndex === 3) {
+          if (hasAccess) {
+            this.blind();
+          }
         }
         if (buttonIndex === destructiveButtonIndex) {
           // eslint-disable-next-line

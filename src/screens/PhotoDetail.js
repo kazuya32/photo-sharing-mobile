@@ -67,6 +67,17 @@ class PhotoDetail extends React.Component {
     });
   }
 
+  onPressBlock = () => {
+    const timestamp = Date.now().toString();
+    this.props.navigation.navigate({
+      routeName: 'UserPage',
+      params: {
+        uid: this.state.logInUid,
+      },
+      key: 'UserPage' + timestamp,
+    });
+  }
+
   onPressUser = () => {
     this.props.navigation.navigate({
       routeName: 'UserPage',
@@ -96,6 +107,7 @@ class PhotoDetail extends React.Component {
             onPressUser={this.onPressUser}
             onPressTeam={this.onPressTeam}
             onPressMatch={this.onPressMatch}
+            onPressBlock={this.onPressBlock}
             onDeleted={() => { this.props.navigation.goBack(); }}
             photoStyle={styles.photo}
             // logInUser={this.state.logInUser}

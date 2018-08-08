@@ -70,11 +70,16 @@ class PhotoCollection extends React.Component {
     givenPhotosRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          photos.push({
-            id: doc.id,
-            data: doc.data(),
-            isCertificated: true,
-          });
+          const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
+          const { invisibleInMyPage } = doc.data();
+          const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
+          if (!(isBlocked || isInvisible)) {
+            photos.push({
+              id: doc.id,
+              data: doc.data(),
+              isCertificated: true,
+            });
+          }
         });
         this.setState({ photos });
       });
