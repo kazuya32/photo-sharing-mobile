@@ -141,6 +141,8 @@ class PhotoUploader extends React.Component {
       height: this.props.navigation.state.params.image.height,
       likes: {},
       accesses: {},
+      blockedBy: {},
+      invisibleInMyPage: {},
     })
       .then(() => {
         this.setState({ isUploading: false });

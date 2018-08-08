@@ -195,11 +195,12 @@ class PhotoTile extends React.Component {
 
   blockingTransaction = () => {
     const { photo } = this.props;
+    const isBlocked = photo.data.blockedBy && photo.data.blockedBy[this.state.logInUid];
 
     const db = firebase.firestore();
     const logInUserRef = db.collection('users').doc(this.state.logInUid);
     logInUserRef.update({
-      [`blockingPhoto.${photo.id}`]: true,
+      [`blockingPhoto.${photo.id}`]: !isBlocked,
     })
       .then(() => {
         // eslint-disable-next-line
@@ -244,7 +245,7 @@ class PhotoTile extends React.Component {
     });
   }
 
-  blind = () => {
+  onPressInvisible = () => {
     const { photo } = this.props;
     const { invisibleInMyPage } = photo.data;
     const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
@@ -268,21 +269,24 @@ class PhotoTile extends React.Component {
   onPressMenu = () => {
     const { photo } = this.props;
     const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
+    const isBlocked = photo.data.blockedBy && photo.data.blockedBy[this.state.logInUid];
     const { invisibleInMyPage } = photo.data;
     const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
 
+    const signatureTitle = 'サインする';
     const options = [
       'キャンセル',
-      'サインする',
-      'ブロック',
+      signatureTitle,
     ];
 
+    const blockTitle = isBlocked ? 'ブロックを取り消す' : 'ブロック';
+    options.push(blockTitle);
+    const invisibleTitle = isInvisible ? 'マイページに表示する' : 'マイページで非表示にする';
     if (hasAccess) {
-      const text = isInvisible ? 'マイページに表示する' : 'マイページで非表示にする';
-      options.push(text);
+      options.push(invisibleTitle);
     }
-
-    options.push('不適切な投稿として通報する');
+    const reportTitle = '不適切な投稿として通報する';
+    options.push(reportTitle);
 
     const destructiveButtonIndex = options.length - 1;
     ActionSheetIOS.showActionSheetWithOptions(
@@ -292,22 +296,25 @@ class PhotoTile extends React.Component {
         cancelButtonIndex: 0,
       },
       (buttonIndex) => {
-        if (buttonIndex === 1) {
-          // eslint-disable-next-line
-          this.onPressSignature();
-        }
-        if (buttonIndex === 2) {
-          // eslint-disable-next-line
-          this.onPressBlock();
-        }
-        if (buttonIndex === 3) {
-          if (hasAccess) {
-            this.blind();
-          }
-        }
-        if (buttonIndex === destructiveButtonIndex) {
-          // eslint-disable-next-line
-          this.onPressReport();
+        const buttonTitle = options[buttonIndex];
+        switch (buttonTitle) {
+          case signatureTitle:
+            this.onPressSignature();
+            break;
+          case blockTitle:
+            this.onPressBlock();
+            break;
+          case invisibleTitle:
+            this.onPressInvisible();
+            break;
+          case reportTitle:
+            this.onPressReport();
+            break;
+
+          default:
+            // eslint-disable-next-line
+            console.log('cancel button');
+            break;
         }
       },
     );

@@ -72,7 +72,7 @@ class PhotoCollection extends React.Component {
         querySnapshot.forEach((doc) => {
           const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
           const { invisibleInMyPage } = doc.data();
-          const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
+          const isInvisible = invisibleInMyPage && invisibleInMyPage[this.props.uid];
           if (!(isBlocked || isInvisible)) {
             photos.push({
               id: doc.id,
@@ -83,18 +83,6 @@ class PhotoCollection extends React.Component {
         });
         this.setState({ photos });
       });
-  }
-
-  getUser = (uid) => {
-    let user;
-    const db = firebase.firestore();
-    const userRef = db.collection('users').doc(uid);
-    userRef.get().then((doc) => {
-      // const user = doc.data();
-      user = { id: doc.id, data: doc.data() };
-      this.setState({ user });
-    });
-    // return user;
   }
 
   // // eslint-disable-next-line
