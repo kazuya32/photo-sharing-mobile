@@ -4,10 +4,15 @@ import Expo from 'expo';
 import firebase from 'firebase';
 import { SocialIcon } from 'react-native-elements';
 
+import TermOfService from '../components/TermOfService.js';
 import BackgroundImage from '../../assets/splash.png';
 import ENV from '../../env.json';
 
 class Login extends React.Component {
+  state = {
+    showTerm: false,
+    // agreed: false,
+  }
   componentWillMount() {
     // firebase.auth().onAuthStateChanged(async (user) => {
     //   if (user) {
@@ -48,6 +53,7 @@ class Login extends React.Component {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        // eslint-disable-next-line
         console.log(errorCode, errorMessage);
       })
       .then(() => {
@@ -89,42 +95,54 @@ class Login extends React.Component {
         .signInWithCredential(credential)
         .then((user) => {
           this.handleFacebookUser(user);
-          this.props.navigation.navigate('Home');
         })
         .catch((error) => {
-          console.error(error)
+          // eslint-disable-next-line
+          console.error(error);
         });
     }
   }
 
   handleFacebookUser = (user) => {
-    console.log(user);
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(user.uid);
     userRef.get().then((DocumentSnapshot) => {
       if (DocumentSnapshot.exists) {
-        console.log(DocumentSnapshot.data());
+        this.props.navigation.navigate('Home');
       } else {
+        // eslint-disable-next-line
         console.log('No exist');
-        db.collection('users').doc(user.uid).set({
-          name: user.displayName,
-          facebookId: user.providerData[0].uid,
-          phoneNumber: user.phoneNumber,
-          photoURL: `${user.photoURL}?type=normal`,
-          desc: '',
-          followers: {},
-          following: {},
-          isAthlete: false,
-        })
-          .then(() => {
-            this.storeUser(user.uid, `${user.photoURL}?type=normal`);
-            console.log('Document successfully written!');
-          })
-          .catch((error) => {
-            console.error('Error writing document: ', error);
-          });
+        this.setState({ user });
+        this.handleGuest();
       }
     });
+  }
+
+  signUp = async () => {
+    const { user } = this.state;
+    const db = firebase.firestore();
+    db.collection('users').doc(user.uid).set({
+      name: user.displayName,
+      facebookId: user.providerData[0].uid,
+      phoneNumber: user.phoneNumber,
+      photoURL: `${user.photoURL}?type=normal`,
+      desc: '',
+      followers: {},
+      following: {},
+      isAthlete: false,
+    })
+      .then(() => {
+        this.storeUser(user.uid, `${user.photoURL}?type=normal`);
+        this.props.navigation.navigate('Home');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error writing document: ', error);
+      });
+  }
+
+  signOut = () => {
+    firebase.auth().signOut();
   }
 
   storeUser = async (uid, photoURL) => {
@@ -132,8 +150,22 @@ class Login extends React.Component {
       await AsyncStorage.setItem('uid', uid);
       await AsyncStorage.setItem('photoURL', photoURL);
     } catch (error) {
+      // eslint-disable-next-line
       console.error('Error writing document: ', error);
     }
+  }
+
+  handleGuest = () => {
+    this.setState({ showTerm: true });
+  }
+
+  handleAgree = () => {
+    this.signUp();
+  }
+
+  handleDisagree = () => {
+    this.signOut();
+    this.setState({ showTerm: false });
   }
 
   render() {
@@ -145,9 +177,18 @@ class Login extends React.Component {
           source={BackgroundImage}
           resizeMode="cover"
         />
+        <TermOfService
+          style={[
+            styles.termOfService,
+            !this.state.showTerm && { display: 'none' },
+          ]}
+          onPressDisagree={this.handleDisagree}
+          onPressAgree={this.handleAgree}
+        />
         <View style={styles.upperArea} />
         <View style={styles.underArea}>
           <SocialIcon
+            style={this.state.showTerm && { display: 'none' }}
             title="Facebookでログイン"
             button
             type="facebook"
@@ -187,6 +228,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  termOfService: {
+    position: 'absolute',
+    // top: 16,
+    // bottom: 16,
+    // left: 16,
+    // right: 16,
+    zIndex: 100,
   },
   bgImage: {
     opacity: 0.8,

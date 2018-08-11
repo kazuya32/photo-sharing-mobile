@@ -30,12 +30,9 @@ class Home extends React.Component {
   //   }
   // }
   componentWillMount() {
-    this.fetchData();
-
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         console.log('We are authenticated now!');
-
         const { // eslint-disable-next-line
           displayName,    // eslint-disable-next-line
           email, // eslint-disable-next-line
@@ -60,6 +57,10 @@ class Home extends React.Component {
     });
   }
 
+  componentDidMount() {
+    this.fetchData();
+  }
+
   // eslint-disable-next-line
   fetchData = async () => {
     try {
@@ -75,14 +76,18 @@ class Home extends React.Component {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(uid);
     userRef.onSnapshot((doc) => {
-      const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
-      console.log(source, ' data: ', doc.data());
-      const logInUser = {
-        id: doc.id,
-        data: doc.data(),
-      };
-      this.storeLogInUser(logInUser);
-      this.setState({ logInUser });
+      if (doc.exists) {
+        const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
+        console.log(source, ' data: ', doc.data());
+        const logInUser = {
+          id: doc.id,
+          data: doc.data(),
+        };
+        this.storeLogInUser(logInUser);
+        this.setState({ logInUser });
+      } else {
+        this.props.navigation.navigate({ routeName: 'Login' });
+      }
     });
   }
 

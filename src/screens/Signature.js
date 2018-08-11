@@ -13,6 +13,8 @@ import {
 import { takeSnapshotAsync } from 'expo';
 
 import PhotoHeader from '../components/PhotoHeader.js';
+import PenSelector from '../components/PenSelector.js';
+import ColorPanel from '../components/ColorPanel.js';
 
 const isAndroid = Platform.OS === 'android';
 // function uuidv4() {
@@ -31,7 +33,8 @@ class Signature extends Component {
     // strokeColor: '0xffff0000',
     // strokeColor: Math.random() * 0xffffff,
     // strokeWidth: Math.random() * 30 + 10,
-    strokeWidth: 30,
+    strokeWidth: 20,
+    // strokeWidth: 5,
     strokeAlpha: 0.8,
     // lines: [
     //   {
@@ -115,6 +118,15 @@ class Signature extends Component {
     });
   }
 
+  onPressWidth = (selectedWidth) => {
+    this.setState({ strokeWidth: selectedWidth });
+  };
+
+  onPressColor = (selectedColor) => {
+    const color = selectedColor.replace(/#/g, '0x');
+    this.setState({ strokeColor: color });
+  };
+
   render() {
     // const resizeMode = 'center';
     const { photo } = this.state;
@@ -158,18 +170,27 @@ class Signature extends Component {
             // initialLines={this.state.lines}
           />
         </View>
-        <View
-          style={styles.toolBox}
-        >
+        <View style={styles.button} >
           <Button
-            color="blue"
+            color="#fff"
             title="undo"
-            style={styles.button}
+            // style={styles.button}
             onPress={() => {
               this.sketch.undo();
             }}
           />
         </View>
+        <ColorPanel
+          dia={24}
+          onPress={this.onPressColor}
+          selectedColor={this.state.strokeColor}
+          style={{ marginBottom: 12, marginTop: 12 }}
+        />
+        <PenSelector
+          onPress={this.onPressWidth}
+          selectedWidth={this.state.strokeWidth}
+          style={{ marginBottom: 12, marginTop: 12 }}
+        />
       </View>
     );
   }
@@ -193,7 +214,7 @@ const styles = StyleSheet.create({
   },
   photoContainer: {
     marginTop: 32,
-    marginBottom: 32,
+    // marginBottom: 32,
     justifyContent: 'center',
     // flex: 1,
     // backgroundColor: '#fff',
@@ -209,17 +230,21 @@ const styles = StyleSheet.create({
     // height: Dimensions.get('window').height * 0.7,
   },
   button: {
-    // position: 'absolute',
-    // height: Dimensions.get('window').height * 0.1,
-    bottom: Dimensions.get('window').height * 0.15,
-    padding: 16,
-    flex: 1,
+    alignSelf: 'center',
+    marginTop: 8,
+    marginBottom: 8,
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   toolBox: {
     backgroundColor: 'black',
-    opacity: 0.5,
+    // opacity: 0.5,
     padding: 16,
     width: Dimensions.get('window').width,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
 });
 
