@@ -11,6 +11,7 @@ class HeaderRightButton extends React.Component {
       photoURL,
       onPressIcon,
       isAthlete,
+      badgeNumber,
     } = this.props;
 
     return (
@@ -31,6 +32,7 @@ class HeaderRightButton extends React.Component {
           photoURL={photoURL}
           dia={32}
           isAthlete={isAthlete}
+          badgeNumber={badgeNumber}
         />
       </View>
     );

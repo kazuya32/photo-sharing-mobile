@@ -97,9 +97,6 @@ class UserTile extends React.Component {
       // isFollowing,
     } = this.props;
 
-    console.log('this.state.logInUid in user tile');
-    console.log(this.state.logInUid);
-
     if (!this.state.user) {
       return (
         <View style={{ flex: 1, height:30, alignSelf: 'center' }}>

@@ -6,12 +6,17 @@ import {
   AsyncStorage,
   TouchableHighlight,
 } from 'react-native';
+import firebase from 'firebase';
 
 import HeaderLeftButton from '../elements/HeaderLeftButton.js';
 import HeaderRightButton from '../elements/HeaderRightButton.js';
 
 class Header extends React.Component {
   state = {
+    receivedRequests: [],
+    sentRequests: [],
+    receivedGifts: [],
+    sentGifts: [],
     // uid: this.props.navigation.state.params && this.props.navigation.state.params.uid,
     // logInUser: this.props.logInUser,
   }
@@ -28,11 +33,82 @@ class Header extends React.Component {
 
       // if (photoURL !== null && isAthlete !== null) {
       const value = (isAthlete === 'true');
+      this.fetchRequest(uid);
+      this.fetchGifts(uid);
       this.setState({ uid, photoURL, isAthlete: value });
       // }
     } catch (error) {
     //
     }
+  }
+
+  fetchRequest = (uid) => {
+    const db = firebase.firestore();
+    const receivedRef = db.collection('requests')
+      .where('to', '==', uid);
+
+    receivedRef.onSnapshot((querySnapshot) => {
+      const receivedRequests = [];
+      querySnapshot.forEach((doc) => {
+        receivedRequests.push({
+          id: doc.id,
+          data: doc.data(),
+          type: 'request',
+        });
+      });
+      this.setState({ receivedRequests });
+    });
+
+    const sentRef = db.collection('requests')
+      .where('from', '==', uid);
+    sentRef.onSnapshot((querySnapshot) => {
+      const sentRequests = [];
+      querySnapshot.forEach((doc) => {
+        sentRequests.push({
+          id: doc.id,
+          data: doc.data(),
+          type: 'request',
+        });
+      });
+      this.setState({ sentRequests });
+    });
+    // if (!receivedRequests.length) {
+    //   this.setState({ receivedRequests });
+    // }
+  }
+
+  fetchGifts = (uid) => {
+    const db = firebase.firestore();
+    const receivedRef = db.collection('gifts')
+      .where('to', '==', uid);
+
+    receivedRef.get()
+      .then((querySnapshot) => {
+        const receivedGifts = [];
+        querySnapshot.forEach((doc) => {
+          receivedGifts.push({
+            id: doc.id,
+            data: doc.data(),
+            type: 'gift',
+          });
+        });
+        this.setState({ receivedGifts });
+      });
+
+    const sentRef = db.collection('gifts')
+      .where('from', '==', uid);
+    sentRef.get()
+      .then((querySnapshot) => {
+        const sentGifts = [];
+        querySnapshot.forEach((doc) => {
+          sentGifts.push({
+            id: doc.id,
+            data: doc.data(),
+            type: 'gift',
+          });
+        });
+        this.setState({ sentGifts });
+      });
   }
 
   navigateToMyPage = () => {
@@ -64,6 +140,30 @@ class Header extends React.Component {
     });
   }
 
+  countUnread = (requests) => {
+    let unreadSum = 0;
+    if (requests) {
+      requests.forEach((request) => {
+        if (!request.data.isReadAfterReceived) {
+          unreadSum += 1;
+        }
+      });
+    }
+    return unreadSum;
+  }
+
+  countApproved = (requests) => {
+    let approvedSum = 0;
+    if (requests) {
+      requests.forEach((request) => {
+        if (request.data.status === 'approved' && !request.data.isReadAfterApproved) {
+          approvedSum += 1;
+        }
+      });
+    }
+    return approvedSum;
+  }
+
   render() {
     const {
       // onPressLeft,
@@ -71,6 +171,11 @@ class Header extends React.Component {
       headerTitle,
     } = this.props;
 
+    const unreadRequestsSum = this.countUnread(this.state.receivedRequests);
+    const approvedRequestsSum = this.countApproved(this.state.sentRequests);
+    const unreadGiftsSum = this.countUnread(this.state.receivedGifts);
+    const approvedGiftsSum = this.countApproved(this.state.sentGifts);
+    const sum = unreadRequestsSum + approvedRequestsSum + unreadGiftsSum + approvedGiftsSum;
 
     return (
       <View style={styles.container}>
@@ -92,6 +197,7 @@ class Header extends React.Component {
             onPressIcon={this.navigateToMyPage}
             photoURL={this.state.photoURL}
             isAthlete={this.state.isAthlete}
+            badgeNumber={sum}
           />
         </View>
       </View>

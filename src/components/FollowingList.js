@@ -31,8 +31,8 @@ class FollowingList extends React.Component {
   );
 
   render() {
-    console.log('this.props.followingList in list');
-    console.log(this.props.followingArray);
+    // console.log('this.props.followingList in list');
+    // console.log(this.props.followingArray);
 
     return (
       <View style={[styles.container, this.props.style]}>
@@ -44,8 +44,6 @@ class FollowingList extends React.Component {
           onEndReachedThreshold={0.2}
           // onEndReached={this.reloadPhotos}
           // getItemLayout={(data, index) => (
-          //  { length: 400, offset: 400 * index, index }
-          // )}
           extraData={this.state}
         />
       </View>

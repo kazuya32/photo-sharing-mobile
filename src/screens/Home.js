@@ -75,10 +75,8 @@ class Home extends React.Component {
   fetchLogInUser = (uid) => {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(uid);
-    userRef.onSnapshot((doc) => {
+    userRef.get().then((doc) => {
       if (doc.exists) {
-        const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
-        console.log(source, ' data: ', doc.data());
         const logInUser = {
           id: doc.id,
           data: doc.data(),
