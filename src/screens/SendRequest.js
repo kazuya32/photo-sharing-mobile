@@ -19,7 +19,6 @@ import CancelButton from '../elements/CancelButton.js';
 
 class SendRequest extends React.Component {
   state = {
-    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     headerTitle: 'リクエスト',
     placeholder: '  メッセージを伝えましょう！（任意）',
     maxLength: 200,
@@ -98,7 +97,7 @@ class SendRequest extends React.Component {
     const db = firebase.firestore();
     const ref = db.collection('photos').doc(this.props.navigation.state.params.photo.id);
     ref.update({
-      [`pendingRequests.${this.state.logInUser.id}`]: true,
+      [`pendingRequests.${this.state.logInUid}`]: true,
     })
       .then(() => {
         // eslint-disable-next-line
@@ -130,9 +129,17 @@ class SendRequest extends React.Component {
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
-          logInUser={this.state.logInUser}
           headerTitle={this.state.headerTitle}
         />
+        <View style={[
+            styles.activityIndicatorContainer,
+            !this.state.isUploading && { display: 'none' },
+          ]}
+        >
+          <View style={styles.activityIndicator}>
+            <ActivityIndicator size="large" color="#DB4D5E" />
+          </View>
+        </View>
         <ScrollView>
           <Text style={styles.text}>
             {this.state.user.data.name}さんにダウンロードリクエストを送信します。
@@ -179,6 +186,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingTop: 80,
+  },
+  activityIndicatorContainer: {
+    position: 'absolute',
+    top: Dimensions.get('window').height / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 150,
+  },
+  activityIndicator: {
+    width: Dimensions.get('window').width,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     margin: 16,

@@ -5,6 +5,7 @@ import {
   FlatList,
   AsyncStorage,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -192,7 +193,7 @@ class Feed extends React.Component {
           data={this.state.photos}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
-          onEndReachedThreshold={0.7}
+          onEndReachedThreshold={0.5}
           onEndReached={this.reloadPhotos}
           extraData={this.state}
           refreshControl={
@@ -200,8 +201,15 @@ class Feed extends React.Component {
               refreshing={this.state.refreshing}
               onRefresh={this.onRefresh}
             />
-           }
+          }
         />
+        <View style={[
+            styles.activityIndicator,
+            !this.state.isReloading && { display: 'none' },
+          ]}
+        >
+          <ActivityIndicator size="small" color="#DB4D5E" />
+        </View>
       </View>
     );
   }
@@ -216,6 +224,12 @@ const styles = StyleSheet.create({
   photoItem: {
     // width: Dimensions.get('window').width / 3,
     // height: Dimensions.get('window').width / 3,
+  },
+  activityIndicator: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

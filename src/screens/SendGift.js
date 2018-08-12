@@ -115,9 +115,17 @@ class SendGift extends React.Component {
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
-          logInUser={this.state.logInUser}
           headerTitle={this.state.headerTitle}
         />
+        <View style={[
+            styles.activityIndicatorContainer,
+            !this.state.isUploading && { display: 'none' },
+          ]}
+        >
+          <View style={styles.activityIndicator}>
+            <ActivityIndicator size="large" color="#DB4D5E" />
+          </View>
+        </View>
         <ScrollView>
           <Text style={styles.text}>
             {this.state.user.data.name}さんにフォトギフトを贈ります。
@@ -165,12 +173,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: 80,
   },
+  activityIndicatorContainer: {
+    position: 'absolute',
+    top: Dimensions.get('window').height / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 150,
+  },
+  activityIndicator: {
+    width: Dimensions.get('window').width,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   text: {
     margin: 16,
   },
   image: {
-    width: Dimensions.get('window').width / 3,
-    height: Dimensions.get('window').width / 3,
+    // width: Dimensions.get('window').width / 3,
+    // height: Dimensions.get('window').width / 3,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').width,
     alignSelf: 'center',
     // marginTop: 16,
     marginBottom: 16,

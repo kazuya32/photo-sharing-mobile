@@ -17,6 +17,7 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 
 import TagTile from '../components/TagTile.js';
 import DownloadButton from '../elements/DownloadButton.js';
+import SignatureButton from '../elements/SignatureButton.js';
 
 class PhotoTile extends React.Component {
   state = {
@@ -129,6 +130,7 @@ class PhotoTile extends React.Component {
     const ref = db.collection('photos').doc(this.props.photo.id);
     ref.update({
       [`likes.${this.state.uid}`]: nextValue,
+      likesSum: likes.length,
     })
       .then(() => {
         // eslint-disable-next-line
@@ -237,11 +239,13 @@ class PhotoTile extends React.Component {
   }
 
   onPressSignature = () => {
+    const timestamp = Date.now().toString();
     this.props.navigation.navigate({
       routeName: 'Signature',
       params: {
         photo: this.props.photo,
       },
+      key: 'UserPage' + timestamp,
     });
   }
 
@@ -425,11 +429,21 @@ class PhotoTile extends React.Component {
             resizeMode="contain"
           />
         </TouchableHighlight>
-        <DownloadButton
-          style={styles.downloadBtn}
-          onPress={this.onPressDownload}
-          hasAccess={photo.data.accesses && photo.data.accesses[this.state.logInUid]}
-        />
+        <View style={styles.btnArea}>
+          <DownloadButton
+            style={styles.downloadBtn}
+            onPress={this.onPressDownload}
+            hasAccess={photo.data.accesses && photo.data.accesses[this.state.logInUid]}
+          />
+          <SignatureButton
+            style={[
+              styles.signatureBtn,
+              this.state.isMyPage && { display: 'none' },
+            ]}
+            onPress={this.onPressSignature}
+
+          />
+        </View>
         <View style={styles.bar}>
           <View style={styles.likes}>
             <TouchableHighlight
@@ -562,9 +576,20 @@ const styles = StyleSheet.create({
     // borderTopWidth: 1,
     // borderTopColor: '#EBEBEB',
   },
-  downloadBtn: {
-    left: (Dimensions.get('window').width * 0.5) - 32,
+  btnArea: {
+    flexDirection: 'row',
+    width: Dimensions.get('window').width,
     bottom: 56,
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  downloadBtn: {
+    marginRight: 16,
+    marginLeft: 16,
+  },
+  signatureBtn: {
+    marginRight: 16,
+    marginLeft: 16,
   },
   bar: {
     flexDirection: 'row',

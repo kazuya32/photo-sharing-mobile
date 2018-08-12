@@ -4,16 +4,20 @@ import { StyleSheet, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class DownloadButton extends React.Component {
+  onPress = () => {
+    const { onPress, hasAccess } = this.props;
+    if (hasAccess) { onPress(); }
+  }
   render() {
-    const { onPress, style, hasAccess } = this.props;
+    const { style, hasAccess } = this.props;
 
     return (
       <TouchableHighlight
-        onPress={onPress}
+        onPress={this.onPress}
         style={[
           styles.container,
           style,
-          !hasAccess && { display: 'none' },
+          !hasAccess && { opacity: 0 },
         ]}
         underlayColor="transparent"
       >
@@ -25,19 +29,11 @@ class DownloadButton extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    // bottom: 20,
-    // right: 20,
-    // width: 56,
-    // height: 56,
     zIndex: 50,
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#102330',
-    // shadowColor: '#102330',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.7,
-    // shadowRadius: 3,
   },
   button: {
     alignSelf: 'center',

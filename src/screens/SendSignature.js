@@ -61,8 +61,8 @@ class SendSignature extends React.Component {
   uploadPhoto = async () => {
     if (!this.state.isUploading) {
       this.setState({ isUploading: true });
-      // eslint-disable-next-line
       const { uri } = this.props.navigation.state.params.signedPhoto;
+      // eslint-disable-next-line
       const res = await fetch(uri);
       const file = await res.blob();
 
@@ -220,9 +220,17 @@ class SendSignature extends React.Component {
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
-          logInUser={this.state.logInUser}
           headerTitle={this.state.headerTitle}
         />
+        <View style={[
+            styles.activityIndicatorContainer,
+            !this.state.isUploading && { display: 'none' },
+          ]}
+        >
+          <View style={styles.activityIndicator}>
+            <ActivityIndicator size="large" color="#DB4D5E" />
+          </View>
+        </View>
         <ScrollView>
           <Text style={styles.text}>
             {this.state.user.data.name}さんにデジタルサインをプレゼントします。
@@ -272,6 +280,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingTop: 80,
+  },
+  activityIndicatorContainer: {
+    position: 'absolute',
+    top: Dimensions.get('window').height / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 150,
+  },
+  activityIndicator: {
+    width: Dimensions.get('window').width,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     margin: 16,

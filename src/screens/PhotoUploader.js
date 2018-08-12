@@ -6,6 +6,7 @@ import {
   Alert,
   Dimensions,
   AsyncStorage,
+  ActivityIndicator,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -232,6 +233,15 @@ class PhotoUploader extends React.Component {
 
     return (
       <View style={styles.container}>
+        <View style={[
+            styles.activityIndicatorContainer,
+            !this.state.isUploading && { display: 'none' },
+          ]}
+        >
+          <View style={styles.activityIndicator}>
+            <ActivityIndicator size="large" color="#DB4D5E" />
+          </View>
+        </View>
         <PhotoHeader
           onPressLeft={() => { this.props.navigation.goBack(); }}
           onPressRight={this.uploadPhoto}
@@ -281,6 +291,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  activityIndicatorContainer: {
+    position: 'absolute',
+    // height: Dimensions.get('window').width / 2,
+    // width: Dimensions.get('window').width,
+    top: Dimensions.get('window').height / 2,
+    // left: Dimensions.get('window').width / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  activityIndicator: {
+    width: Dimensions.get('window').width,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   body: {
     flex: 1,

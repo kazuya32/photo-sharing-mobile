@@ -16,7 +16,6 @@ import Header from '../components/Header.js';
 class TeamFeed extends React.Component {
   state = {
     headerTitle: 'FLEGO',
-    // logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
   }
 
   componentWillMount() {
@@ -92,17 +91,29 @@ class TeamFeed extends React.Component {
   render() {
     if (!this.state.photos) {
       return (
-        <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-          <ActivityIndicator />
+        <View style={styles.container}>
+          <Header
+            navigation={this.props.navigation}
+            headerTitle={this.state.headerTitle}
+          />
+          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+            <ActivityIndicator />
+          </View>
         </View>
       );
     }
 
     if (!this.state.photos.length) {
       return (
-        <Text style={styles.alert}>
-           投稿画像はありません.
-        </Text>
+        <View style={styles.container}>
+          <Header
+            navigation={this.props.navigation}
+            headerTitle={this.state.headerTitle}
+          />
+          <Text style={styles.alert}>
+             投稿画像はありません.
+          </Text>
+        </View>
       );
     }
 
@@ -110,7 +121,6 @@ class TeamFeed extends React.Component {
       <View style={styles.container}>
         <Header
           navigation={this.props.navigation}
-          logInUser={this.state.logInUser}
           headerTitle={this.state.headerTitle}
         />
         <FlatList
@@ -132,6 +142,11 @@ class TeamFeed extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: 80,
+  },
+  alert: {
     flex: 1,
     backgroundColor: '#fff',
     paddingTop: 80,

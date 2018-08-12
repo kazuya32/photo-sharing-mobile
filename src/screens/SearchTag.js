@@ -7,24 +7,27 @@ import {
 import firebase from 'firebase';
 import { SearchBar } from 'react-native-elements';
 
+import Header from '../components/Header.js';
+import TeamTabView from '../components/TeamTabView.js';
 import SearchItem from '../components/SearchItem.js';
 
 class SearchTag extends React.Component {
   state = {}
 
   componentDidMount() {
-    this.fetchData();
+    const { tagType } = this.props.navigation.state.params;
+    if (!tagType === 'teams') {
+      this.fetchData();
+    }
   }
 
+  // eslint-disable-next-line
   fetchData = () => {
     const { tagType } = this.props.navigation.state.params;
     const db = firebase.firestore();
     let ref;
 
     switch (tagType) {
-      case 'teams':
-        ref = db.collection('teams');
-        break;
       case 'matchSchedules':
         ref = db.collection('matchSchedules');
         break;
@@ -45,8 +48,12 @@ class SearchTag extends React.Component {
         array.push({ id: doc.id, data: doc.data() });
       });
       this.setState({ array });
-      console.log(array);
     });
+  }
+
+  onPressTeam = (team) => {
+    const { tagType, onPress } = this.props.navigation.state.params;
+    onPress(tagType, team);
   }
 
   keyExtractor = (item, index) => index.toString();
@@ -72,7 +79,23 @@ class SearchTag extends React.Component {
     );
   }
 
+
   render() {
+    const { tagType } = this.props.navigation.state.params;
+    if (tagType === 'teams') {
+      return (
+        <View style={{ flex: 1, paddingTop: 80, backgroundColor: '#fff' }}>
+          <Header
+            navigation={this.props.navigation}
+            headerTitle="チームタグをつける"
+          />
+          <TeamTabView
+            onPressTeam={this.onPressTeam}
+          />
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <SearchBar

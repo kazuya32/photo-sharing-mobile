@@ -5,11 +5,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class UploadButton extends React.Component {
   render() {
-    const { onPress } = this.props;
+    const { onPress, style } = this.props;
 
     return (
-      <TouchableHighlight onPress={onPress} style={styles.container} underlayColor="transparent">
-        <Icon name="plus" size={40} style={styles.button} />
+      <TouchableHighlight onPress={onPress} style={[styles.container, style]} underlayColor="transparent">
+        <Icon name="grease-pencil" size={24} style={styles.button} />
       </TouchableHighlight>
     );
   }
@@ -17,21 +17,17 @@ class UploadButton extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    width: 56,
-    height: 56,
-    zIndex: 100,
     backgroundColor: '#DB4D5E',
     justifyContent: 'center',
-    alignContent: 'center',
     alignItems: 'center',
     shadowColor: '#102330',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.7,
     shadowRadius: 3,
-    borderRadius: 28,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    zIndex: 50,
   },
   button: {
     alignSelf: 'center',

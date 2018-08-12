@@ -1,10 +1,8 @@
 import React from 'react';
 import {
-  StyleSheet,
   View,
   TouchableOpacity,
   Image,
-  Dimensions,
 } from 'react-native';
 import firebase from 'firebase';
 // import Icon from 'react-native-vector-icons/Ionicons';
@@ -93,14 +91,5 @@ class PhotoCollectionItem extends React.Component {
     );
   }
 }
-
-// <Icon
-//   name="md-ribbon"
-//   size={24}
-//   style={[
-//     styles.ribbon,
-//     !item.isCertificated && { display: 'none' },
-//   ]}
-// />
 
 export default PhotoCollectionItem;
