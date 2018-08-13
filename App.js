@@ -217,5 +217,4 @@ const App = createStackNavigator({
   },
 });
 
-
 export default App;
