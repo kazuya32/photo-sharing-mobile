@@ -196,8 +196,8 @@ class Login extends React.Component {
             onPress={this.logInWithFacebook}
           />
           <SocialIcon
-            style={{ display: 'none' }}
-            title="アスリートテストユーザー"
+            // style={{ display: 'none' }}
+            title="テストユーザーでお試し"
             button
             type="facebook"
             raised

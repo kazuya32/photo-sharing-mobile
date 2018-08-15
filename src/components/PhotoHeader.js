@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, Button, TouchableHighlight, StatusBar } from 'react-native';
 
 class Appbar extends React.Component {
   render() {
@@ -12,6 +12,9 @@ class Appbar extends React.Component {
 
     return (
       <View style={styles.container}>
+        <StatusBar
+          barStyle="dark-content"
+        />
         <TouchableHighlight style={styles.leftButton} onPress={onPressLeft} underlayColor="transparent">
           <Text style={styles.leftButtonText}>
             Cancel

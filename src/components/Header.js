@@ -5,6 +5,7 @@ import {
   Text,
   AsyncStorage,
   TouchableHighlight,
+  StatusBar,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -179,6 +180,9 @@ class Header extends React.Component {
 
     return (
       <View style={styles.container}>
+        <StatusBar
+          barStyle="dark-content"
+        />
         <View style={styles.button}>
           <HeaderLeftButton
             onPress={this.navigateToSearch}
