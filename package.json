@@ -2,6 +2,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "dependencies": {
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "expo": "^27.0.1",
     "expo-pixi": "^0.2.4",
     "firebase": "^4.6.2",
