@@ -263,17 +263,12 @@ class Profile extends React.Component {
                 badgeNumber={sum}
               />
               <MenuButton
-                style={styles.menuButtonMyPage}
+                style={[styles.menuButtonMyPage]}
                 onPress={this.onPressMenuMyPage}
                 isMyPage={this.state.isMyPage}
               />
             </View>
             <View style={[styles.buttonArea, this.state.isMyPage && { display: 'none' }]}>
-              <MenuButton
-                style={styles.menuButton}
-                onPress={this.onPressMenu}
-                isMyPage={this.state.isMyPage}
-              />
               <FollowButton
                 style={[
                   styles.followButton,
@@ -285,22 +280,21 @@ class Profile extends React.Component {
               />
             </View>
           </View>
-          <Text style={styles.userDesc}>
-            {user && user.data.desc}
-          </Text>
+          <View style={styles.downArea}>
+            <Text style={styles.userDesc}>
+              {user && user.data.desc}
+            </Text>
+            <MenuButton
+              style={[styles.menuButton, this.state.isMyPage && { display: 'none' }]}
+              onPress={this.onPressMenu}
+              isMyPage={this.state.isMyPage}
+            />
+          </View>
         </View>
       </View>
     );
   }
 }
-
-// <Icon
-//   name="account-check"
-//   size={24}
-//   style={[
-//     styles.athleteMark,
-//   ]}
-// />
 
 const styles = StyleSheet.create({
   container: {
@@ -326,14 +320,18 @@ const styles = StyleSheet.create({
   upperArea: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // alignContent: 'center',
-    // flex: 1,
-    // width: 190,
+    alignContent: 'center',
+  },
+  downArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
   },
   userName: {
     flexDirection: 'row',
     // justifyContent: 'space-between',
     alignContent: 'flex-end',
+    // justifyContent: 'center',
     // flex: 1,
     // width: 190,
   },
@@ -349,37 +347,27 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   buttonArea: {
-    // flexDirection: 'row',
-    alignContent: 'flex-start',
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   buttonAreaMypage: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     alignContent: 'flex-start',
-    // flex: 1,
-    // width: 190,
   },
   menuButton: {
     alignSelf: 'flex-end',
-    marginBottom: 16,
+    marginTop: 12,
+    marginBottom: 12,
   },
   menuButtonMyPage: {
     alignSelf: 'flex-start',
   },
   requestButton: {
-    // position: 'absolute',
-    // right: 12,
     marginRight: 12,
-    // height: 30,
     alignSelf: 'flex-start',
   },
   followButton: {
-    // position: 'absolute',
-    // right: 0,
-    // top: 0,
-    // height: 30,
-    alignSelf: 'flex-start',
-    // marginTop: 16,
+    alignSelf: 'center',
   },
 });
 
