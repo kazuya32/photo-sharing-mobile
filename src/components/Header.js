@@ -131,10 +131,10 @@ class Header extends React.Component {
   }
 
   navigateToHome = () => {
-    const timestamp = Date.now().toString();
+    // const timestamp = Date.now().toString();
     this.props.navigation.navigate({
       routeName: 'Home',
-      key: 'Home' + timestamp,
+      // key: 'Home' + timestamp,
     });
   }
 

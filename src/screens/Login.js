@@ -57,12 +57,7 @@ class Login extends React.Component {
         console.log(errorCode, errorMessage);
       })
       .then(() => {
-        // this.props.navigation.navigate('Home');
-        const timestamp = Date.now().toString();
-        this.props.navigation.navigate({
-          routeName: 'Home',
-          key: 'Home' + timestamp,
-        });
+        this.navigateToMain();
       });
   }
 
@@ -113,12 +108,7 @@ class Login extends React.Component {
     const userRef = db.collection('users').doc(user.uid);
     userRef.get().then((DocumentSnapshot) => {
       if (DocumentSnapshot.exists) {
-        // this.props.navigation.navigate('Home');
-        const timestamp = Date.now().toString();
-        this.props.navigation.navigate({
-          routeName: 'Home',
-          key: 'Home' + timestamp,
-        });
+        this.navigateToMain();
       } else {
         // eslint-disable-next-line
         console.log('No exist');
@@ -163,6 +153,15 @@ class Login extends React.Component {
       // eslint-disable-next-line
       console.error('Error writing document: ', error);
     }
+  }
+
+  navigateToMain = () => {
+    this.props.navigation.navigate('Main');
+    // const timestamp = Date.now().toString();
+    // this.props.navigation.navigate({
+    //   routeName: 'Home',
+    //   key: 'Home' + timestamp,
+    // });
   }
 
   handleGuest = () => {

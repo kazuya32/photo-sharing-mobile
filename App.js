@@ -77,7 +77,7 @@ firebase.initializeApp(config);
 //   }
 // });
 
-const HomeStack = createStackNavigator({
+const MainStack = createStackNavigator({
   // Login: { screen: Login },
   Home: { screen: Home },
   TeamFeed: { screen: TeamFeed },
@@ -206,7 +206,7 @@ const HomeStack = createStackNavigator({
 // });
 
 const App = createStackNavigator({
-  Home: HomeStack,
+  Main: MainStack,
   Login: { screen: Login },
   // PhotoPicker: UploadStack,
 }, {
