@@ -57,7 +57,12 @@ class Login extends React.Component {
         console.log(errorCode, errorMessage);
       })
       .then(() => {
-        this.props.navigation.navigate('Home');
+        // this.props.navigation.navigate('Home');
+        const timestamp = Date.now().toString();
+        this.props.navigation.navigate({
+          routeName: 'Home',
+          key: 'Home' + timestamp,
+        });
       });
   }
 
@@ -108,7 +113,12 @@ class Login extends React.Component {
     const userRef = db.collection('users').doc(user.uid);
     userRef.get().then((DocumentSnapshot) => {
       if (DocumentSnapshot.exists) {
-        this.props.navigation.navigate('Home');
+        // this.props.navigation.navigate('Home');
+        const timestamp = Date.now().toString();
+        this.props.navigation.navigate({
+          routeName: 'Home',
+          key: 'Home' + timestamp,
+        });
       } else {
         // eslint-disable-next-line
         console.log('No exist');

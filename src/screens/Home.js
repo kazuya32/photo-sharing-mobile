@@ -45,6 +45,7 @@ class Home extends React.Component {
 
         try {
           await AsyncStorage.setItem('uid', uid);
+          this.fetchData();
           // await AsyncStorage.setItem('facebookId', providerData[0].uid);
         } catch (error) {
           console.log('failed to saving AsyncStorage');

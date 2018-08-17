@@ -18,8 +18,6 @@ class Header extends React.Component {
     sentRequests: [],
     receivedGifts: [],
     sentGifts: [],
-    // uid: this.props.navigation.state.params && this.props.navigation.state.params.uid,
-    // logInUser: this.props.logInUser,
   }
 
   componentWillMount() {
@@ -133,11 +131,10 @@ class Header extends React.Component {
   }
 
   navigateToHome = () => {
+    const timestamp = Date.now().toString();
     this.props.navigation.navigate({
       routeName: 'Home',
-      params: {
-      },
-      // key: 'Home' + Date.now().toString(),
+      key: 'Home' + timestamp,
     });
   }
 
