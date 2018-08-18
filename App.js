@@ -19,11 +19,9 @@ import Signature from './src/screens/Signature.js';
 import SendSignature from './src/screens/SendSignature.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
 import Schedule from './src/screens/Schedule.js';
-import Match from './src/screens/Match.js';
 import Team from './src/screens/Team.js';
 import UserSearch from './src/screens/UserSearch.js';
 import SearchTag from './src/screens/SearchTag.js';
-import SearchMatch from './src/screens/SearchMatch.js';
 import Search from './src/screens/Search.js';
 import PlayerList from './src/screens/PlayerList.js';
 import ReportPhoto from './src/screens/ReportPhoto.js';
@@ -31,6 +29,8 @@ import ReportUser from './src/screens/ReportUser.js';
 import SelectGifts from './src/screens/SelectGifts.js';
 import SendGift from './src/screens/SendGift.js';
 import EditPhoto from './src/screens/EditPhoto.js';
+// import Match from './src/screens/Match.js';
+// import SearchMatch from './src/screens/SearchMatch.js';
 
 import ENV from './env.json';
 
@@ -93,12 +93,12 @@ const MainStack = createStackNavigator({
   SendSignature: { screen: SendSignature },
   PhotoUploader: { screen: PhotoUploader },
   SearchTag: { screen: SearchTag },
-  SearchMatch: { screen: SearchMatch },
+  // SearchMatch: { screen: SearchMatch },
   Search: { screen: Search },
   PlayerList: { screen: PlayerList },
   Team: { screen: Team },
   Schedule: { screen: Schedule },
-  Match: { screen: Match },
+  // Match: { screen: Match },
   ReportPhoto: { screen: ReportPhoto },
   ReportUser: { screen: ReportUser },
   SelectGifts: { screen: SelectGifts },

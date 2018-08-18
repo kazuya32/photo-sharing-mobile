@@ -9,35 +9,24 @@ import Header from '../components/Header.js';
 
 class Search extends React.Component {
   state = {
-    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
-    headerTitle: 'FLEGO',
+    headerTitle: '探す',
   }
 
   onPressPlayer = () => {
     this.props.navigation.navigate({
       routeName: 'PlayerList',
-      params: {
-        logInUser: this.state.logInUser,
-      },
     });
   }
 
   onPressTeam = () => {
-    console.log(this.props.navigation.state.params && this.props.navigation.state.params.logInUser);
     this.props.navigation.navigate({
       routeName: 'Team',
-      params: {
-        logInUser: this.state.logInUser,
-      },
     });
   }
 
   onPressMatch = () => {
     this.props.navigation.navigate({
       routeName: 'Schedule',
-      params: {
-        logInUser: this.state.logInUser,
-      },
     });
   }
 
@@ -51,17 +40,17 @@ class Search extends React.Component {
         />
         <SelectItem
           onPress={this.onPressPlayer}
-          title="公式アスリートから探す"
+          title="公式アスリート"
           itemColor="black"
         />
         <SelectItem
           onPress={this.onPressTeam}
-          title="チームから探す"
+          title="Jリーグチーム"
           itemColor="black"
         />
         <SelectItem
           onPress={this.onPressMatch}
-          title="公式試合から探す"
+          title="公式マッチ"
           itemColor="black"
         />
       </View>

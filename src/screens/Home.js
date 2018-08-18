@@ -109,6 +109,7 @@ class Home extends React.Component {
         photo: item,
         logInUser: this.state.logInUser,
       },
+      key: 'PhotoDetail' + item.id,
     });
   }
 
@@ -120,38 +121,28 @@ class Home extends React.Component {
         logInUser: this.state.logInUser,
         // user: item,
       },
-      key: 'UserPage' + item,
+      key: 'UserPage' + item.id,
     });
   }
 
   onPressMatch = (item) => {
-    // this.setState({
-    //   feedType: 'match',
-    //   itemId: item.data.matchId,
-    // });
     this.props.navigation.navigate({
       routeName: 'MatchFeed',
       params: {
-        feedType: 'match',
-        itemId: item.data.matchId,
-        matchPath: item.data.matchPath,
-        logInUser: this.state.logInUser,
+        match: item,
       },
+      key: 'MatchFeed' + item.id,
     });
   }
 
-  onPressTeam = (item) => {
-    // this.setState({
-    //   feedType: 'TeamFeed',
-    //   itemId: item.data.teamId,
-    // });
+  onPressTeam = (team) => {
     this.props.navigation.navigate({
       routeName: 'TeamFeed',
       params: {
         feedType: 'team',
-        itemId: item.data.teamId,
-        logInUser: this.state.logInUser,
+        itemId: team.id,
       },
+      key: 'TeamFeed' + team.id,
     });
   }
 
@@ -182,12 +173,16 @@ class Home extends React.Component {
       // this.props.navigation.navigate({ routeName: 'Home' });
       // Alert.alert('カメラロールの使用が許可されていません。');
     } else {
+      const timestamp = Date.now().toString();
+      const key = 'PhotoUploader' + timestamp;
       this.props.navigation.navigate({
         routeName: 'PhotoUploader',
         params: {
           image: result,
           logInUser: this.state.logInUser,
+          key,
         },
+        key,
       });
     }
   };

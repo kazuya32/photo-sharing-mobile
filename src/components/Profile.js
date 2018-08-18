@@ -103,12 +103,16 @@ class Profile extends React.Component {
       // this.props.navigation.navigate({ routeName: 'Home' });
       // Alert.alert('カメラロールの使用が許可されていません。');
     } else {
+      const timestamp = Date.now().toString();
+      const key = 'PhotoUploader' + timestamp;
       this.props.navigation.navigate({
         routeName: 'PhotoUploader',
         params: {
           image: result,
           logInUser: this.state.logInUser,
+          key,
         },
+        key,
       });
     }
   };

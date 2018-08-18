@@ -75,8 +75,8 @@ class TeamFeed extends React.Component {
           routeName: 'PhotoDetail',
           params: {
             photo: item,
-            logInUser: this.state.logInUser,
           },
+          key: 'PhotoDetail' + item.id,
         });
       }}
     >

@@ -1,15 +1,16 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
+import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 
-import TeamList from './TeamList.js';
+import ScheduleCategory from './ScheduleCategory.js';
 
-class TeamTabView extends React.Component {
+class ScheduleTabView extends React.Component {
   state = {
   }
 
   render() {
-    const { onPressTeam } = this.props; // onPressは呼び出し元のスクリーンによって挙動が変わるため
+    const { onPressMatch } = this.props; // onPressは呼び出し元のスクリーンによって挙動が変わるため
+
     return (
       <ScrollableTabView
         // renderTabBar={this.renderTabBar}
@@ -22,25 +23,24 @@ class TeamTabView extends React.Component {
         tabBarInactiveTextColor="black"
         tabBarTextStyle={styles.tabBarText}
         tabStyle={{ paddingBottom: 0 }}
-        // initialPage={initialPage}
       >
-        <TeamList
+        <ScheduleCategory
           tabLabel="J1"
-          league="J1"
-          style={styles.teams}
-          onPressTeam={onPressTeam}
+          category="J1"
+          navigation={this.props.navigation}
+          onPressMatch={onPressMatch}
         />
-        <TeamList
+        <ScheduleCategory
           tabLabel="J2"
-          league="J2"
-          style={styles.teams}
-          onPressTeam={onPressTeam}
+          category="J2"
+          navigation={this.props.navigation}
+          onPressMatch={onPressMatch}
         />
-        <TeamList
+        <ScheduleCategory
           tabLabel="J3"
-          league="J3"
-          style={styles.teams}
-          onPressTeam={onPressTeam}
+          category="J3"
+          navigation={this.props.navigation}
+          onPressMatch={onPressMatch}
         />
       </ScrollableTabView>
     );
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TeamTabView;
+export default ScheduleTabView;

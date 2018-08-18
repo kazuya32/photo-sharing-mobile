@@ -16,36 +16,19 @@ import Header from '../components/Header.js';
 class MatchFeed extends React.Component {
   state = {
     headerTitle: 'FLEGO',
-    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
   }
 
   componentWillMount() {
-    if (this.props.navigation.state.params && this.props.navigation.state.params.feedType) {
-      // const { feedType, itemId, matchPath } = this.props.navigation.state.params;
-      // this.setState({ feedType, itemId });
-      // this.getMatch(matchPath);
-      this.fetchMatchPhotos();
-    }
-  }
-
-  getMatch = (matchPath) => {
-    const db = firebase.firestore();
-    const Ref = db.doc(matchPath);
-    Ref.get().then((doc) => {
-      const match = { id: doc.id, data: doc.data() };
-      this.setState({ match });
-      // this.setState({ headerTitle: `${match.data.home.teamName} vs ${match.data.away.teamName}` });
-    });
+    this.fetchMatchPhotos();
   }
 
   // eslint-disable-next-line
   fetchMatchPhotos = () => {
-    const matchId = this.props.navigation.state.params.itemId;
+    const { match } = this.props.navigation.state.params;
     const db = firebase.firestore();
-    // const maxResults = 5;
 
     const photosRef = db.collection('photos')
-      .where('matchId', '==', matchId);
+      .where('matchId', '==', match.id);
 
     const photos = [];
     photosRef.get()
@@ -77,8 +60,8 @@ class MatchFeed extends React.Component {
           routeName: 'PhotoDetail',
           params: {
             photo: item,
-            logInUser: this.state.logInUser,
           },
+          key: 'PhotoDetail' + item.id,
         });
       }}
     >
@@ -101,9 +84,15 @@ class MatchFeed extends React.Component {
 
     if (!this.state.photos.length) {
       return (
-        <Text style={styles.alert}>
-           投稿画像はありません.
-        </Text>
+        <View style={styles.container}>
+          <Header
+            headerTitle={this.state.headerTitle}
+            navigation={this.props.navigation}
+          />
+          <Text style={styles.alert}>
+             投稿画像はまだありません。
+          </Text>
+        </View>
       );
     }
 
@@ -112,7 +101,6 @@ class MatchFeed extends React.Component {
         <Header
           headerTitle={this.state.headerTitle}
           navigation={this.props.navigation}
-          logInUser={this.state.logInUser}
         />
         <FlatList
           navigation={this.props.navigation}
@@ -146,7 +134,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 70,
+    paddingTop: 80,
+  },
+  alert: {
+    padding: 16,
   },
   photoItem: {
     // width: (Dimensions.get('window').width / 4) - 1,

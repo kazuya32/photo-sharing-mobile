@@ -49,35 +49,21 @@ class PhotoUploader extends React.Component {
   }
 
   onPress = (tagType, item) => {
+    const key = this.props.navigation.state.params && this.props.navigation.state.params.key;
     switch (tagType) {
       case 'teams':
         this.setState({ team: item });
-        this.props.navigation.navigate({ routeName: 'PhotoUploader' });
-        break;
-      case 'matchSchedules':
-        this.props.navigation.navigate({
-          routeName: 'SearchMatch',
-          params: {
-            tagType: 'matches',
-            scheduleId: item.id,
-            onPress: this.onPressMatch,
-          },
-        });
+        this.props.navigation.navigate({ routeName: 'PhotoUploader', key });
         break;
       case 'matches':
         this.setState({ match: item });
-        this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+        this.props.navigation.navigate({ routeName: 'PhotoUploader', key });
         break;
 
       default:
         console.log('invalid tagType');
         break;
     }
-  }
-
-  onPressMatch = (tagType, item) => {
-    this.setState({ match: item });
-    this.props.navigation.navigate({ routeName: 'PhotoUploader' });
   }
 
   addTeam = () => {
@@ -94,7 +80,7 @@ class PhotoUploader extends React.Component {
     this.props.navigation.navigate({
       routeName: 'SearchTag',
       params: {
-        tagType: 'matchSchedules',
+        tagType: 'matches',
         onPress: this.onPress,
       },
     });
@@ -136,7 +122,8 @@ class PhotoUploader extends React.Component {
       tags: this.mapArray(this.state.tags),
       people: this.mapArrayPeople(this.state.people),
       matchId: this.state.match && this.state.match.id,
-      matchPath: this.state.match && `matchSchedules/${this.state.match.data.scheduleId}/matches/${this.state.match.id}`,
+      // eslint-disable-next-line
+      // matchPath: this.state.match && `matchSchedules/${this.state.match.data.scheduleId}/matches/${this.state.match.id}`,
       teamId: this.state.team && this.state.team.id,
       width: this.props.navigation.state.params.image.width,
       height: this.props.navigation.state.params.image.height,
@@ -200,6 +187,7 @@ class PhotoUploader extends React.Component {
   }
 
   onPressUser = (item) => {
+    const key = this.props.navigation.state.params && this.props.navigation.state.params.key;
     const { people } = this.state;
     let count = 0;
     people.forEach((user) => {
@@ -207,7 +195,7 @@ class PhotoUploader extends React.Component {
     });
     if (count === people.length) { people.push(item); }
     this.setState({ people });
-    return this.props.navigation.navigate({ routeName: 'PhotoUploader' });
+    return this.props.navigation.navigate({ routeName: 'PhotoUploader', key });
   }
 
   tagPeople = () => {
@@ -278,7 +266,7 @@ class PhotoUploader extends React.Component {
             onPress={this.addMatch}
             title={[
               !this.state.match && 'Add Match',
-              this.state.match && `${this.state.match.data.home.teamName} vs ${this.state.match.data.away.teamName}`,
+              this.state.match && `${this.state.match.data.homeTeam.fullname} vs ${this.state.match.data.awayTeam.fullname}`,
             ]}
           />
         </View>

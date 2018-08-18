@@ -9,6 +9,7 @@ import { SearchBar } from 'react-native-elements';
 
 import Header from '../components/Header.js';
 import TeamTabView from '../components/TeamTabView.js';
+import ScheduleTabView from '../components/ScheduleTabView.js';
 import SearchItem from '../components/SearchItem.js';
 
 class SearchTag extends React.Component {
@@ -16,7 +17,7 @@ class SearchTag extends React.Component {
 
   componentDidMount() {
     const { tagType } = this.props.navigation.state.params;
-    if (!tagType === 'teams') {
+    if (!(tagType === 'teams' || tagType === 'matches')) {
       this.fetchData();
     }
   }
@@ -51,9 +52,9 @@ class SearchTag extends React.Component {
     });
   }
 
-  onPressTeam = (team) => {
+  onPress = (item) => {
     const { tagType, onPress } = this.props.navigation.state.params;
-    onPress(tagType, team);
+    onPress(tagType, item);
   }
 
   keyExtractor = (item, index) => index.toString();
@@ -90,7 +91,21 @@ class SearchTag extends React.Component {
             headerTitle="チームタグをつける"
           />
           <TeamTabView
-            onPressTeam={this.onPressTeam}
+            onPressTeam={this.onPress}
+          />
+        </View>
+      );
+    }
+
+    if (tagType === 'matches') {
+      return (
+        <View style={{ flex: 1, paddingTop: 80, backgroundColor: '#fff' }}>
+          <Header
+            navigation={this.props.navigation}
+            headerTitle="試合タグをつける"
+          />
+          <ScheduleTabView
+            onPressMatch={this.onPress}
           />
         </View>
       );
