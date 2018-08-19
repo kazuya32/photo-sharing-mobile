@@ -24,7 +24,7 @@ class ScheduleCategory extends React.Component {
     const db = firebase.firestore();
 
     const ref = db.collection('matches')
-      .where('category', '==', this.props.category)
+      .where('category', '==', this.props.category);
       // .limit(maxResults);
 
     const matches = [];
