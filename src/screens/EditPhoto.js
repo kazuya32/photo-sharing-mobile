@@ -30,7 +30,7 @@ class EditPhoto extends React.Component {
       const {
         tags,
         people,
-        matchPath,
+        matchId,
         teamId,
       } = photo.data;
 
@@ -44,7 +44,7 @@ class EditPhoto extends React.Component {
         peopleIdArray.forEach((item) => { this.fetchUser(item); });
       }
 
-      if (matchPath) { this.fetchMatch(matchPath); }
+      if (matchId) { this.fetchMatch(matchId); }
 
       if (teamId) { this.fetchTeam(teamId); }
     }
@@ -71,9 +71,9 @@ class EditPhoto extends React.Component {
     });
   }
 
-  fetchMatch = (matchPath) => {
+  fetchMatch = (matchId) => {
     const db = firebase.firestore();
-    const Ref = db.doc(matchPath);
+    const Ref = db.collection('matches').doc(matchId);
     Ref.get().then((doc) => {
       const match = { id: doc.id, data: doc.data() };
       this.setState({ match });
@@ -291,7 +291,7 @@ class EditPhoto extends React.Component {
             onPress={this.addMatch}
             title={[
               !this.state.match && 'Add Match',
-              this.state.match && `${this.state.match.data.home.teamName} vs ${this.state.match.data.away.teamName}`,
+              this.state.match && `${this.state.match.data.homeTeam.fullname} vs ${this.state.match.data.awayTeam.fullname}`,
             ]}
           />
         </View>

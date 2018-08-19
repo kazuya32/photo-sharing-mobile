@@ -19,7 +19,15 @@ class MatchFeed extends React.Component {
   }
 
   componentWillMount() {
+    this.fetchMatchTitle();
     this.fetchMatchPhotos();
+  }
+
+  // eslint-disable-next-line
+  fetchMatchTitle = () => {
+    const { match } = this.props.navigation.state.params;
+    const headerTitle = `${match.data.homeTeam.name} vs ${match.data.awayTeam.name}`;
+    this.setState({ headerTitle });
   }
 
   // eslint-disable-next-line

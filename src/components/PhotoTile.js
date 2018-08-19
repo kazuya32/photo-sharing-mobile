@@ -16,6 +16,8 @@ import firebase from 'firebase';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import TagTile from '../components/TagTile.js';
+import MatchTile from '../elements/MatchTile.js';
+import TeamTile from '../elements/TeamTile.js';
 import DownloadButton from '../elements/DownloadButton.js';
 import SignatureButton from '../elements/SignatureButton.js';
 
@@ -24,7 +26,6 @@ class PhotoTile extends React.Component {
     // eslint-disable-next-line
     stadium: null,
     liked: this.props.photo.data.likes[this.props.uid],
-    // logInUser: this.props.logInUser,
     uid: this.props.uid,
     deleted: false,
     blocked: false,
@@ -40,22 +41,10 @@ class PhotoTile extends React.Component {
     // const user = this.getUser(photo.data.uid);
     this.getUser(photo.data.uid);
     const likes = this.makeListFromObject(photo.data.likes);
-    // let match;
-    // let team;
-
-    if (photo.data.matchPath) {
-      this.getMatch(photo.data.matchPath);
-    }
-
-    if (photo.data.teamId) {
-      this.getTeam(photo.data.teamId);
-    }
 
     this.setState({
       // user,
       likes,
-      // match,
-      // team,
     });
   }
 
@@ -80,28 +69,6 @@ class PhotoTile extends React.Component {
       this.setState({ user });
     });
     // return user;
-  }
-
-  getMatch = (matchPath) => {
-    let match;
-    const db = firebase.firestore();
-    const Ref = db.doc(matchPath);
-    Ref.get().then((doc) => {
-      match = { id: doc.id, data: doc.data() };
-      this.setState({ match });
-    });
-    // return match;
-  }
-
-  getTeam = (teamId) => {
-    let team;
-    const db = firebase.firestore();
-    const Ref = db.collection('teams').doc(teamId);
-    Ref.get().then((doc) => {
-      team = { id: doc.id, data: doc.data() };
-      this.setState({ team });
-    });
-    // return team;
   }
 
   // eslint-disable-next-line
@@ -350,6 +317,8 @@ class PhotoTile extends React.Component {
   render() {
     const {
       onPressUser,
+      onPressMatch,
+      onPressTeam,
       style,
       photoStyle,
       photo,
@@ -372,33 +341,14 @@ class PhotoTile extends React.Component {
       >
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <View style={[styles.match, !this.state.match && { display: 'none' }]}>
-              <Text style={styles.matchPrefix}>
-                In
-              </Text>
-              <TouchableHighlight
-                // onPress={this.onPressMatch}
-                onPress={this.props.onPressMatch}
-                underlayColor="transparent"
-              >
-                <Text style={styles.matchTitle}>
-                  {this.state.match && `${this.state.match.data.home.teamName} vs ${this.state.match.data.away.teamName}`}
-                </Text>
-              </TouchableHighlight>
-            </View>
-            <View style={[styles.team, !this.state.team && { display: 'none' }]}>
-              <Text style={styles.teamPrefix}>
-                For
-              </Text>
-              <TouchableHighlight
-                onPress={this.props.onPressTeam}
-                underlayColor="transparent"
-              >
-                <Text style={styles.teamTitle}>
-                  {this.state.team && `${this.state.team.data.name}`}
-                </Text>
-              </TouchableHighlight>
-            </View>
+            <MatchTile
+              onPress={onPressMatch}
+              matchId={photo.data.matchId}
+            />
+            <TeamTile
+              onPress={onPressTeam}
+              teamId={photo.data.teamId}
+            />
           </View>
           <TouchableHighlight
             onPress={onPressMenu}
@@ -529,41 +479,6 @@ const styles = StyleSheet.create({
     // height: 30,
     // width: '100%',
     alignSelf: 'center',
-  },
-  match: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignContent: 'center',
-    // paddingTop: 12,
-    // paddingLeft: 16,
-    // paddingRight: 16,
-    // paddingBottom: 12,
-  },
-  team: {
-    alignContent: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginTop: 8,
-    // paddingLeft: 16,
-    // paddingRight: 16,
-    // paddingBottom: 12,
-  },
-  matchTitle: {
-    alignSelf: 'center',
-    color: '#DB4D5E',
-    // fontSize: 12,
-  },
-  teamTitle: {
-    color: '#DB4D5E',
-    fontSize: 12,
-  },
-  matchPrefix: {
-    marginRight: 4,
-    alignSelf: 'center',
-  },
-  teamPrefix: {
-    marginRight: 4,
-    fontSize: 12,
   },
   photo: {
     alignSelf: 'center',

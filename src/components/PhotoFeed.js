@@ -176,8 +176,8 @@ class Feed extends React.Component {
       onPressPhoto={() => { this.props.onPressPhoto(item); }}
       // onPressUser={() => { this.props.onPressUser(item.data.uid); }}
       onPressUser={this.props.onPressUser}
-      onPressMatch={() => { this.props.onPressMatch(item); }}
-      onPressTeam={() => { this.props.onPressTeam(item); }}
+      onPressMatch={this.props.onPressMatch}
+      onPressTeam={this.props.onPressTeam}
       photoStyle={styles.photoItem}
       uid={this.state.uid}
       logInUser={this.state.logInUser}
