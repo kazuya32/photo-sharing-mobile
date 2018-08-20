@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Image, Dimensions, AsyncStorage } from 'react-native';
-import Expo from 'expo';
+import Expo, { Constants } from 'expo';
 import firebase from 'firebase';
 import { SocialIcon } from 'react-native-elements';
 
@@ -12,34 +12,6 @@ class Login extends React.Component {
   state = {
     showTerm: false,
     // agreed: false,
-  }
-  componentWillMount() {
-    // firebase.auth().onAuthStateChanged(async (user) => {
-    //   if (user) {
-    //     console.log('We are authenticated now!');
-    //
-    //     const { // eslint-disable-next-line
-    //       displayName,    // eslint-disable-next-line
-    //       email, // eslint-disable-next-line
-    //       emailVerified, // eslint-disable-next-line
-    //       photoURL, // eslint-disable-next-line
-    //       isAnonymous,
-    //       uid, // eslint-disable-next-line
-    //       providerData,
-    //     } = user;
-    //
-    //     try {
-    //       await AsyncStorage.setItem('uid', uid);
-    //       // await AsyncStorage.setItem('facebookId', providerData[0].uid);
-    //     } catch (error) {
-    //       console.log('failed to saving AsyncStorage');
-    //     }
-    //     this.props.navigation.navigate({ routeName: 'Home' });
-    //   // eslint-disable-next-line
-    //   } else {
-    //     console.log('not login');
-    //   }
-    // });
   }
 
   logInTest = (testEmail) => {
@@ -67,12 +39,14 @@ class Login extends React.Component {
     // firebase.auth().useDeviceLanguage();
     // firebase.auth().signInWithRedirect(provider);
     const appId = ENV.FACEBOOK_APP_ID;
+    const { appOwnership } = Constants;
+    const behavior = (appOwnership === 'standalone') ? 'native' : 'web';
 
     const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
       appId,
       {
         permissions: ['public_profile'],
-        // behavior: 'native',
+        behavior,
       },
     );
 
@@ -156,12 +130,11 @@ class Login extends React.Component {
   }
 
   navigateToMain = () => {
-    this.props.navigation.navigate('Main');
-    // const timestamp = Date.now().toString();
-    // this.props.navigation.navigate({
-    //   routeName: 'Home',
-    //   key: 'Home' + timestamp,
-    // });
+    const timestamp = Date.now().toString();
+    this.props.navigation.navigate({
+      routeName: 'Main',
+      key: 'Main' + timestamp,
+    });
   }
 
   handleGuest = () => {
@@ -218,21 +191,6 @@ class Login extends React.Component {
   }
 }
 
-// <SocialIcon
-//   title="ファンテストユーザー"
-//   button
-//   type="facebook"
-//   raised
-//   onPress={() => { this.logInTest('testuser@example.com'); }}
-// />
-// <SocialIcon
-//   title="アスリートテストユーザー"
-//   button
-//   type="facebook"
-//   raised
-//   onPress={() => { this.logInTest('testuser2@example.com'); }}
-// />
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -240,10 +198,6 @@ const styles = StyleSheet.create({
   },
   termOfService: {
     position: 'absolute',
-    // top: 16,
-    // bottom: 16,
-    // left: 16,
-    // right: 16,
     zIndex: 100,
   },
   bgImage: {

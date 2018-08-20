@@ -11,8 +11,11 @@ import {
   ActionSheetIOS,
   CameraRoll,
   AsyncStorage,
+  Share,
+  Linking,
 } from 'react-native';
 import firebase from 'firebase';
+// import { Share } from 'expo';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import TagTile from '../components/TagTile.js';
@@ -121,8 +124,17 @@ class PhotoTile extends React.Component {
   // eslint-disable-next-line
   onPressDownload = () => {
     CameraRoll.saveToCameraRoll(this.props.photo.data.downloadURL)
-      .then(() => {
-        Alert.alert('画像を保存しました。');
+      .then((uri) => {
+        // Alert.alert('画像を保存しました。');
+        Alert.alert(
+          '画像を保存しました。',
+          '保存した画像をInstagramで友達にシェアしよう！',
+          [
+            { text: 'No' },
+            { text: 'Yes', onPress: () => this.ShareToInstagram(uri) },
+          ],
+          { cancelable: false },
+        );
       });
   }
 
@@ -216,6 +228,20 @@ class PhotoTile extends React.Component {
     });
   }
 
+  onPressShare = () => {
+    const content = {
+      message: 'message',
+      title: 'title',
+    };
+    Share.share(content);
+  }
+
+  ShareToInstagram = (uri) => {
+    const encodedURL = encodeURIComponent(uri);
+    const instagramURL = `instagram://library?AssetPath=${encodedURL}`;
+    Linking.openURL(instagramURL);
+  }
+
   onPressInvisible = () => {
     const { photo } = this.props;
     const { invisibleInMyPage } = photo.data;
@@ -245,9 +271,11 @@ class PhotoTile extends React.Component {
     const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
 
     const signatureTitle = 'サインする';
+    // const sharingTitle = 'シェアする';
     const options = [
       'キャンセル',
       signatureTitle,
+      // sharingTitle,
     ];
 
     const blockTitle = isBlocked ? 'ブロックを取り消す' : 'ブロック';
@@ -272,6 +300,9 @@ class PhotoTile extends React.Component {
           case signatureTitle:
             this.onPressSignature();
             break;
+          // case sharingTitle:
+          //   this.onPressShare();
+          //   break;
           case blockTitle:
             this.onPressBlock();
             break;
