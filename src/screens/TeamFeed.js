@@ -19,12 +19,9 @@ class TeamFeed extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.navigation.state.params && this.props.navigation.state.params.feedType) {
-      const { feedType, itemId } = this.props.navigation.state.params;
-      // this.setState({ feedType, itemId });
-      this.getTeam(itemId);
-      this.fetchPhotos();
-    }
+    const { itemId } = this.props.navigation.state.params;
+    this.getTeam(itemId);
+    this.fetchPhotos();
   }
 
   getTeam = (teamId) => {

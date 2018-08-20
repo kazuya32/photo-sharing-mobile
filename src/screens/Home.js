@@ -200,14 +200,12 @@ class Home extends React.Component {
           logInUser={this.state.logInUser}
           uid={this.state.uid}
           feedType="home"
-          // feedType={this.state.feedType}
           itemId={this.state.itemId}
           onPressUser={this.onPressUser}
           onPressPhoto={this.onPressPhoto}
           onPressMatch={this.onPressMatch}
           onPressTeam={this.onPressTeam}
           navigation={this.props.navigation}
-          // scheduleId={scheduleId}
         />
         <UploadButton onPress={this.onPressUpload} />
       </View>

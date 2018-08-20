@@ -161,7 +161,7 @@ class Feed extends React.Component {
   // }
 
   onRefresh = () => {
-    this.setState({ refreshing: true });
+    this.setState({ refreshing: true, photos: [] }); // photosに一旦空の配列を入れるとリフレッシュ時にバグらない
     this.fetchPhotos().then(() => {
       this.setState({ refreshing: false });
     });
@@ -174,14 +174,12 @@ class Feed extends React.Component {
       photo={item}
       style={item.data.hasArranged && { display: 'none' }}
       onPressPhoto={() => { this.props.onPressPhoto(item); }}
-      // onPressUser={() => { this.props.onPressUser(item.data.uid); }}
       onPressUser={this.props.onPressUser}
       onPressMatch={this.props.onPressMatch}
       onPressTeam={this.props.onPressTeam}
       photoStyle={styles.photoItem}
       uid={this.state.uid}
       logInUser={this.state.logInUser}
-      scheduleId={this.state}
       navigation={this.props.navigation}
     />
   );
