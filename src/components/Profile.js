@@ -56,7 +56,8 @@ class Profile extends React.Component {
     let approvedSum = 0;
     if (requests) {
       requests.forEach((request) => {
-        if (request.data.status === 'approved' && !request.data.isReadAfterApproved) {
+        const isReadAfterApproved = (request.data.status === 'approved' && !request.data.isReadAfterApproved);
+        if ((request.type === 'request') && isReadAfterApproved) {
           approvedSum += 1;
         }
       });

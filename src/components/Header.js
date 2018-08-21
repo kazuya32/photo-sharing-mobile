@@ -94,20 +94,20 @@ class Header extends React.Component {
         this.setState({ receivedGifts });
       });
 
-    const sentRef = db.collection('gifts')
-      .where('from', '==', uid);
-    sentRef.get()
-      .then((querySnapshot) => {
-        const sentGifts = [];
-        querySnapshot.forEach((doc) => {
-          sentGifts.push({
-            id: doc.id,
-            data: doc.data(),
-            type: 'gift',
-          });
-        });
-        this.setState({ sentGifts });
-      });
+    // const sentRef = db.collection('gifts')
+    //   .where('from', '==', uid);
+    // sentRef.get()
+    //   .then((querySnapshot) => {
+    //     const sentGifts = [];
+    //     querySnapshot.forEach((doc) => {
+    //       sentGifts.push({
+    //         id: doc.id,
+    //         data: doc.data(),
+    //         type: 'gift',
+    //       });
+    //     });
+    //     this.setState({ sentGifts });
+    //   });
   }
 
   navigateToMyPage = () => {
@@ -172,8 +172,8 @@ class Header extends React.Component {
     const unreadRequestsSum = this.countUnread(this.state.receivedRequests);
     const approvedRequestsSum = this.countApproved(this.state.sentRequests);
     const unreadGiftsSum = this.countUnread(this.state.receivedGifts);
-    const approvedGiftsSum = this.countApproved(this.state.sentGifts);
-    const sum = unreadRequestsSum + approvedRequestsSum + unreadGiftsSum + approvedGiftsSum;
+    // const approvedGiftsSum = this.countApproved(this.state.sentGifts);
+    const sum = unreadRequestsSum + approvedRequestsSum + unreadGiftsSum;
 
     return (
       <View style={styles.container}>
