@@ -5,6 +5,7 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 // import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 
 import Login from './src/screens/Login.js';
+import EmailLogin from './src/screens/EmailLogin.js';
 import Home from './src/screens/Home.js';
 import TeamFeed from './src/screens/TeamFeed.js';
 import MatchFeed from './src/screens/MatchFeed.js';
@@ -205,10 +206,21 @@ const MainStack = createStackNavigator({
 //   },
 // });
 
-const App = createStackNavigator({
-  Main: MainStack,
+const LoginStack = createStackNavigator({
   Login: { screen: Login },
-  // PhotoPicker: UploadStack,
+  EmailLogin: { screen: EmailLogin },
+}, {
+  headerMode: 'none',
+  // mode: 'modal',
+  navigationOptions: {
+    gesturesEnabled: true,
+  },
+});
+
+
+const App = createStackNavigator({
+  MainStack,
+  LoginStack,
 }, {
   headerMode: 'none',
   mode: 'modal',

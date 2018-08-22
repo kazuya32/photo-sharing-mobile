@@ -53,7 +53,7 @@ class Home extends React.Component {
       // eslint-disable-next-line
       } else {
         console.log('not login');
-        this.props.navigation.navigate({ routeName: 'Login' });
+        this.props.navigation.navigate({ routeName: 'LoginStack' });
       }
     });
   }
@@ -85,7 +85,7 @@ class Home extends React.Component {
         this.storeLogInUser(logInUser);
         this.setState({ logInUser });
       } else {
-        this.props.navigation.navigate({ routeName: 'Login' });
+        this.props.navigation.navigate({ routeName: 'LoginStack' });
       }
     });
   }

@@ -2,11 +2,12 @@ import React from 'react';
 import { StyleSheet, View, Image, Dimensions, AsyncStorage } from 'react-native';
 import Expo, { Constants } from 'expo';
 import firebase from 'firebase';
-import { SocialIcon } from 'react-native-elements';
 
 import TermOfService from '../components/TermOfService.js';
 import BackgroundImage from '../../assets/splash.png';
 import ENV from '../../env.json';
+import EmailLoginButton from '../elements/EmailLoginButton';
+import FacebookLoginButton from '../elements/FacebookLoginButton';
 
 class Login extends React.Component {
   state = {
@@ -132,8 +133,16 @@ class Login extends React.Component {
   navigateToMain = () => {
     const timestamp = Date.now().toString();
     this.props.navigation.navigate({
-      routeName: 'Main',
-      key: 'Main' + timestamp,
+      routeName: 'MainStack',
+      key: 'MainStack' + timestamp,
+    });
+  }
+
+  navigateToEmailLogin = () => {
+    const timestamp = Date.now().toString();
+    this.props.navigation.navigate({
+      routeName: 'EmailLogin',
+      key: 'EmailLogin' + timestamp,
     });
   }
 
@@ -169,21 +178,16 @@ class Login extends React.Component {
         />
         <View style={styles.upperArea} />
         <View style={styles.underArea}>
-          <SocialIcon
-            style={this.state.showTerm && { display: 'none' }}
-            title="Facebookでログイン"
-            button
-            type="facebook"
-            raised
+          <FacebookLoginButton
             onPress={this.logInWithFacebook}
+            title="Facebookでログイン"
+            style={[
+              this.state.showTerm && { display: 'none' },
+            ]}
           />
-          <SocialIcon
-            style={{ display: 'none' }}
-            title="テストユーザーでお試し"
-            button
-            type="facebook"
-            raised
-            onPress={() => { this.logInTest('testuser2@example.com'); }}
+          <EmailLoginButton
+            onPress={this.navigateToEmailLogin}
+            title="Emailでログイン"
           />
         </View>
       </View>
