@@ -15,25 +15,6 @@ class Login extends React.Component {
     // agreed: false,
   }
 
-  logInTest = (testEmail) => {
-    // const testEmail = 'testuser@example.com';
-    const testPassword = 'testuser';
-
-    firebase.auth().signInWithEmailAndPassword(testEmail, testPassword)
-      .then((user) => {
-        AsyncStorage.setItem('uid', user.uid);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // eslint-disable-next-line
-        console.log(errorCode, errorMessage);
-      })
-      .then(() => {
-        this.navigateToMain();
-      });
-  }
-
   logInWithFacebook = async () => {
     // const provider = new firebase.auth.FacebookAuthProvider();
     // firebase.auth().languageCode = 'ja_JP';
@@ -160,6 +141,7 @@ class Login extends React.Component {
   }
 
   render() {
+    console.log(this.state.showTerm);
     return (
       <View style={styles.container}>
         <Image
@@ -171,8 +153,9 @@ class Login extends React.Component {
         <TermOfService
           style={[
             styles.termOfService,
-            !this.state.showTerm && { display: 'none' },
+            // !this.state.showTerm && { display: 'none' },
           ]}
+          shoe={this.state.showTerm}
           onPressDisagree={this.handleDisagree}
           onPressAgree={this.handleAgree}
         />

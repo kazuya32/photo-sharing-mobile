@@ -3,9 +3,10 @@ import {
   StyleSheet,
   TouchableHighlight,
   View,
-  Text,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
+import ButtonBadge from '../elements/ButtonBadge.js';
 
 class RequestButton extends React.Component {
   render() {
@@ -40,20 +41,10 @@ class RequestButton extends React.Component {
               badgeNumber && styles.hasRequestTitle,
             ]}
           />
-          <View
-            style={[
-              styles.badge,
-              !badgeNumber && { display: 'none' },
-            ]}
-          >
-            <Text
-              style={[
-                styles.badgeTitle,
-              ]}
-            >
-              {num}
-            </Text>
-          </View>
+          <ButtonBadge
+            style={[styles.badge]}
+            badgeNumber={badgeNumber}
+          />
         </View>
       </TouchableHighlight>
     );
@@ -90,20 +81,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: -8,
     top: -8,
-    backgroundColor: '#fff',
-    alignSelf: 'center',
-    height: 20,
-    width: 20,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#DB4D5E',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badgeTitle: {
-    color: '#DB4D5E',
-    alignSelf: 'center',
-    fontSize: 10,
   },
   followButton: {
     position: 'absolute',

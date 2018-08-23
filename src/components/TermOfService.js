@@ -23,7 +23,14 @@ class TermOfService extends React.Component {
   }
 
   render() {
-    const { style, onPressDisagree, onPressAgree } = this.props;
+    const {
+      style,
+      onPressDisagree,
+      onPressAgree,
+      show,
+    } = this.props;
+
+    if (!show) { return null; }
 
     return (
       <ScrollView

@@ -3,13 +3,14 @@ import {
   StyleSheet,
   TouchableHighlight,
   Image,
-  Text,
   View,
+  // Platform,
 } from 'react-native';
 
-// import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import IconBadge from '../elements/IconBadge.js';
 
-class SendButton extends React.Component {
+
+class UserIcon extends React.Component {
   render() {
     const {
       onPress,
@@ -28,44 +29,40 @@ class SendButton extends React.Component {
     const borderWidth = this.props.borderWidth || 3;
     const borderColor = this.props.borderColor || '#DB4D5E';
 
-    let num = badgeNumber;
-    if (num > 99) { num = 99; }
+    // const isAndroid = Platform.OS === 'android';
 
     return (
       <TouchableHighlight
         style={[
           styles.profilePhoto,
           { width: dia, height: dia, borderRadius: dia * 0.5 },
+          // isAndroid && { paddingTop: 6, paddingRight: 6 },
           style,
         ]}
         onPress={onPress}
         underlayColor="transparent"
       >
-        <View>
+        <View
+          style={[
+            // styles.profilePhoto,
+            // { width: dia, height: dia, borderRadius: dia * 0.5 },
+          ]}
+        >
           <Image
             style={[
               styles.photo,
-              { width: dia, height: dia, borderRadius: dia * 0.5 },
+              { width: dia, height: dia },
               isAthlete && { borderWidth, borderColor },
-              // isAthlete && { borderWidth: 3, borderColor: '#dab300' },
+              // isAndroid && { top: 0 },
             ]}
             source={{ uri: photoURL }}
-            resizeMode="contain"
+            resizeMode="cover"
+            borderRadius={dia * 0.5}
           />
-          <View
-            style={[
-              styles.badge,
-              !badgeNumber && { display: 'none' },
-            ]}
-          >
-            <Text
-              style={[
-                styles.badgeTitle,
-              ]}
-            >
-              {num}
-            </Text>
-          </View>
+          <IconBadge
+            style={styles.badge}
+            badgeNumber={badgeNumber}
+          />
         </View>
       </TouchableHighlight>
     );
@@ -74,11 +71,9 @@ class SendButton extends React.Component {
 
 const styles = StyleSheet.create({
   profilePhoto: {
+    backgroundColor: 'gray',
   },
   photo: {
-    backgroundColor: 'gray',
-    // borderWidth: 1,
-    // borderColor: '#EBEBEB',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -88,22 +83,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: -6,
     top: -6,
-    backgroundColor: '#DB4D5E',
-    alignSelf: 'center',
-    height: 18,
-    width: 18,
-    borderRadius: 9,
-    borderWidth: 1,
-    borderColor: '#DB4D5E',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badgeTitle: {
-    color: '#fff',
-    alignSelf: 'center',
-    fontSize: 10,
-    textAlign: 'center',
   },
 });
 
-export default SendButton;
+export default UserIcon;

@@ -5,6 +5,8 @@ import {
   Text,
   TouchableHighlight,
   ActionSheetIOS,
+  Platform,
+  Alert,
 } from 'react-native';
 
 class SendButton extends React.Component {
@@ -24,20 +26,39 @@ class SendButton extends React.Component {
       this.setState({ isFollowing: nextValue });
       this.props.handleFollowButton(nextValue);
     } else {
-      const options = ['キャンセル', 'フォローを外す'];
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options,
-          destructiveButtonIndex: 1,
-          cancelButtonIndex: 0,
-        },
-        (buttonIndex) => {
-          if (buttonIndex === 1) {
-            this.setState({ isFollowing: nextValue });
-            this.props.handleFollowButton(nextValue);
-          }
-        },
-      );
+      const isAndroid = Platform.OS === 'android';
+      if (isAndroid) {
+        Alert.alert(
+          'フォローをやめます。',
+          '本当によろしいですか？',
+          [
+            { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+            {
+              text: 'OK',
+              onPress: () => {
+                this.setState({ isFollowing: nextValue });
+                this.props.handleFollowButton(nextValue);
+              },
+            },
+          ],
+          { cancelable: false },
+        );
+      } else {
+        const options = ['キャンセル', 'フォローを外す'];
+        ActionSheetIOS.showActionSheetWithOptions(
+          {
+            options,
+            destructiveButtonIndex: 1,
+            cancelButtonIndex: 0,
+          },
+          (buttonIndex) => {
+            if (buttonIndex === 1) {
+              this.setState({ isFollowing: nextValue });
+              this.props.handleFollowButton(nextValue);
+            }
+          },
+        );
+      }
     }
   }
 

@@ -13,6 +13,7 @@ import {
   AsyncStorage,
   Share,
   Linking,
+  Platform,
 } from 'react-native';
 import firebase from 'firebase';
 // import { Share } from 'expo';
@@ -264,85 +265,97 @@ class PhotoTile extends React.Component {
   }
 
   onPressMenu = () => {
-    const { photo } = this.props;
-    const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
-    const isBlocked = photo.data.blockedBy && photo.data.blockedBy[this.state.logInUid];
-    const { invisibleInMyPage } = photo.data;
-    const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
+    const isAndroid = Platform.OS === 'android';
 
-    const signatureTitle = 'サインする';
-    // const sharingTitle = 'シェアする';
-    const options = [
-      'キャンセル',
-      signatureTitle,
-      // sharingTitle,
-    ];
+    if (isAndroid) {
+      Alert.alert('この機能は現在iosでのみ対応しています。ごめんなさい！');
+    } else {
+      const { photo } = this.props;
+      const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
+      const isBlocked = photo.data.blockedBy && photo.data.blockedBy[this.state.logInUid];
+      const { invisibleInMyPage } = photo.data;
+      const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
 
-    const blockTitle = isBlocked ? 'ブロックを取り消す' : 'ブロック';
-    options.push(blockTitle);
-    const invisibleTitle = isInvisible ? 'マイページに表示する' : 'マイページで非表示にする';
-    if (hasAccess) {
-      options.push(invisibleTitle);
+      const signatureTitle = 'サインする';
+      // const sharingTitle = 'シェアする';
+      const options = [
+        'キャンセル',
+        signatureTitle,
+        // sharingTitle,
+      ];
+
+      const blockTitle = isBlocked ? 'ブロックを取り消す' : 'ブロック';
+      options.push(blockTitle);
+      const invisibleTitle = isInvisible ? 'マイページに表示する' : 'マイページで非表示にする';
+      if (hasAccess) {
+        options.push(invisibleTitle);
+      }
+      const reportTitle = '不適切な投稿として通報する';
+      options.push(reportTitle);
+
+      const destructiveButtonIndex = options.length - 1;
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options,
+          destructiveButtonIndex,
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          const buttonTitle = options[buttonIndex];
+          switch (buttonTitle) {
+            case signatureTitle:
+              this.onPressSignature();
+              break;
+            // case sharingTitle:
+            //   this.onPressShare();
+            //   break;
+            case blockTitle:
+              this.onPressBlock();
+              break;
+            case invisibleTitle:
+              this.onPressInvisible();
+              break;
+            case reportTitle:
+              this.onPressReport();
+              break;
+
+            default:
+              // eslint-disable-next-line
+              console.log('cancel button');
+              break;
+          }
+        },
+      );
     }
-    const reportTitle = '不適切な投稿として通報する';
-    options.push(reportTitle);
-
-    const destructiveButtonIndex = options.length - 1;
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options,
-        destructiveButtonIndex,
-        cancelButtonIndex: 0,
-      },
-      (buttonIndex) => {
-        const buttonTitle = options[buttonIndex];
-        switch (buttonTitle) {
-          case signatureTitle:
-            this.onPressSignature();
-            break;
-          // case sharingTitle:
-          //   this.onPressShare();
-          //   break;
-          case blockTitle:
-            this.onPressBlock();
-            break;
-          case invisibleTitle:
-            this.onPressInvisible();
-            break;
-          case reportTitle:
-            this.onPressReport();
-            break;
-
-          default:
-            // eslint-disable-next-line
-            console.log('cancel button');
-            break;
-        }
-      },
-    );
   }
 
   onPressMenuMyPage = () => {
-    const options = ['キャンセル', '編集', '削除'];
-    const destructiveButtonIndex = options.length - 1;
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options,
-        destructiveButtonIndex,
-        cancelButtonIndex: 0,
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 1) {
-          // eslint-disable-next-line
-          this.onPressEdit();
-        }
-        if (buttonIndex === destructiveButtonIndex) {
-          this.deletePhoto();
-          // eslint-disable-next-line
-          this.props.onDeleted && this.props.onDeleted();
-        }
-      },
-    );
+    const isAndroid = Platform.OS === 'android';
+
+    if (isAndroid) {
+      Alert.alert('この機能は現在iosでのみ対応しています。ごめんなさい！');
+    } else {
+      const options = ['キャンセル', '編集', '削除'];
+      const destructiveButtonIndex = options.length - 1;
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options,
+          destructiveButtonIndex,
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 1) {
+            // eslint-disable-next-line
+            this.onPressEdit();
+          }
+          if (buttonIndex === destructiveButtonIndex) {
+            this.deletePhoto();
+            // eslint-disable-next-line
+            this.props.onDeleted && this.props.onDeleted();
+          }
+        },
+      );
+    }
   }
 
   render() {
@@ -447,10 +460,9 @@ class PhotoTile extends React.Component {
             </Text>
             <View style={[
                 styles.indicator,
-                this.state.user && { display: 'none' },
               ]}
             >
-              <ActivityIndicator />
+              <ActivityIndicator color="#DB4D5E" animating={!this.state.user} />
             </View>
             <TouchableHighlight
               onPress={() => { onPressUser(this.state.user.id); }}

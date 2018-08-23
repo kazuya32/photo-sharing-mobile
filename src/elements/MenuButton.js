@@ -34,11 +34,6 @@ class MenuButton extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    right: 16,
-    // height: 30,
-    alignSelf: 'center',
-  },
   menuButton: {
     backgroundColor: '#fff',
     borderRadius: 20,
@@ -65,13 +60,6 @@ const styles = StyleSheet.create({
   },
   menuButtonTitleMyPage: {
     color: '#DB4D5E',
-  },
-  followButton: {
-    position: 'absolute',
-    right: 16,
-    // height: 30,
-    alignSelf: 'flex-start',
-    marginTop: 16,
   },
 });
 

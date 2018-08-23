@@ -17,6 +17,8 @@ class DownloadRequestButton extends React.Component {
       isMyPage,
     } = this.props;
 
+    if (hasAccess || isMyPage) { return null; }
+
     const text = isPending ? 'リクエスト送信済み' : 'ダウンロードリクエスト';
 
     return (
@@ -24,7 +26,6 @@ class DownloadRequestButton extends React.Component {
         style={[
           styles.container,
           style,
-          (hasAccess || isMyPage) && { display: 'none' },
         ]}
         onPress={this.onPress}
         underlayColor="transparent"

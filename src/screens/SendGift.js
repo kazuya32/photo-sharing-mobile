@@ -119,11 +119,10 @@ class SendGift extends React.Component {
         />
         <View style={[
             styles.activityIndicatorContainer,
-            !this.state.isUploading && { display: 'none' },
           ]}
         >
           <View style={styles.activityIndicator}>
-            <ActivityIndicator size="large" color="#DB4D5E" />
+            <ActivityIndicator size="large" color="#DB4D5E" animating={this.state.isUploading} />
           </View>
         </View>
         <ScrollView>

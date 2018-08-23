@@ -6,6 +6,7 @@ import {
   AsyncStorage,
   ActionSheetIOS,
   Alert,
+  Platform,
 } from 'react-native';
 import {
   ImagePicker,
@@ -129,31 +130,37 @@ class Profile extends React.Component {
   }
 
   onPressMenuMyPage = () => {
-    const options = ['キャンセル', '写真を投稿', 'プロフィールを編集'];
-    const destructiveButtonIndex = options.length;
-    if (this.state.isMyPage) {
-      options.push('ログアウト');
+    const isAndroid = Platform.OS === 'android';
+
+    if (isAndroid) {
+      Alert.alert('この機能は現在iosでのみ対応しています。ごめんなさい！');
+    } else {
+      const options = ['キャンセル', '写真を投稿', 'プロフィールを編集'];
+      const destructiveButtonIndex = options.length;
+      if (this.state.isMyPage) {
+        options.push('ログアウト');
+      }
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options,
+          destructiveButtonIndex,
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 1) {
+            // eslint-disable-next-line
+            this.onPressUpload();
+          }
+          if (buttonIndex === 2) {
+            // eslint-disable-next-line
+            this.onPressEdit();
+          }
+          if (buttonIndex === destructiveButtonIndex) {
+            this.signOut();
+          }
+        },
+      );
     }
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options,
-        destructiveButtonIndex,
-        cancelButtonIndex: 0,
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 1) {
-          // eslint-disable-next-line
-          this.onPressUpload();
-        }
-        if (buttonIndex === 2) {
-          // eslint-disable-next-line
-          this.onPressEdit();
-        }
-        if (buttonIndex === destructiveButtonIndex) {
-          this.signOut();
-        }
-      },
-    );
   }
 
   blockingTransaction = () => {
@@ -206,23 +213,29 @@ class Profile extends React.Component {
   }
 
   onPressMenu = () => {
-    const options = ['キャンセル', 'ブロック', '不適切アカウントとして報告'];
-    const destructiveButtonIndex = 1;
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options,
-        destructiveButtonIndex,
-        cancelButtonIndex: 0,
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 1) {
-          this.block();
-        }
-        if (buttonIndex === 2) {
-          this.report();
-        }
-      },
-    );
+    const isAndroid = Platform.OS === 'android';
+
+    if (isAndroid) {
+      Alert.alert('この機能は現在ios限定でのみ対応しています。ごめんなさい！');
+    } else {
+      const options = ['キャンセル', 'ブロック', '不適切アカウントとして報告'];
+      const destructiveButtonIndex = 1;
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options,
+          destructiveButtonIndex,
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 1) {
+            this.block();
+          }
+          if (buttonIndex === 2) {
+            this.report();
+          }
+        },
+      );
+    }
   }
 
   render() {
@@ -363,9 +376,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     marginTop: 12,
     marginBottom: 12,
+    // paddingRight: 8,
   },
   menuButtonMyPage: {
     alignSelf: 'flex-start',
+    // paddingRight: 8,
   },
   requestButton: {
     marginRight: 12,

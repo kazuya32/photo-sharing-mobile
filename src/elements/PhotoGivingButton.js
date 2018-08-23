@@ -8,19 +8,18 @@ class PhotoGivingButton extends React.Component {
       buttonStyle,
       textStyle,
       isMyPage,
-      // isAthlete,
       onPress,
     } = this.props;
 
     const text = '写真を届ける';
+
+    if (isMyPage) { return null; }
 
     return (
       <TouchableHighlight
         style={[
           styles.container,
           style,
-          // (!isAthlete || isMyPage) && { display: 'none' },
-          isMyPage && { display: 'none' },
         ]}
         onPress={onPress}
         underlayColor="transparent"

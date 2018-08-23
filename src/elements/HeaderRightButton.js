@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableHighlight } from 'react-native';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StyleSheet, TouchableHighlight } from 'react-native';
 
 import UserIcon from './UserIcon.js';
 
@@ -15,18 +14,11 @@ class HeaderRightButton extends React.Component {
     } = this.props;
 
     return (
-      <View style={styles.container}>
-        <TouchableHighlight
-          onPress={onPress}
-          underlayColor="transparent"
-          style={styles.nortification}
-        >
-          <MaterialCommunityIcon
-            name="bell-outline"
-            size={28}
-            style={styles.icon}
-          />
-        </TouchableHighlight>
+      <TouchableHighlight
+        onPress={onPress}
+        underlayColor="transparent"
+        style={styles.container}
+      >
         <UserIcon
           onPress={onPressIcon}
           photoURL={photoURL}
@@ -34,7 +26,7 @@ class HeaderRightButton extends React.Component {
           isAthlete={isAthlete}
           badgeNumber={badgeNumber}
         />
-      </View>
+      </TouchableHighlight>
     );
   }
 }
@@ -43,13 +35,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  nortification: {
-    marginRight: 4,
-  },
-  icon: {
-    alignSelf: 'center',
-    display: 'none', // 通知機能未実装のために暫定処置
   },
 });
 

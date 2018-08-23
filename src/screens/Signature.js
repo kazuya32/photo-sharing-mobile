@@ -2,13 +2,15 @@ import * as ExpoPixi from 'expo-pixi';
 import React, { Component } from 'react';
 import {
   Image,
-  Button,
+  TouchableOpacity,
+  Text,
   Platform,
   AppState,
   StyleSheet,
   View,
   Dimensions,
   PixelRatio,
+  ScrollView,
 } from 'react-native';
 import { takeSnapshotAsync } from 'expo';
 
@@ -170,27 +172,31 @@ class Signature extends Component {
             // initialLines={this.state.lines}
           />
         </View>
-        <View style={styles.button} >
-          <Button
-            color="#fff"
-            title="undo"
-            // style={styles.button}
+        <ScrollView>
+          <TouchableOpacity
+            style={styles.button}
             onPress={() => {
               this.sketch.undo();
             }}
+          >
+            <Text
+              style={styles.buttonTitle}
+            >
+              undo
+            </Text>
+          </TouchableOpacity>
+          <ColorPanel
+            dia={24}
+            onPress={this.onPressColor}
+            selectedColor={this.state.strokeColor}
+            style={{ marginBottom: 12, marginTop: 12 }}
           />
-        </View>
-        <ColorPanel
-          dia={24}
-          onPress={this.onPressColor}
-          selectedColor={this.state.strokeColor}
-          style={{ marginBottom: 12, marginTop: 12 }}
-        />
-        <PenSelector
-          onPress={this.onPressWidth}
-          selectedWidth={this.state.strokeWidth}
-          style={{ marginBottom: 12, marginTop: 12 }}
-        />
+          <PenSelector
+            onPress={this.onPressWidth}
+            selectedWidth={this.state.strokeWidth}
+            style={{ marginBottom: 12, marginTop: 12 }}
+          />
+        </ScrollView>
       </View>
     );
   }
@@ -231,12 +237,17 @@ const styles = StyleSheet.create({
   },
   button: {
     alignSelf: 'center',
-    marginTop: 8,
+    marginTop: 12,
     marginBottom: 8,
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 16,
     paddingRight: 16,
+  },
+  buttonTitle: {
+    color: '#fff',
+    fontWeight: '500',
+    fontSize: 20,
   },
   toolBox: {
     backgroundColor: 'black',

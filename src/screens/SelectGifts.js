@@ -97,9 +97,16 @@ class SelectGifts extends React.Component {
 
     if (!this.state.photos.length) {
       return (
-        <Text style={styles.alert}>
-           投稿画像はありません.
-        </Text>
+        <View style={styles.container}>
+          <Header
+            navigation={this.props.navigation}
+            logInUser={this.state.logInUser}
+            headerTitle={this.state.headerTitle}
+          />
+          <Text style={styles.alert}>
+             投稿できる画像がまだないようです。他ユーザーに写真を届けるにはまず写真をアップロードする必要があります。
+          </Text>
+        </View>
       );
     }
 
@@ -132,6 +139,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingTop: 80,
+  },
+  alert: {
+    padding: 16,
   },
   photoItem: {
     width: (Dimensions.get('window').width / 4),
