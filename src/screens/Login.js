@@ -188,6 +188,9 @@ class Login extends React.Component {
           <EmailLoginButton
             onPress={this.navigateToEmailLogin}
             title="Emailでログイン"
+            style={[
+              { display: 'none' },
+            ]}
           />
         </View>
       </View>
