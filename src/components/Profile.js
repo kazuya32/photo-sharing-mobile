@@ -120,13 +120,15 @@ class Profile extends React.Component {
   };
 
   onPressEdit = () => {
-    this.props.navigation.navigate({
-      routeName: 'EditProfile',
-      params: {
-        user: this.props.user,
-        uid: this.props.uid,
-      },
-    });
+    if (this.state.isMyPage) {
+      this.props.navigation.navigate({
+        routeName: 'EditProfile',
+        params: {
+          user: this.props.user,
+          uid: this.props.uid,
+        },
+      });
+    }
   }
 
   onPressMenuMyPage = () => {
@@ -256,7 +258,7 @@ class Profile extends React.Component {
     return (
       <View style={styles.container}>
         <UserIcon
-          // onPress
+          onPress={this.onPressEdit}
           photoURL={photoURL}
           dia={48}
           isAthlete={(user && user.data.isAthlete)}

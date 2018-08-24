@@ -10,34 +10,88 @@ import {
 import firebase from 'firebase';
 
 import HeaderLeftButton from '../elements/HeaderLeftButton.js';
-import HeaderRightButton from '../elements/HeaderRightButton.js';
+import UserIcon from '../elements/UserIcon.js';
+// import HeaderRightButton from '../elements/HeaderRightButton.js';
 
 class Header extends React.Component {
   state = {
     receivedRequests: [],
     sentRequests: [],
     receivedGifts: [],
-    sentGifts: [],
+    // sentGifts: [],
   }
 
   componentWillMount() {
-    this.retrieveUser();
+    this.handleAuthState();
+    // this.retrieveUser();
   }
 
-  retrieveUser = async () => {
-    try {
-      const uid = await AsyncStorage.getItem('uid');
-      const photoURL = await AsyncStorage.getItem('photoURL');
-      const isAthlete = await AsyncStorage.getItem('isAthlete');
 
-      // if (photoURL !== null && isAthlete !== null) {
-      const value = (isAthlete === 'true');
-      this.fetchRequest(uid);
-      this.fetchGifts(uid);
-      this.setState({ uid, photoURL, isAthlete: value });
-      // }
+  handleAuthState = async () => {
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (user) {
+        const { // eslint-disable-next-line
+          displayName,    // eslint-disable-next-line
+          email, // eslint-disable-next-line
+          emailVerified, // eslint-disable-next-line
+          photoURL, // eslint-disable-next-line
+          isAnonymous,
+          uid, // eslint-disable-next-line
+          providerData,
+        } = user;
+
+        this.fetchLogInUser(uid);
+        this.fetchRequest(uid);
+        this.fetchGifts(uid);
+      }
+    });
+  }
+
+  // retrieveUser = async () => {
+  //   try {
+  //     const uid = await AsyncStorage.getItem('uid');
+  //     const photoURL = await AsyncStorage.getItem('photoURL');
+  //     const isAthlete = await AsyncStorage.getItem('isAthlete');
+  //
+  //
+  //     // if (photoURL !== null && isAthlete !== null) {
+  //     const value = (isAthlete === 'true');
+  //     this.fetchRequest(uid);
+  //     this.fetchGifts(uid);
+  //     this.setState({ uid, photoURL, isAthlete: value });
+  //     // }
+  //   } catch (error) {
+  //   //
+  //   }
+  // }
+
+  fetchLogInUser = (uid) => {
+    const db = firebase.firestore();
+    const userRef = db.collection('users').doc(uid);
+    userRef.onSnapshot((doc) => {
+      // const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
+      const user = {
+        id: doc.id,
+        data: doc.data(),
+      };
+      this.storeLogInUser(user);
+      this.setState({
+        uid,
+        photoURL: user.data.photoURL,
+        isAthlete: user.data.isAthlete,
+      });
+    });
+  }
+
+  storeLogInUser = async (logInUser) => {
+    try {
+      // await AsyncStorage.setItem('uid', logInUser.id);
+      await AsyncStorage.setItem('photoURL', logInUser.data.photoURL);
+      await AsyncStorage.setItem('name', logInUser.data.name);
+      await AsyncStorage.setItem('desc', logInUser.data.desc);
+      await AsyncStorage.setItem('isAthlete', logInUser.data.isAthlete.toString());
     } catch (error) {
-    //
+      // Error saving data
     }
   }
 
@@ -193,9 +247,9 @@ class Header extends React.Component {
           </TouchableHighlight>
         </View>
         <View style={styles.button}>
-          <HeaderRightButton
-            // onPress={onPressRight}
-            onPressIcon={this.navigateToMyPage}
+          <UserIcon
+            onPress={this.navigateToMyPage}
+            dia={32}
             photoURL={this.state.photoURL}
             isAthlete={this.state.isAthlete}
             badgeNumber={sum}

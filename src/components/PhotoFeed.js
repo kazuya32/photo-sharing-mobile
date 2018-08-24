@@ -76,8 +76,9 @@ class Feed extends React.Component {
     photosRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
+          const { userDeleted } = doc.data();
           const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.uid];
-          if (!isBlocked) {
+          if (!(userDeleted || isBlocked)) {
             photos.push({
               id: doc.id,
               data: doc.data(),
@@ -139,7 +140,8 @@ class Feed extends React.Component {
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.uid];
-            if (!isBlocked) {
+            const { userDeleted } = doc.data();
+            if (!(userDeleted || isBlocked)) {
               photos.push({
                 id: doc.id,
                 data: doc.data(),

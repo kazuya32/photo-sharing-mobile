@@ -42,10 +42,14 @@ class MatchFeed extends React.Component {
     photosRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          photos.push({
-            id: doc.id,
-            data: doc.data(),
-          });
+          const { userDeleted } = doc.data();
+          const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
+          if (!(userDeleted || isBlocked)) {
+            photos.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          }
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
         this.setState({ photos, lastVisible });

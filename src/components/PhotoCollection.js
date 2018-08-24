@@ -43,7 +43,8 @@ class PhotoCollection extends React.Component {
       const photos = [];
       querySnapshot.forEach((doc) => {
         const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
-        if (!isBlocked) {
+        const { userDeleted } = doc.data();
+        if (!(userDeleted || isBlocked)) {
         // if (!doc.data().hasArranged) {
           photos.push({
             id: doc.id,
@@ -73,7 +74,8 @@ class PhotoCollection extends React.Component {
           const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
           const { invisibleInMyPage } = doc.data();
           const isInvisible = invisibleInMyPage && invisibleInMyPage[this.props.uid];
-          if (!(isBlocked || isInvisible)) {
+          const { userDeleted } = doc.data();
+          if ((!(userDeleted || isBlocked) && !isInvisible)) {
             photos.push({
               id: doc.id,
               data: doc.data(),

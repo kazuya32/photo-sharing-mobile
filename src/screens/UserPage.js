@@ -87,22 +87,10 @@ class UserPage extends React.Component {
         });
       }
 
-      if (this.state.isMyPage) {
-        this.storeLogInUser(user);
-      }
+      // if (this.state.isMyPage) {
+      //   this.storeLogInUser(user);
+      // }
     });
-  }
-
-  storeLogInUser = async (logInUser) => {
-    try {
-      // await AsyncStorage.setItem('uid', logInUser.id);
-      await AsyncStorage.setItem('photoURL', logInUser.data.photoURL);
-      await AsyncStorage.setItem('name', logInUser.data.name);
-      await AsyncStorage.setItem('desc', logInUser.data.desc);
-      await AsyncStorage.setItem('isAthlete', logInUser.data.isAthlete.toString());
-    } catch (error) {
-      // Error saving data
-    }
   }
 
   fetchRequest = () => {
@@ -114,11 +102,14 @@ class UserPage extends React.Component {
     receivedRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          receivedItems.push({
-            id: doc.id,
-            data: doc.data(),
-            type: 'request',
-          });
+          const { userDeleted } = doc.data();
+          if (!userDeleted) {
+            receivedItems.push({
+              id: doc.id,
+              data: doc.data(),
+              type: 'request',
+            });
+          }
         });
         this.setState({ receivedItems });
       });
@@ -129,11 +120,14 @@ class UserPage extends React.Component {
     sentRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          sentItems.push({
-            id: doc.id,
-            data: doc.data(),
-            type: 'request',
-          });
+          const { userDeleted } = doc.data();
+          if (!userDeleted) {
+            sentItems.push({
+              id: doc.id,
+              data: doc.data(),
+              type: 'request',
+            });
+          }
         });
         this.setState({ sentItems });
       });
@@ -151,11 +145,14 @@ class UserPage extends React.Component {
     receivedRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          receivedItems.push({
-            id: doc.id,
-            data: doc.data(),
-            type: 'gift',
-          });
+          const { userDeleted } = doc.data();
+          if (!userDeleted) {
+            receivedItems.push({
+              id: doc.id,
+              data: doc.data(),
+              type: 'gift',
+            });
+          }
         });
         this.setState({ receivedItems });
       });
@@ -166,11 +163,14 @@ class UserPage extends React.Component {
     sentRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          sentItems.push({
-            id: doc.id,
-            data: doc.data(),
-            type: 'gift',
-          });
+          const { userDeleted } = doc.data();
+          if (!userDeleted) {
+            sentItems.push({
+              id: doc.id,
+              data: doc.data(),
+              type: 'gift',
+            });
+          }
         });
         this.setState({ sentItems });
       });

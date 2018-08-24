@@ -33,7 +33,8 @@ class PhotoDetail extends React.Component {
     }
   }
 
-  onPress = () => {
+  onPressRequest = () => {
+    console.log(this.props.navigation.state.params.photo);
     // Alert.alert('ダウンロードリクエストを送信しました。');
     this.props.navigation.navigate({
       routeName: 'SendRequest',
@@ -115,7 +116,7 @@ class PhotoDetail extends React.Component {
             navigation={this.props.navigation}
           />
           <DownloadRequestButton
-            onPress={this.onPress}
+            onPress={this.onPressRequest}
             style={[
               styles.reqBtn,
             ]}

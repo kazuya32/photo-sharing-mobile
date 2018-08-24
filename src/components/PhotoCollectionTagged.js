@@ -49,7 +49,8 @@ class PhotoCollection extends React.Component {
         const photos = [];
         querySnapshot.forEach((doc) => {
           const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
-          if (!isBlocked) {
+          const { userDeleted } = doc.data();
+          if (!(userDeleted || isBlocked)) {
             photos.push({
               id: doc.id,
               data: doc.data(),
