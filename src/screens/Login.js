@@ -89,7 +89,7 @@ class Login extends React.Component {
     })
       .then(() => {
         this.storeUser(user.uid, `${user.photoURL}?type=normal`);
-        this.props.navigation.navigate('Home');
+        this.navigateToMain();
       })
       .catch((error) => {
         // eslint-disable-next-line
