@@ -141,7 +141,9 @@ class Login extends React.Component {
   }
 
   render() {
-    console.log(this.state.showTerm);
+    const { appOwnership } = Constants;
+    const isTest = appOwnership === 'expo';
+
     return (
       <View style={styles.container}>
         <Image
@@ -155,20 +157,19 @@ class Login extends React.Component {
             styles.termOfService,
             // !this.state.showTerm && { display: 'none' },
           ]}
-          shoe={this.state.showTerm}
+          show={this.state.showTerm}
           onPressDisagree={this.handleDisagree}
           onPressAgree={this.handleAgree}
         />
         <View style={styles.upperArea} />
         <View style={styles.underArea}>
           <FacebookLoginButton
+            show={!this.state.showTerm}
             onPress={this.logInWithFacebook}
             title="Facebookでログイン"
-            style={[
-              this.state.showTerm && { display: 'none' },
-            ]}
           />
           <EmailLoginButton
+            show={isTest}
             onPress={this.navigateToEmailLogin}
             title="Emailでログイン"
             style={[

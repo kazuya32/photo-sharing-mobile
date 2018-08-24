@@ -8,7 +8,10 @@ class EmailLoginButton extends React.Component {
       onPress,
       style,
       title,
+      show,
     } = this.props;
+
+    if (!show) { return null; }
 
     return (
       <TouchableHighlight style={[style]} onPress={onPress} underlayColor="transparent">

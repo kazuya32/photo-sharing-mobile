@@ -13,6 +13,16 @@ class EmailLogin extends React.Component {
     // agreed: false,
   }
 
+  validateEmail = () => {
+    // eslint-disable-next-line
+    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(this.state.email) === true) {
+      this.setState({ emailValidated : true });
+    } else {
+      this.setState({ emailValidated : false });
+    }
+  }
+
   logIn = (email, password) => {
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then((user) => {
@@ -99,6 +109,25 @@ class EmailLogin extends React.Component {
     console.log(text);
   }
 
+  errorHandler = (code, message) => {
+    this.setState({
+      error: !code ? null : { code, message },
+    });
+  }
+
+  onPressNext = () => {
+    this.errorHandler(400, 'test');
+  }
+
+  onChangeTextEmail = (text) => {
+    this.setState({ email: text });
+  }
+
+  // eslint-disable-next-line
+  onChangeTextPass = (text) => {
+    this.setState({ pass: text });
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -112,15 +141,22 @@ class EmailLogin extends React.Component {
         />
         <View style={styles.form}>
           <FormLabel>Email</FormLabel>
-          <FormInput onChangeText={this.log} />
+          <FormInput
+            onChangeText={this.onChangeTextEmail}
+            keyboardType="email-address"
+          />
           <FormValidationMessage>Error message</FormValidationMessage>
           <FormLabel>Password</FormLabel>
-          <FormInput onChangeText={this.log} />
-          <FormValidationMessage>Error message</FormValidationMessage>
-          <FormLabel>Confirm Password</FormLabel>
-          <FormInput onChangeText={this.log} />
-          <FormValidationMessage>Error message</FormValidationMessage>
+          <FormInput
+            onChangeText={this.onChangeTextEmail}
+            secureTextEntry
+            shake={this.state.error}
+          />
+          <FormValidationMessage>
+            {this.state.error && this.state.error.message}
+          </FormValidationMessage>
         </View>
+
         <View style={styles.footer}>
           <CancelButton
             onPress={() => { this.props.navigation.goBack(); }}
@@ -128,8 +164,8 @@ class EmailLogin extends React.Component {
           >
             戻る
           </CancelButton>
-          <SaveButton onPress={this.uploadRequest} shadow >
-            送信
+          <SaveButton onPress={this.onPressNext} shadow >
+            次へ
           </SaveButton>
         </View>
       </View>
@@ -151,7 +187,7 @@ const styles = StyleSheet.create({
     margin: 16,
   },
   footer: {
-    // position: 'absolute',
+    position: 'absolute',
     width: '100%',
     borderTopWidth: 1,
     borderColor: '#C4C4C4',

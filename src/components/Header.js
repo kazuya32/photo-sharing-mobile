@@ -70,16 +70,18 @@ class Header extends React.Component {
     const userRef = db.collection('users').doc(uid);
     userRef.onSnapshot((doc) => {
       // const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
-      const user = {
-        id: doc.id,
-        data: doc.data(),
-      };
-      this.storeLogInUser(user);
-      this.setState({
-        uid,
-        photoURL: user.data.photoURL,
-        isAthlete: user.data.isAthlete,
-      });
+      if (doc.exists) {
+        const user = {
+          id: doc.id,
+          data: doc.data(),
+        };
+        this.storeLogInUser(user);
+        this.setState({
+          uid,
+          photoURL: user.data.photoURL,
+          isAthlete: user.data.isAthlete,
+        });
+      }
     });
   }
 
