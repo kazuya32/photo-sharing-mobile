@@ -31,7 +31,6 @@ class Schedule extends React.Component {
           logInUser={this.state.logInUser}
         />
         <ScheduleTabView
-          category="J1"
           navigation={this.props.navigation}
           onPressMatch={this.onPressMatch}
         />

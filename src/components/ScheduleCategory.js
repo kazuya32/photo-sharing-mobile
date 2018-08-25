@@ -45,10 +45,12 @@ class ScheduleCategory extends React.Component {
   // eslint-disable-next-line
   extractPastSchedules = (matches) => {
     const currentTimestamp = Date.now();
+    const day = 1000 * 60 * 60 * 24;
+    const searchTime = currentTimestamp + (day * 2);
     const pastMatches = [];
 
     matches.forEach((match) => {
-      if (match.data.time.timestamp < currentTimestamp) {
+      if (match.data.time.timestamp < searchTime) {
         pastMatches.push(match);
       }
     });
