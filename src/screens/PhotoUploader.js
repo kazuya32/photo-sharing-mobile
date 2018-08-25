@@ -240,7 +240,7 @@ class PhotoUploader extends React.Component {
             <Image
               style={styles.image}
               source={{ uri: this.props.navigation.state.params.image.uri }}
-              resizeMode="cover"
+              resizeMode="contain"
             />
             <TagBox
               placeholder="タグをつける"

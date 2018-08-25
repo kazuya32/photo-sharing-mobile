@@ -266,7 +266,7 @@ class EditPhoto extends React.Component {
             <Image
               style={styles.image}
               source={{ uri: this.props.navigation.state.params.photo.data.downloadURL }}
-              resizeMode="cover"
+              resizeMode="contain"
             />
             <TagBox
               placeholder="タグをつける"
