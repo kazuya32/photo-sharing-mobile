@@ -28,23 +28,27 @@ class Header extends React.Component {
 
 
   handleAuthState = async () => {
-    firebase.auth().onAuthStateChanged(async (user) => {
-      if (user) {
-        const { // eslint-disable-next-line
-          displayName,    // eslint-disable-next-line
-          email, // eslint-disable-next-line
-          emailVerified, // eslint-disable-next-line
-          photoURL, // eslint-disable-next-line
-          isAnonymous,
-          uid, // eslint-disable-next-line
-          providerData,
-        } = user;
-
-        this.fetchLogInUser(uid);
-        this.fetchRequest(uid);
-        this.fetchGifts(uid);
-      }
-    });
+    // firebase.auth().onAuthStateChanged(async (user) => {
+      // if (user) {
+      //   const { // eslint-disable-next-line
+      //     displayName,    // eslint-disable-next-line
+      //     email, // eslint-disable-next-line
+      //     emailVerified, // eslint-disable-next-line
+      //     photoURL, // eslint-disable-next-line
+      //     isAnonymous,
+      //     uid, // eslint-disable-next-line
+      //     providerData,
+      //   } = user;
+      //
+      //   this.fetchLogInUser(uid);
+      //   this.fetchRequest(uid);
+      //   this.fetchGifts(uid);
+      // }
+    // });
+    const uid = await AsyncStorage.getItem('uid');
+    this.fetchLogInUser(uid);
+    this.fetchRequest(uid);
+    this.fetchGifts(uid);
   }
 
   // retrieveUser = async () => {
@@ -89,8 +93,8 @@ class Header extends React.Component {
     try {
       // await AsyncStorage.setItem('uid', logInUser.id);
       await AsyncStorage.setItem('photoURL', logInUser.data.photoURL);
-      await AsyncStorage.setItem('name', logInUser.data.name);
-      await AsyncStorage.setItem('desc', logInUser.data.desc);
+      // await AsyncStorage.setItem('name', logInUser.data.name);
+      // await AsyncStorage.setItem('desc', logInUser.data.desc);
       await AsyncStorage.setItem('isAthlete', logInUser.data.isAthlete.toString());
     } catch (error) {
       // Error saving data
@@ -220,8 +224,6 @@ class Header extends React.Component {
 
   render() {
     const {
-      // onPressLeft,
-      // onPressRight,
       headerTitle,
     } = this.props;
 

@@ -13,14 +13,11 @@ import PhotoTile from '../components/PhotoTile.js';
 
 class Feed extends React.Component {
   state = {
-    logInUser: this.props.logInUser,
     isReloading: false,
     refreshing: false,
   }
 
   componentWillMount() {
-    const { feedType } = this.props;
-    this.setState({ feedType });
     this.fetchData();
   }
 
@@ -31,7 +28,7 @@ class Feed extends React.Component {
       if (value !== null) {
         this.setState({ uid: value });
         // this.fetchUser();
-        this.fetchPhotos(value);
+        this.fetchPhotos();
       }
     } catch (error) {
     //
@@ -43,34 +40,9 @@ class Feed extends React.Component {
     const db = firebase.firestore();
     const maxResults = 3;
 
-    let photosRef;
-
-    switch (this.state.feedType) {
-      case 'home':
-        photosRef = db.collection('photos')
-          .orderBy('createdAt', 'desc')
-          .limit(maxResults);
-        break;
-      case 'user':
-        photosRef = db.collection('photos')
-          .where('uid', '==', this.state.uid)
-          .limit(maxResults);
-        break;
-      case 'match':
-        photosRef = db.collection('photos')
-          .where('matchId', '==', this.props.itemId)
-          .limit(maxResults);
-        break;
-      case 'team':
-        photosRef = db.collection('photos')
-          .where('teamId', '==', this.props.itemId)
-          .limit(maxResults);
-        break;
-
-      default:
-        console.log('invalid type');
-        break;
-    }
+    const photosRef = db.collection('photos')
+      .orderBy('createdAt', 'desc')
+      .limit(maxResults);
 
     const photos = [];
     photosRef.get()
@@ -101,38 +73,10 @@ class Feed extends React.Component {
 
       // 画像URLの取得だけは最初に一度におこない、レンダリングだけ順番に行う機能を実装するべき
 
-      let photosRef;
-
-      switch (this.state.feedType) {
-        case 'home':
-          photosRef = db.collection('photos')
-            .orderBy('createdAt', 'desc')
-            .startAfter(this.state.lastVisible)
-            .limit(maxResults);
-          break;
-        case 'user':
-          photosRef = db.collection('photos')
-            .where('uid', '==', this.state.uid)
-            .startAfter(this.state.lastVisible)
-            .limit(maxResults);
-          break;
-        case 'match':
-          photosRef = db.collection('photos')
-            .where('matchId', '==', this.props.itemId)
-            .startAfter(this.state.lastVisible)
-            .limit(maxResults);
-          break;
-        case 'team':
-          photosRef = db.collection('photos')
-            .where('teamId', '==', this.props.itemId)
-            .startAfter(this.state.lastVisible)
-            .limit(maxResults);
-          break;
-
-        default:
-          console.log('invalid type');
-          break;
-      }
+      const photosRef = db.collection('photos')
+        .orderBy('createdAt', 'desc')
+        .startAfter(this.state.lastVisible)
+        .limit(maxResults);
 
       const { photos } = this.state;
 
@@ -181,7 +125,6 @@ class Feed extends React.Component {
       onPressTeam={this.props.onPressTeam}
       photoStyle={styles.photoItem}
       uid={this.state.uid}
-      logInUser={this.state.logInUser}
       navigation={this.props.navigation}
     />
   );

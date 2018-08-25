@@ -15,7 +15,6 @@ import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
 
 class PhotoCollection extends React.Component {
   state = {
-    // logInUser: this.props.logInUser,
   }
 
   componentWillMount() {

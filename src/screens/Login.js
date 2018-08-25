@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, Dimensions, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Image, Dimensions, AsyncStorage, Platform } from 'react-native';
 import Expo, { Constants } from 'expo';
 import firebase from 'firebase';
 
@@ -13,6 +13,10 @@ class Login extends React.Component {
   state = {
     showTerm: false,
     // agreed: false,
+  }
+
+  componentWillMount() {
+    AsyncStorage.setItem('uid', '');
   }
 
   logInWithFacebook = async () => {
@@ -60,6 +64,7 @@ class Login extends React.Component {
   }
 
   handleFacebookUser = (user) => {
+    console.log('handleFacebookUser');
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(user.uid);
     userRef.get().then((DocumentSnapshot) => {
@@ -67,15 +72,15 @@ class Login extends React.Component {
         this.navigateToMain();
       } else {
         // eslint-disable-next-line
-        console.log('No exist');
-        this.setState({ user });
-        this.handleGuest();
+        console.log('No exist in handle facebook user');
+        // this.setState({ user });
+        this.handleGuest(user);
       }
     });
   }
 
-  signUp = async () => {
-    const { user } = this.state;
+  signUp = async (user) => {
+    // const { user } = this.state;
     const db = firebase.firestore();
     db.collection('users').doc(user.uid).set({
       name: user.displayName,
@@ -128,7 +133,14 @@ class Login extends React.Component {
   }
 
   handleGuest = () => {
-    this.setState({ showTerm: true });
+    // this.navigateToMain();
+    const isAndroid = Platform.OS === 'android';
+    if (isAndroid) {
+      // this.handleAgree();
+      this.setState({ showTerm: true });
+    } else {
+      this.setState({ showTerm: true });
+    }
   }
 
   handleAgree = () => {
@@ -144,18 +156,18 @@ class Login extends React.Component {
     const { appOwnership } = Constants;
     const isTest = appOwnership === 'expo';
 
+    // const isAndroid = Platform.OS === 'android';
+
     return (
       <View style={styles.container}>
         <Image
           style={styles.bgImage}
-          // source={this.state.backgroundImage}
           source={BackgroundImage}
           resizeMode="cover"
         />
         <TermOfService
           style={[
             styles.termOfService,
-            // !this.state.showTerm && { display: 'none' },
           ]}
           show={this.state.showTerm}
           onPressDisagree={this.handleDisagree}
@@ -169,11 +181,11 @@ class Login extends React.Component {
             title="Facebookでログイン"
           />
           <EmailLoginButton
-            show={isTest}
+            show
             onPress={this.navigateToEmailLogin}
             title="Emailでログイン"
             style={[
-              { display: 'none' },
+              // { display: 'none' },
             ]}
           />
         </View>

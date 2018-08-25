@@ -56,7 +56,6 @@ class PhotoTile extends React.Component {
   checkMyPage = async (uid) => {
     const value = await AsyncStorage.getItem('uid');
     const isMyPage = (uid === value);
-    // const isMyPage = (this.props.uid === this.props.logInUser.id);
     this.setState({
       isMyPage,
       logInUid: value,

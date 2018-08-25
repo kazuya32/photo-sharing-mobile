@@ -178,7 +178,8 @@ class UserPage extends React.Component {
 
   // eslint-disable-next-line
   makeListFromObject = (obj) => {
-    // const count = 0;
+    // if (Object.keys(obj).length) { return []; }
+
     const array = [];
     Object.keys(obj).forEach((prop) => {
       if (obj[prop]) {

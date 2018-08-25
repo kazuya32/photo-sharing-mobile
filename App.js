@@ -6,6 +6,8 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 
 import Login from './src/screens/Login.js';
 import EmailLogin from './src/screens/EmailLogin.js';
+import EmailSignUp from './src/screens/EmailSignUp.js';
+import InitUser from './src/screens/InitUser.js';
 import Home from './src/screens/Home.js';
 import TeamFeed from './src/screens/TeamFeed.js';
 import MatchFeed from './src/screens/MatchFeed.js';
@@ -209,6 +211,8 @@ const MainStack = createStackNavigator({
 const LoginStack = createStackNavigator({
   Login: { screen: Login },
   EmailLogin: { screen: EmailLogin },
+  EmailSignUp: { screen: EmailSignUp },
+  InitUser: { screen: InitUser },
 }, {
   headerMode: 'none',
   // mode: 'modal',
@@ -221,6 +225,8 @@ const LoginStack = createStackNavigator({
 const App = createStackNavigator({
   MainStack,
   LoginStack,
+  // MainStack: { screen: Home },
+  // LoginStack: { screen: Login },
 }, {
   headerMode: 'none',
   mode: 'modal',

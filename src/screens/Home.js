@@ -4,6 +4,7 @@ import {
   View,
   Alert,
   AsyncStorage,
+  ActivityIndicator,
 } from 'react-native';
 import {
   ImagePicker,
@@ -23,14 +24,8 @@ class Home extends React.Component {
     // logInUser: null,
   }
 
-  // componentWillMount() {
-  //   if (this.props.navigation.state.params && this.props.navigation.state.params.feedType) {
-  //     const { feedType, itemId } = this.props.navigation.state.params;
-  //     this.setState({ feedType, itemId });
-  //   }
-  // }
   componentWillMount() {
-    firebase.auth().onAuthStateChanged(async (user) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         console.log('We are authenticated now!');
         const { // eslint-disable-next-line
@@ -43,22 +38,30 @@ class Home extends React.Component {
           providerData,
         } = user;
 
+        console.log('We are authenticated now! yey!');
+        // firebase.auth().signOut();
+
+        this.setState({ logined: true });
+
         try {
           await AsyncStorage.setItem('uid', uid);
-          this.fetchData();
           // await AsyncStorage.setItem('facebookId', providerData[0].uid);
+          // this.fetchData();
         } catch (error) {
           console.log('failed to saving AsyncStorage');
         }
       // eslint-disable-next-line
       } else {
         console.log('not login');
+        // unsubscribe();
         this.props.navigation.navigate({ routeName: 'LoginStack' });
       }
     });
   }
 
   componentDidMount() {
+    // console.log('home');
+    // this.props.navigation.navigate({ routeName: 'LoginStack' });
     this.fetchData();
   }
 
@@ -85,6 +88,7 @@ class Home extends React.Component {
         this.storeLogInUser(logInUser);
         this.setState({ logInUser });
       } else {
+        firebase.auth().signOut();
         this.props.navigation.navigate({ routeName: 'LoginStack' });
       }
     });
@@ -94,8 +98,8 @@ class Home extends React.Component {
     try {
       // await AsyncStorage.setItem('uid', logInUser.id);
       await AsyncStorage.setItem('photoURL', logInUser.data.photoURL);
-      await AsyncStorage.setItem('name', logInUser.data.name);
-      await AsyncStorage.setItem('desc', logInUser.data.desc);
+      // await AsyncStorage.setItem('name', logInUser.data.name);
+      // await AsyncStorage.setItem('desc', logInUser.data.desc);
       await AsyncStorage.setItem('isAthlete', logInUser.data.isAthlete.toString());
     } catch (error) {
       // Error saving data
@@ -191,6 +195,16 @@ class Home extends React.Component {
 
 
   render() {
+    if (!this.state.logined) {
+      return (
+        <View style={styles.container}>
+          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+            <ActivityIndicator />
+          </View>
+        </View>
+      );
+    }
+
     console.log(Constants.statusBarHeight);
     return (
       <View style={styles.container}>
@@ -199,9 +213,7 @@ class Home extends React.Component {
           navigation={this.props.navigation}
         />
         <PhotoFeed
-          logInUser={this.state.logInUser}
           uid={this.state.uid}
-          feedType="home"
           itemId={this.state.itemId}
           onPressUser={this.onPressUser}
           onPressPhoto={this.onPressPhoto}
