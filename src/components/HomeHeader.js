@@ -11,18 +11,20 @@ import { Constants } from 'expo';
 import firebase from 'firebase';
 
 import DesignLanguage from '../../designLanguage.json';
-import BackButton from '../elements/BackButton.js';
+import HeaderLeftButton from '../elements/HeaderLeftButton.js';
 import UserIcon from '../elements/UserIcon.js';
 
-class Header extends React.Component {
+class HomeHeader extends React.Component {
   state = {
     receivedRequests: [],
     sentRequests: [],
     receivedGifts: [],
+    // sentGifts: [],
   }
 
   componentWillMount() {
     this.initAuthState();
+    // this.retrieveUser();
   }
 
 
@@ -32,6 +34,24 @@ class Header extends React.Component {
     this.fetchRequest(uid);
     this.fetchGifts(uid);
   }
+
+  // retrieveUser = async () => {
+  //   try {
+  //     const uid = await AsyncStorage.getItem('uid');
+  //     const photoURL = await AsyncStorage.getItem('photoURL');
+  //     const isAthlete = await AsyncStorage.getItem('isAthlete');
+  //
+  //
+  //     // if (photoURL !== null && isAthlete !== null) {
+  //     const value = (isAthlete === 'true');
+  //     this.fetchRequest(uid);
+  //     this.fetchGifts(uid);
+  //     this.setState({ uid, photoURL, isAthlete: value });
+  //     // }
+  //   } catch (error) {
+  //   //
+  //   }
+  // }
 
   fetchLogInUser = (uid) => {
     const db = firebase.firestore();
@@ -145,11 +165,12 @@ class Header extends React.Component {
     });
   }
 
-  navigateToHome = () => {
-    // const timestamp = Date.now().toString();
+  navigateToSearch = () => {
     this.props.navigation.navigate({
-      routeName: 'Home',
-      // key: 'Home' + timestamp,
+      routeName: 'Search',
+      params: {
+        logInUser: this.state.logInUser,
+      },
     });
   }
 
@@ -178,17 +199,7 @@ class Header extends React.Component {
   }
 
   onPressTitle = () => {
-    const {
-      headerTitle,
-    } = this.props;
-
-    if (headerTitle === 'FLEGO') {
-      this.navigateToHome();
-    }
-  }
-
-  onPressBack = () => {
-    this.props.navigation.goBack();
+    console.log(Constants.statusBarHeight);
   }
 
   render() {
@@ -202,6 +213,7 @@ class Header extends React.Component {
     // const approvedGiftsSum = this.countApproved(this.state.sentGifts);
     const sum = unreadRequestsSum + approvedRequestsSum + unreadGiftsSum;
 
+    console.log(Constants.statusBarHeight);
     const height = Constants.statusBarHeight + DesignLanguage.headerHeight;
     const paddingTop = Constants.statusBarHeight + DesignLanguage.headerPaddingTop;
     const paddingBottom = DesignLanguage.headerPaddingBottom;
@@ -220,13 +232,12 @@ class Header extends React.Component {
         <StatusBar
           barStyle="dark-content"
         />
-        <BackButton
-          onPress={this.onPressBack}
-          style={styles.back}
-          size={32}
+        <HeaderLeftButton
+          onPress={this.navigateToSearch}
+          style={styles.leftButton}
         />
-        <TouchableHighlight onPress={this.onPressTitle} underlayColor="transparent" style={styles.title}>
-          <Text style={styles.titleText}>
+        <TouchableHighlight onPress={this.onPressTitle} underlayColor="transparent">
+          <Text style={styles.appbarTitle}>
             {headerTitle}
           </Text>
         </TouchableHighlight>
@@ -260,19 +271,15 @@ const styles = StyleSheet.create({
     borderBottomColor: '#808080',
     zIndex: 10,
   },
-  title: {
-  },
-  titleText: {
-    // position: 'absolute',
-    // alignSelf: 'center',
+  appbarTitle: {
     color: '#000000',
     fontSize: 18,
     fontWeight: '700',
   },
-  back: {
+  leftButton: {
     position: 'absolute',
     left: 0,
-    bottom: 8,
+    bottom: 12,
     paddingLeft: 18,
     paddingRight: 18,
   },
@@ -287,4 +294,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header;
+export default HomeHeader;

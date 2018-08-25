@@ -145,12 +145,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 80,
   },
   alert: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 80,
+    padding: 16,
   },
   photoItem: {
     width: (Dimensions.get('window').width / 4),

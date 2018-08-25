@@ -11,7 +11,6 @@ import InitUser from './src/screens/InitUser.js';
 import Home from './src/screens/Home.js';
 import TeamFeed from './src/screens/TeamFeed.js';
 import MatchFeed from './src/screens/MatchFeed.js';
-import Nortification from './src/screens/Nortification.js';
 import PhotoDetail from './src/screens/PhotoDetail.js';
 import SendRequest from './src/screens/SendRequest.js';
 import UserPage from './src/screens/UserPage.js';
@@ -23,7 +22,6 @@ import SendSignature from './src/screens/SendSignature.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
 import Schedule from './src/screens/Schedule.js';
 import Team from './src/screens/Team.js';
-import UserSearch from './src/screens/UserSearch.js';
 import SearchTag from './src/screens/SearchTag.js';
 import Search from './src/screens/Search.js';
 import PlayerList from './src/screens/PlayerList.js';
@@ -34,6 +32,7 @@ import SendGift from './src/screens/SendGift.js';
 import EditPhoto from './src/screens/EditPhoto.js';
 // import Match from './src/screens/Match.js';
 // import SearchMatch from './src/screens/SearchMatch.js';
+// import Nortification from './src/screens/Nortification.js';
 
 import ENV from './env.json';
 
@@ -85,7 +84,7 @@ const MainStack = createStackNavigator({
   Home: { screen: Home },
   TeamFeed: { screen: TeamFeed },
   MatchFeed: { screen: MatchFeed },
-  Nortification: { screen: Nortification },
+  // Nortification: { screen: Nortification },
   UserPage: { screen: UserPage },
   EditProfile: { screen: EditProfile },
   PhotoDetail: { screen: PhotoDetail },

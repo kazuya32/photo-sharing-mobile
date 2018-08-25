@@ -1,5 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, Button, TouchableHighlight, StatusBar } from 'react-native';
+import { Constants } from 'expo';
+
+import DesignLanguage from '../../designLanguage.json';
 
 class Appbar extends React.Component {
   render() {
@@ -10,8 +13,21 @@ class Appbar extends React.Component {
       rightButtonTitle,
     } = this.props;
 
+    const height = Constants.statusBarHeight + DesignLanguage.headerHeight;
+    const paddingTop = Constants.statusBarHeight + DesignLanguage.headerPaddingTop;
+    const paddingBottom = DesignLanguage.headerPaddingBottom;
+
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            height,
+            paddingTop,
+            paddingBottom,
+          },
+        ]}
+      >
         <StatusBar
           barStyle="dark-content"
         />
@@ -40,17 +56,11 @@ class Appbar extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 80,
+    width: '100%',
     backgroundColor: '#FCFCFC',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 32,
-    paddingBottom: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,

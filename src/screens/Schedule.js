@@ -55,7 +55,6 @@ class Schedule extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 80,
     backgroundColor: '#fff',
   },
   bgImage: {

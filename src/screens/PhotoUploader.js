@@ -295,7 +295,6 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
-    marginTop: 80,
   },
   // tags: {
   //   flexDirection: 'row',

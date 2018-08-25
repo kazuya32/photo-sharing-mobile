@@ -9,12 +9,11 @@ import {
 import {
   ImagePicker,
   Permissions,
-  Constants,
 } from 'expo';
 import firebase from 'firebase';
 
 import PhotoFeed from '../components/PhotoFeed.js';
-import Header from '../components/Header.js';
+import HomeHeader from '../components/HomeHeader.js';
 import UploadButton from '../elements/UploadButton.js';
 
 class Home extends React.Component {
@@ -205,10 +204,9 @@ class Home extends React.Component {
       );
     }
 
-    console.log(Constants.statusBarHeight);
     return (
       <View style={styles.container}>
-        <Header
+        <HomeHeader
           headerTitle={this.state.headerTitle}
           navigation={this.props.navigation}
         />
@@ -231,7 +229,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 80,
   },
 });
 

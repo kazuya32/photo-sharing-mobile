@@ -258,7 +258,7 @@ class EditPhoto extends React.Component {
         <PhotoHeader
           onPressLeft={() => { this.props.navigation.goBack(); }}
           onPressRight={this.updatePhoto}
-          headerTitle="Edit Photo"
+          headerTitle="写真を編集する"
           rightButtonTitle="Save"
         />
         <View style={styles.body}>
@@ -307,7 +307,6 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
-    marginTop: 80,
   },
   // tags: {
   //   flexDirection: 'row',

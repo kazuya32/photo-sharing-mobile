@@ -11,6 +11,7 @@ import {
   Dimensions,
   PixelRatio,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { takeSnapshotAsync } from 'expo';
 
@@ -85,13 +86,17 @@ class Signature extends Component {
   };
 
   onPressSave = () => {
-    this.props.navigation.navigate({
-      routeName: 'SendSignature',
-      params: {
-        originalPhoto: this.state.photo,
-        signedPhoto: this.state.signedPhoto,
-      },
-    });
+    if (!this.state.signedPhoto) {
+      Alert.alert('デジタルサインが行われていません。');
+    } else {
+      this.props.navigation.navigate({
+        routeName: 'SendSignature',
+        params: {
+          originalPhoto: this.state.photo,
+          signedPhoto: this.state.signedPhoto,
+        },
+      });
+    }
   }
 
   takeSnapshot = async () => {
@@ -206,7 +211,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'black',
     flex: 1,
-    paddingTop: 80,
     // alignItems: 'center',
   },
   sketch: {

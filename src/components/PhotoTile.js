@@ -28,8 +28,7 @@ import SignatureButton from '../elements/SignatureButton.js';
 class PhotoTile extends React.Component {
   state = {
     // eslint-disable-next-line
-    stadium: null,
-    liked: this.props.photo.data.likes[this.props.uid],
+    stadium: null,    
     uid: this.props.uid,
     deleted: false,
     blocked: false,
@@ -59,6 +58,7 @@ class PhotoTile extends React.Component {
     this.setState({
       isMyPage,
       logInUid: value,
+      liked: this.props.photo.data.likes[value],
     });
   }
 

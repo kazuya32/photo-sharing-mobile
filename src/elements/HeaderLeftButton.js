@@ -5,12 +5,13 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class HeaderLeftButton extends React.Component {
   render() {
-    const { onPress } = this.props;
+    const { onPress, style } = this.props;
 
     return (
       <TouchableHighlight
         onPress={onPress}
         underlayColor="transparent"
+        style={[styles.container, style]}
       >
         <Icon
           name="search"
@@ -23,6 +24,8 @@ class HeaderLeftButton extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+  },
   search: {
     alignSelf: 'center',
   },

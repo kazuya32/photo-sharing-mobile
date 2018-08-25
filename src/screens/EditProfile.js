@@ -115,9 +115,8 @@ class EditProfile extends React.Component {
     return (
       <View style={styles.container}>
         <Header
-          onPressLeft={() => { this.props.navigation.navigate({ routeName: 'MyPageFun' }); }}
-          onPressRight={() => { this.props.navigation.navigate({ routeName: 'Nortification' }); }}
-          headerTitle="Edit Profile"
+          navigation={this.props.navigation}
+          headerTitle="プロフィールを編集"
         />
         <ScrollView>
           <UserIcon
@@ -161,7 +160,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 80,
   },
   icon: {
     left: 24,
