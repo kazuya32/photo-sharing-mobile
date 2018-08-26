@@ -68,8 +68,10 @@ class ReceivedRequestTile extends React.Component {
   }
 
   onPress = (request, user, photo) => {
-    this.setState({ isReadAfterReceived: true });
-    this.setReadAfterReceived(request);
+    if (!request.data.isReadAfterReceived) {
+      this.setState({ isReadAfterReceived: true });
+      this.setReadAfterReceived(request);
+    }
     this.props.onPress(request, user, photo);
   }
 
@@ -79,19 +81,22 @@ class ReceivedRequestTile extends React.Component {
     } = this.props;
 
     if (this.state.photoDeleted) {
-      return (
-        <View style={{ display: 'none' }} />
-      );
+      return null;
     }
 
     if (!(this.state.user && this.state.photo)) {
-    // if (!(this.state.photo)) {
       return (
         <View style={{ flex: 1, height:30, alignSelf: 'center' }}>
           <ActivityIndicator />
         </View>
       );
     }
+
+    const title = this.state.user.data.isAthlete ? '選手' : 'さん';
+    const originalMessage = `${title}からのダウンロードリクエストが届いています。`;
+    const athleteMessage = `${title}からのダウンロードがありました！`;
+
+    const text = request.data.downloadByAthlete ? athleteMessage : originalMessage;
 
     return (
       <TouchableHighlight
@@ -112,7 +117,7 @@ class ReceivedRequestTile extends React.Component {
                 (this.state.isReadAfterReceived || request.data.isReadAfterReceived) && { color: 'black' },
               ]}
             >
-              {`${this.state.user && this.state.user.data.name}さんからのダウンロードリクエストが届いています。`}
+              {`${this.state.user && this.state.user.data.name}${text}`}
             </Text>
             <Text
               style={[
@@ -158,6 +163,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 16,
     paddingRight: 16,
+    paddingTop: 4,
   },
 });
 

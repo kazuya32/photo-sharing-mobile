@@ -61,13 +61,10 @@ class SentGiftTile extends React.Component {
     } = this.props;
 
     if (this.state.photoDeleted) {
-      return (
-        <View style={{ display: 'none' }} />
-      );
+      return null;
     }
 
     if (!(this.state.user && this.state.photo)) {
-    // if (!(this.state.photo)) {
       return (
         <View style={{ flex: 1, height:30, alignSelf: 'center' }}>
           <ActivityIndicator />
@@ -75,8 +72,10 @@ class SentGiftTile extends React.Component {
       );
     }
 
-    const originalMessage = 'さんにフォトギフトを贈りました。';
-    const signatureMessage = 'さんにデジタルサインを贈りました。';
+    const title = this.state.user.data.isAthlete ? '選手' : 'さん';
+    const originalMessage = `${title}にフォトギフトを贈りました。`;
+    const signatureMessage = `${title}にデジタルサインを贈りました。`;
+
     const text = gift.data.type === 'signature' ? signatureMessage : originalMessage;
 
     return (
@@ -145,6 +144,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 16,
     paddingRight: 16,
+    paddingTop: 4,
   },
 });
 

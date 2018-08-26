@@ -6,7 +6,7 @@
     "privacy": "unlisted",
     "sdkVersion": "27.0.0",
     "platforms": ["ios", "android"],
-    "version": "1.2.0",
+    "version": "1.2.2",
     "orientation": "portrait",
     "icon": "./assets/icon-ios.png",
     "splash": {
@@ -30,7 +30,7 @@
     },
     "android": {
       "package": "com.flego.android",
-      "versionCode": 5,
+      "versionCode": 8,
       "icon": "./assets/icon-android.png"
     },
     "facebookScheme": "fb2113813658871952",

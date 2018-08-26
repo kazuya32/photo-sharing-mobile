@@ -68,8 +68,10 @@ class ReceivedGiftTile extends React.Component {
   }
 
   onPress = (gift, user, photo) => {
-    this.setState({ isReadAfterReceived: true });
-    this.setReadAfterReceived(gift);
+    if (!gift.data.isReadAfterReceived) {
+      this.setState({ isReadAfterReceived: true });
+      this.setReadAfterReceived(gift);
+    }
     this.props.onPress(photo);
   }
 
@@ -79,9 +81,7 @@ class ReceivedGiftTile extends React.Component {
     } = this.props;
 
     if (this.state.photoDeleted) {
-      return (
-        <View style={{ display: 'none' }} />
-      );
+      return null;
     }
 
     if (!(this.state.user && this.state.photo)) {
@@ -92,8 +92,10 @@ class ReceivedGiftTile extends React.Component {
       );
     }
 
-    const originalMessage = 'さんからフォトギフトが届いています。';
-    const signatureMessage = 'さんからデジタルサインが届いています。';
+    const title = this.state.user.data.isAthlete ? '選手' : 'さん';
+    const originalMessage = `${title}からフォトギフトが届いています。`;
+    const signatureMessage = `${title}からデジタルサインが届いています。`;
+
     const text = gift.data.type === 'signature' ? signatureMessage : originalMessage;
 
     return (
@@ -161,6 +163,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 16,
     paddingRight: 16,
+    paddingTop: 4,
   },
 });
 

@@ -44,7 +44,7 @@ class PhotoTile extends React.Component {
       photo,
     } = this.props;
 
-    this.checkMyPage(photo.data.uid);
+    this.fetchLogInData(photo.data.uid);
 
     // const user = this.getUser(photo.data.uid);
     this.getUser(photo.data.uid);
@@ -57,12 +57,15 @@ class PhotoTile extends React.Component {
   }
 
   // eslint-disable-next-line
-  checkMyPage = async (uid) => {
+  fetchLogInData = async (uid) => {
     const value = await AsyncStorage.getItem('uid');
+    const isAthleteString = await AsyncStorage.getItem('isAthlete');
+    const isAthlete = isAthleteString === 'true';
     const isMyPage = (uid === value);
     this.setState({
       isMyPage,
       logInUid: value,
+      isAthleteLogIn: isAthlete,
       liked: this.props.photo.data.likes[value],
     });
   }
@@ -127,8 +130,7 @@ class PhotoTile extends React.Component {
   };
 
   // eslint-disable-next-line
-  onPressDownload = () => {
-    this.setState({ isDownloading: true });
+  downloadPhoto = () => {
     const { photo } = this.props;
     const remoteURL = photo.data.downloadURL;
     const isAndroid = Platform.OS === 'android';
@@ -178,6 +180,74 @@ class PhotoTile extends React.Component {
           );
         });
     }
+  }
+
+  // eslint-disable-next-line
+  onPressDownload = () => {
+    if (!this.state.isDownloading) {
+      this.setState({ isDownloading: true });
+
+      const { photo } = this.props;
+      const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
+
+      if (!hasAccess && this.state.isAthleteLogIn) {
+        this.setDownloadRequestByAthlete();
+      }
+      this.downloadPhoto();
+    }
+  }
+
+  // eslint-disable-next-line
+  setDownloadRequestByAthlete = () => {
+    this.makeRequest();
+    this.giveAccessToAthlete();
+  }
+
+  // eslint-disable-next-line
+  makeRequest = () => {
+    const { photo } = this.props;
+
+    const createdAt = Date.now();
+    const db = firebase.firestore();
+    db.collection('requests').doc().set({
+      from: this.state.logInUid,
+      to: photo.data.uid,
+      photoId: photo.id,
+      message: '',
+      isReadAfterReceived: false,
+      isReadAfterApproved: true,
+      status: 'approved',
+      createdAt,
+      updatedAt: createdAt,
+      downloadByAthlete: true,
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error writing document: ', error);
+      });
+  }
+
+  // eslint-disable-next-line
+  giveAccessToAthlete = async () => {
+    const { photo } = this.props;
+
+    const db = firebase.firestore();
+    const Ref = db.collection('photos').doc(photo.id);
+    Ref.update({
+      [`accesses.${this.state.logInUid}`]: true,
+    })
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('Document successfully written!');
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
   }
 
   deletePhoto = () => {
@@ -398,6 +468,8 @@ class PhotoTile extends React.Component {
     const XYRate = photo.data.height / photo.data.width;
     const photoHeight = photoWidth * XYRate;
 
+    const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
+
     return (
       <View style={[
           styles.container,
@@ -450,7 +522,7 @@ class PhotoTile extends React.Component {
           <DownloadButton
             style={styles.downloadBtn}
             onPress={this.onPressDownload}
-            hasAccess={photo.data.accesses && photo.data.accesses[this.state.logInUid]}
+            hasAccess={hasAccess || this.state.isAthleteLogIn}
           />
           <SignatureButton
             style={[

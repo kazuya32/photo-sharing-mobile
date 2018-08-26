@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   FlatList,
+  Text,
 } from 'react-native';
 
 import ReceivedRequestTile from './ReceivedRequestTile.js';
@@ -66,6 +67,16 @@ class ReceivedRequests extends React.Component {
     // eslint-disable-next-line
     const items = this.props.navigation.state.params && this.props.navigation.state.params.receivedItems;
 
+    if (!(items && items.length)) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.alert}>
+             受信アイテムはありません。
+          </Text>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <FlatList
@@ -85,6 +96,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  alert: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 16,
   },
 });
 

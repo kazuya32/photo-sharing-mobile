@@ -82,10 +82,13 @@ class SentRequestTile extends React.Component {
       request,
     } = this.props;
 
+    // アスリートが自分からダウンロードした場合はアスリート側には表示しない
+    if (request.data.downloadByAthlete) {
+      return null;
+    }
+
     if (this.state.photoDeleted) {
-      return (
-        <View style={{ display: 'none' }} />
-      );
+      return null;
     }
 
     if (!(this.state.user && this.state.photo)) {
@@ -97,8 +100,9 @@ class SentRequestTile extends React.Component {
       );
     }
 
-    const pendingMessage = 'さんにダウンロードリクエストを送信しました。';
-    const approvedMessage = 'さんからダウンロードリクエストを承認されました。';
+    const title = this.state.user.data.isAthlete ? '選手' : 'さん';
+    const pendingMessage = `${title}にダウンロードリクエストを送信しました。`;
+    const approvedMessage = `${title}からダウンロードリクエストを承認されました。`;
     const text = request.data.status === 'approved' ? approvedMessage : pendingMessage;
 
     return (
@@ -167,6 +171,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 16,
     paddingRight: 16,
+    paddingTop: 4,
   },
 });
 

@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   FlatList,
+  Text,
 } from 'react-native';
 
 import SentRequestTile from './SentRequestTile.js';
@@ -54,6 +55,16 @@ class SentItems extends React.Component {
     // eslint-disable-next-line
     const items = this.props.navigation.state.params && this.props.navigation.state.params.sentItems;
 
+    if (!(items && items.length)) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.alert}>
+             送信アイテムはありません。
+          </Text>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <FlatList
@@ -73,6 +84,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  alert: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 16,
   },
 });
 
