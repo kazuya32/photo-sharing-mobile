@@ -219,7 +219,7 @@ class Home extends React.Component {
           onPressTeam={this.onPressTeam}
           navigation={this.props.navigation}
         />
-        <UploadButton onPress={this.onPressUpload} />
+        <UploadButton onPress={this.onPressUpload} show />
       </View>
     );
   }

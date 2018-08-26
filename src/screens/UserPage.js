@@ -16,6 +16,7 @@ import PhotoCollection from '../components/PhotoCollection.js';
 import PhotoCollectionTagged from '../components/PhotoCollectionTagged.js';
 import FollowingList from '../components/FollowingList.js';
 import PhotoGivingButton from '../elements/PhotoGivingButton.js';
+import UploadButton from '../elements/UploadButton.js';
 
 class UserPage extends React.Component {
   state = {
@@ -250,7 +251,7 @@ class UserPage extends React.Component {
       });
   }
 
-  onPressUpload = () => {
+  onPressGifting = () => {
     const timestamp = Date.now().toString();
     this.props.navigation.navigate({
       routeName: 'SelectGifts',
@@ -260,6 +261,49 @@ class UserPage extends React.Component {
       key: 'SelectGifts' + timestamp,
     });
   }
+
+  onPressUpload = () => {
+    this.getPermission();
+  }
+
+  getPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (status === 'granted') {
+      this.pickImage();
+    } else {
+      // this.props.navigation.navigate({ routeName: 'Home' });
+      Alert.alert('カメラロールの使用が許可されていません。');
+    }
+  }
+
+  pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1.0,
+      aspect: [4, 4],
+      // aspect: [4, 3],
+      // base64: true,
+      exif: true,
+    });
+    console.log(result);
+
+    if (result.cancelled) {
+      // this.props.navigation.navigate({ routeName: 'Home' });
+      // Alert.alert('カメラロールの使用が許可されていません。');
+    } else {
+      const timestamp = Date.now().toString();
+      const key = 'PhotoUploader' + timestamp;
+      this.props.navigation.navigate({
+        routeName: 'PhotoUploader',
+        params: {
+          image: result,
+          logInUser: this.state.logInUser,
+          key,
+        },
+        key,
+      });
+    }
+  };
 
   keyExtractor = (item, index) => index.toString();
 
@@ -357,10 +401,10 @@ class UserPage extends React.Component {
         </ScrollableTabView>
 
         <PhotoGivingButton
-          // isAthlete={this.state.user && this.state.user.data.isAthlete}
-          isMyPage={this.state.isMyPage}
-          onPress={this.onPressUpload}
+          show={this.state.isMyPage}
+          onPress={this.onPressGifting}
         />
+        <UploadButton onPress={this.onPressUpload} show={this.state.isMyPage} />
       </View>
     );
   }

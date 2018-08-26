@@ -7,13 +7,13 @@ class PhotoGivingButton extends React.Component {
       style,
       buttonStyle,
       textStyle,
-      isMyPage,
+      show,
       onPress,
     } = this.props;
 
     const text = '写真を届ける';
 
-    if (isMyPage) { return null; }
+    if (show) { return null; }
 
     return (
       <TouchableHighlight

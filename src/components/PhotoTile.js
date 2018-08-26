@@ -8,7 +8,6 @@ import {
   ActivityIndicator,
   Dimensions,
   Alert,
-  ActionSheetIOS,
   CameraRoll,
   AsyncStorage,
   Share,
@@ -16,9 +15,13 @@ import {
   Platform,
 } from 'react-native';
 import firebase from 'firebase';
-// import { Share } from 'expo';
+import {
+  FileSystem,
+  // Share,
+} from 'expo';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import ActionSheet from '../components/ActionSheet.js';
 import TagTile from '../components/TagTile.js';
 import MatchTile from '../elements/MatchTile.js';
 import TeamTile from '../elements/TeamTile.js';
@@ -28,10 +31,12 @@ import SignatureButton from '../elements/SignatureButton.js';
 class PhotoTile extends React.Component {
   state = {
     // eslint-disable-next-line
-    stadium: null,    
+    stadium: null,
     uid: this.props.uid,
     deleted: false,
     blocked: false,
+    modalVisible: false,
+    isDownloading: false,
   }
 
   componentDidMount() {
@@ -123,19 +128,56 @@ class PhotoTile extends React.Component {
 
   // eslint-disable-next-line
   onPressDownload = () => {
-    CameraRoll.saveToCameraRoll(this.props.photo.data.downloadURL)
-      .then((uri) => {
-        // Alert.alert('画像を保存しました。');
-        Alert.alert(
-          '画像を保存しました。',
-          '保存した画像をInstagramで友達にシェアしよう！',
-          [
-            { text: 'No' },
-            { text: 'Yes', onPress: () => this.ShareToInstagram(uri) },
-          ],
-          { cancelable: false },
-        );
-      });
+    this.setState({ isDownloading: true });
+    const { photo } = this.props;
+    const remoteURL = photo.data.downloadURL;
+    const isAndroid = Platform.OS === 'android';
+
+    if (isAndroid) {
+      FileSystem.downloadAsync(
+        remoteURL,
+        FileSystem.documentDirectory + photo.id + '.jpg',
+      )
+        .then(({ uri }) => {
+          // console.log('Finished downloading to ', uri);
+          CameraRoll.saveToCameraRoll(uri)
+            .then(() => {
+              this.setState({ isDownloading: false });
+              // eslint-disable-next-line
+              Alert.alert(
+                '画像を保存しました。',
+                // '保存した画像をInstagramで友達にシェアしよう！',
+                // [
+                //   { text: 'No' },
+                //   { text: 'Yes', onPress: () => this.ShareToInstagram(uri) },
+                // ],
+                // { cancelable: false },
+              // eslint-disable-next-line
+              );
+            });
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+    } else {
+      CameraRoll.saveToCameraRoll(remoteURL)
+      // eslint-disable-next-line
+        .then((uri) => {
+          this.setState({ isDownloading: false });
+          // eslint-disable-next-line
+          Alert.alert(
+            '画像を保存しました。',
+            // '保存した画像をInstagramで友達にシェアしよう！',
+            // [
+            //   { text: 'No' },
+            //   { text: 'Yes', onPress: () => this.ShareToInstagram(uri) },
+            // ],
+            // { cancelable: false },
+          // eslint-disable-next-line
+          );
+        });
+    }
   }
 
   deletePhoto = () => {
@@ -264,97 +306,77 @@ class PhotoTile extends React.Component {
   }
 
   onPressMenu = () => {
-    const isAndroid = Platform.OS === 'android';
-
-    if (isAndroid) {
-      Alert.alert('この機能は現在iosでのみ対応しています。ごめんなさい！');
-    } else {
-      const { photo } = this.props;
-      const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
-      const isBlocked = photo.data.blockedBy && photo.data.blockedBy[this.state.logInUid];
-      const { invisibleInMyPage } = photo.data;
-      const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
-
-      const signatureTitle = 'サインする';
-      // const sharingTitle = 'シェアする';
-      const options = [
-        'キャンセル',
-        signatureTitle,
-        // sharingTitle,
-      ];
-
-      const blockTitle = isBlocked ? 'ブロックを取り消す' : 'ブロック';
-      options.push(blockTitle);
-      const invisibleTitle = isInvisible ? 'マイページに表示する' : 'マイページで非表示にする';
-      if (hasAccess) {
-        options.push(invisibleTitle);
-      }
-      const reportTitle = '不適切な投稿として通報する';
-      options.push(reportTitle);
-
-      const destructiveButtonIndex = options.length - 1;
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options,
-          destructiveButtonIndex,
-          cancelButtonIndex: 0,
-        },
-        (buttonIndex) => {
-          const buttonTitle = options[buttonIndex];
-          switch (buttonTitle) {
-            case signatureTitle:
-              this.onPressSignature();
-              break;
-            // case sharingTitle:
-            //   this.onPressShare();
-            //   break;
-            case blockTitle:
-              this.onPressBlock();
-              break;
-            case invisibleTitle:
-              this.onPressInvisible();
-              break;
-            case reportTitle:
-              this.onPressReport();
-              break;
-
-            default:
-              // eslint-disable-next-line
-              console.log('cancel button');
-              break;
-          }
-        },
-      );
-    }
+    this.setModalVisible(true);
   }
 
-  onPressMenuMyPage = () => {
-    const isAndroid = Platform.OS === 'android';
+  createOptionsMyPage = () => {
+    const optionsMyPage = [
+      {
+        title: '編集',
+        onPress: this.onPressEdit,
+        cancel: false,
+        destructive: false,
+      },
+      {
+        title: '削除',
+        onPress: () => {
+          this.deletePhoto();
+          // eslint-disable-next-line
+          this.props.onDeleted && this.props.onDeleted();
+        },
+        cancel: false,
+        destructive: true,
+      },
+    ];
 
-    if (isAndroid) {
-      Alert.alert('この機能は現在iosでのみ対応しています。ごめんなさい！');
-    } else {
-      const options = ['キャンセル', '編集', '削除'];
-      const destructiveButtonIndex = options.length - 1;
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options,
-          destructiveButtonIndex,
-          cancelButtonIndex: 0,
-        },
-        (buttonIndex) => {
-          if (buttonIndex === 1) {
-            // eslint-disable-next-line
-            this.onPressEdit();
-          }
-          if (buttonIndex === destructiveButtonIndex) {
-            this.deletePhoto();
-            // eslint-disable-next-line
-            this.props.onDeleted && this.props.onDeleted();
-          }
-        },
-      );
+    return optionsMyPage;
+  }
+
+  createOptions = () => {
+    const options = [
+      {
+        title: 'サインする',
+        onPress: this.onPressSignature,
+        cancel: false,
+        destructive: false,
+      },
+    ];
+
+    const { photo } = this.props;
+    const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
+    const isBlocked = photo.data.blockedBy && photo.data.blockedBy[this.state.logInUid];
+    const { invisibleInMyPage } = photo.data;
+    const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
+
+    const blockTitle = isBlocked ? 'ブロックを取り消す' : 'ブロック';
+    options.push({
+      title: blockTitle,
+      onPress: this.onPressBlock,
+      cancel: false,
+      destructive: false,
+    });
+
+    const invisibleTitle = isInvisible ? 'マイページに表示する' : 'マイページで非表示にする';
+    if (hasAccess) {
+      options.push({
+        title: invisibleTitle,
+        onPress: this.onPressInvisible,
+        cancel: false,
+        destructive: false,
+      });
     }
+    const reportTitle = '不適切な投稿として通報する';
+    options.push({
+      title: reportTitle,
+      onPress: this.onPressReport,
+      cancel: false,
+      destructive: true,
+    });
+    return options;
+  }
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
   }
 
   render() {
@@ -368,7 +390,9 @@ class PhotoTile extends React.Component {
     } = this.props;
 
     const iconName = this.state.liked ? 'heart' : 'heart-outline';
-    const onPressMenu = this.state.isMyPage ? this.onPressMenuMyPage : this.onPressMenu;
+    // const onPressMenu = this.state.isMyPage ? this.onPressMenuMyPage : this.onPressMenu;
+    const options = this.state.isMyPage ? this.createOptionsMyPage() : this.createOptions();
+    // const options = this.createOptionsMypage();
 
     const photoWidth = Dimensions.get('window').width;
     const XYRate = photo.data.height / photo.data.width;
@@ -394,7 +418,7 @@ class PhotoTile extends React.Component {
             />
           </View>
           <TouchableHighlight
-            onPress={onPressMenu}
+            onPress={this.onPressMenu}
             style={styles.menuButton}
             underlayColor="transparent"
           >
@@ -477,6 +501,20 @@ class PhotoTile extends React.Component {
           style={[styles.tags, !photo.data.tags && { display: 'none' }]}
           tags={photo.data.tags}
         />
+
+        <ActionSheet
+          visible={this.state.modalVisible}
+          setModalVisible={(visible) => { this.setModalVisible(visible); }}
+          options={options}
+        />
+        <View style={[
+            styles.activityIndicatorContainer,
+          ]}
+        >
+          <View style={styles.activityIndicator}>
+            <ActivityIndicator size="large" color="#DB4D5E" animating={this.state.isDownloading} />
+          </View>
+        </View>
       </View>
     );
   }
@@ -486,6 +524,17 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     marginBottom: 12,
+  },
+  activityIndicatorContainer: {
+    position: 'absolute',
+    top: Dimensions.get('window').height / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  activityIndicator: {
+    width: Dimensions.get('window').width,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     flexDirection: 'row',
@@ -599,3 +648,101 @@ const styles = StyleSheet.create({
 });
 
 export default PhotoTile;
+
+// onPressMenu = () => {
+//   const isAndroid = Platform.OS === 'android';
+//
+//   // if (isAndroid) {
+//   if (true) {
+//     // Alert.alert('この機能は現在iosでのみ対応しています。ごめんなさい！');
+//     this.setModalVisible(true);
+//   } else {
+//     const { photo } = this.props;
+//     const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
+//     const isBlocked = photo.data.blockedBy && photo.data.blockedBy[this.state.logInUid];
+//     const { invisibleInMyPage } = photo.data;
+//     const isInvisible = invisibleInMyPage && invisibleInMyPage[this.state.logInUid];
+//
+//     const signatureTitle = 'サインする';
+//     // const sharingTitle = 'シェアする';
+//     const options = [
+//       'キャンセル',
+//       signatureTitle,
+//       // sharingTitle,
+//     ];
+//
+//     const blockTitle = isBlocked ? 'ブロックを取り消す' : 'ブロック';
+//     options.push(blockTitle);
+//     const invisibleTitle = isInvisible ? 'マイページに表示する' : 'マイページで非表示にする';
+//     if (hasAccess) {
+//       options.push(invisibleTitle);
+//     }
+//     const reportTitle = '不適切な投稿として通報する';
+//     options.push(reportTitle);
+//
+//     const destructiveButtonIndex = options.length - 1;
+//     ActionSheetIOS.showActionSheetWithOptions(
+//       {
+//         options,
+//         destructiveButtonIndex,
+//         cancelButtonIndex: 0,
+//       },
+//       (buttonIndex) => {
+//         const buttonTitle = options[buttonIndex];
+//         switch (buttonTitle) {
+//           case signatureTitle:
+//             this.onPressSignature();
+//             break;
+//           // case sharingTitle:
+//           //   this.onPressShare();
+//           //   break;
+//           case blockTitle:
+//             this.onPressBlock();
+//             break;
+//           case invisibleTitle:
+//             this.onPressInvisible();
+//             break;
+//           case reportTitle:
+//             this.onPressReport();
+//             break;
+//
+//           default:
+//             // eslint-disable-next-line
+//             console.log('cancel button');
+//             break;
+//         }
+//       },
+//     );
+//   }
+// }
+//
+// onPressMenuMyPage = () => {
+//   const isAndroid = Platform.OS === 'android';
+//
+//   if (isAndroid) {
+//   // if (true) {
+//     // Alert.alert('この機能は現在iosでのみ対応しています。ごめんなさい！');
+//     this.setModalVisible(true);
+//   } else {
+//     const options = ['キャンセル', '編集', '削除'];
+//     const destructiveButtonIndex = options.length - 1;
+//     ActionSheetIOS.showActionSheetWithOptions(
+//       {
+//         options,
+//         destructiveButtonIndex,
+//         cancelButtonIndex: 0,
+//       },
+//       (buttonIndex) => {
+//         if (buttonIndex === 1) {
+//           // eslint-disable-next-line
+//           this.onPressEdit();
+//         }
+//         if (buttonIndex === destructiveButtonIndex) {
+//           this.deletePhoto();
+//           // eslint-disable-next-line
+//           this.props.onDeleted && this.props.onDeleted();
+//         }
+//       },
+//     );
+//   }
+// }

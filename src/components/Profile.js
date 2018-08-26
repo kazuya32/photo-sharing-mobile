@@ -4,9 +4,7 @@ import {
   View,
   Text,
   AsyncStorage,
-  ActionSheetIOS,
   Alert,
-  Platform,
 } from 'react-native';
 import {
   ImagePicker,
@@ -19,9 +17,11 @@ import MenuButton from '../elements/MenuButton.js';
 import RequestButton from '../elements/RequestButton.js';
 import FollowButton from '../elements/FollowButton.js';
 import CheckMark from '../elements/CheckMark.js';
+import ActionSheet from '../components/ActionSheet.js';
 
 class Profile extends React.Component {
   state = {
+    modalVisible: false,
     // isMyPage: this.props.isMyPage,
     // isFollowing: this.props.isFollowing,
   }
@@ -131,40 +131,6 @@ class Profile extends React.Component {
     }
   }
 
-  onPressMenuMyPage = () => {
-    const isAndroid = Platform.OS === 'android';
-
-    if (isAndroid) {
-      Alert.alert('この機能は現在iosでのみ対応しています。ごめんなさい！');
-    } else {
-      const options = ['キャンセル', '写真を投稿', 'プロフィールを編集'];
-      const destructiveButtonIndex = options.length;
-      if (this.state.isMyPage) {
-        options.push('ログアウト');
-      }
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options,
-          destructiveButtonIndex,
-          cancelButtonIndex: 0,
-        },
-        (buttonIndex) => {
-          if (buttonIndex === 1) {
-            // eslint-disable-next-line
-            this.onPressUpload();
-          }
-          if (buttonIndex === 2) {
-            // eslint-disable-next-line
-            this.onPressEdit();
-          }
-          if (buttonIndex === destructiveButtonIndex) {
-            this.signOut();
-          }
-        },
-      );
-    }
-  }
-
   blockingTransaction = () => {
     const db = firebase.firestore();
     const logInUserRef = db.collection('users').doc(this.state.logInUid);
@@ -214,30 +180,55 @@ class Profile extends React.Component {
     });
   }
 
-  onPressMenu = () => {
-    const isAndroid = Platform.OS === 'android';
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
 
-    if (isAndroid) {
-      Alert.alert('この機能は現在ios限定でのみ対応しています。ごめんなさい！');
-    } else {
-      const options = ['キャンセル', 'ブロック', '不適切アカウントとして報告'];
-      const destructiveButtonIndex = 1;
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options,
-          destructiveButtonIndex,
-          cancelButtonIndex: 0,
-        },
-        (buttonIndex) => {
-          if (buttonIndex === 1) {
-            this.block();
-          }
-          if (buttonIndex === 2) {
-            this.report();
-          }
-        },
-      );
-    }
+  onPressMenu = () => {
+    this.setModalVisible(true);
+  }
+
+  createOptionsMyPage = () => {
+    const optionsMyPage = [
+      // {
+      //   title: '写真を投稿',
+      //   onPress: this.onPressUpload,
+      //   cancel: false,
+      //   destructive: false,
+      // },
+      {
+        title: 'プロフィールを編集',
+        onPress: this.onPressEdit,
+        cancel: false,
+        destructive: false,
+      },
+      {
+        title: 'ログアウト',
+        onPress: this.signOut,
+        cancel: false,
+        destructive: true,
+      },
+    ];
+
+    return optionsMyPage;
+  }
+
+  createOptions = () => {
+    const options = [
+      {
+        title: 'ブロック',
+        onPress: this.block,
+        cancel: false,
+        destructive: false,
+      },
+      {
+        title: '不適切アカウントとして報告',
+        onPress: this.report,
+        cancel: false,
+        destructive: true,
+      },
+    ];
+    return options;
   }
 
   render() {
@@ -254,6 +245,8 @@ class Profile extends React.Component {
     const unreadSum = this.countUnread(receivedItems);
     const approvedSum = this.countApproved(sentItems);
     const sum = unreadSum + approvedSum;
+
+    const options = this.state.isMyPage ? this.createOptionsMyPage() : this.createOptions();
 
     return (
       <View style={styles.container}>
@@ -284,7 +277,7 @@ class Profile extends React.Component {
               />
               <MenuButton
                 style={[styles.menuButtonMyPage]}
-                onPress={this.onPressMenuMyPage}
+                onPress={this.onPressMenu}
                 isMyPage={this.state.isMyPage}
               />
             </View>
@@ -311,6 +304,11 @@ class Profile extends React.Component {
             />
           </View>
         </View>
+        <ActionSheet
+          visible={this.state.modalVisible}
+          setModalVisible={(visible) => { this.setModalVisible(visible); }}
+          options={options}
+        />
       </View>
     );
   }
@@ -394,3 +392,63 @@ const styles = StyleSheet.create({
 });
 
 export default Profile;
+
+// onPressMenu = () => {
+//   const isAndroid = Platform.OS === 'android';
+//
+//   if (isAndroid) {
+//     Alert.alert('この機能は現在ios限定でのみ対応しています。ごめんなさい！');
+//   } else {
+//     const options = ['キャンセル', 'ブロック', '不適切アカウントとして報告'];
+//     const destructiveButtonIndex = 1;
+//     ActionSheetIOS.showActionSheetWithOptions(
+//       {
+//         options,
+//         destructiveButtonIndex,
+//         cancelButtonIndex: 0,
+//       },
+//       (buttonIndex) => {
+//         if (buttonIndex === 1) {
+//           this.block();
+//         }
+//         if (buttonIndex === 2) {
+//           this.report();
+//         }
+//       },
+//     );
+//   }
+// }
+
+// onPressMenuMyPage = () => {
+//   const isAndroid = Platform.OS === 'android';
+//
+//   if (isAndroid) {
+//     Alert.alert('この機能は現在iosでのみ対応しています。ごめんなさい！');
+//   } else {
+//     const options = ['キャンセル', '写真を投稿', 'プロフィールを編集'];
+//     const destructiveButtonIndex = options.length;
+//     if (this.state.isMyPage) {
+//       options.push('ログアウト');
+//     }
+//     ActionSheetIOS.showActionSheetWithOptions(
+//       {
+//         options,
+//         destructiveButtonIndex,
+//         cancelButtonIndex: 0,
+//       },
+//       (buttonIndex) => {
+//         if (buttonIndex === 1) {
+//           // eslint-disable-next-line
+//           this.onPressUpload();
+//         }
+//         if (buttonIndex === 2) {
+//           // eslint-disable-next-line
+//           this.onPressEdit();
+//         }
+//         if (buttonIndex === destructiveButtonIndex) {
+//           this.signOut();
+//         }
+//       },
+//     );
+//   }
+// }

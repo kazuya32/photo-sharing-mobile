@@ -5,7 +5,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class UploadButton extends React.Component {
   render() {
-    const { onPress } = this.props;
+    const { onPress, show } = this.props;
+
+    if (!show) { return null; }
 
     return (
       <TouchableHighlight onPress={onPress} style={styles.container} underlayColor="transparent">
