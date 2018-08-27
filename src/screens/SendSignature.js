@@ -232,7 +232,7 @@ class SendSignature extends React.Component {
         </View>
         <ScrollView>
           <Text style={styles.text}>
-            {this.state.user.data.name}さんにデジタルサインをプレゼントします。
+            {this.state.user.data.name}さんにデジタルサインを贈ります。
           </Text>
           <Image
             style={[

@@ -100,6 +100,7 @@ class Signature extends Component {
   }
 
   takeSnapshot = async () => {
+    console.log('takeSnapshot');
     const { photo } = this.state;
     const XYRate = photo.data.height / photo.data.width;
 
@@ -117,7 +118,7 @@ class Signature extends Component {
       // width: Dimensions.get('window').width,
       // height: Dimensions.get('window').height * 0.7,
       quality: 1,
-      format: 'png',
+      format: 'jpg',
     });
     // console.log(this.photoContainer.current);
     this.setState({
@@ -168,13 +169,16 @@ class Signature extends Component {
               styles.sketch,
               { height: photoHeight, width: photoWidth },
             ]}
+            // strokeColor="0x000000"
+            // strokeAlpha={1}
             strokeColor={this.state.strokeColor}
-            strokeWidth={this.state.strokeWidth}
             strokeAlpha={this.state.strokeAlpha}
+            strokeWidth={this.state.strokeWidth}
             // onChange={this.onChangeAsync}
             onChange={this.takeSnapshot}
             onReady={this.onReady}
             // initialLines={this.state.lines}
+
           />
         </View>
         <ScrollView>

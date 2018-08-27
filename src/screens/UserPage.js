@@ -6,7 +6,12 @@ import {
   Image,
   Dimensions,
   AsyncStorage,
+  Alert,
 } from 'react-native';
+import {
+  ImagePicker,
+  Permissions,
+} from 'expo';
 import firebase from 'firebase';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 
@@ -23,9 +28,6 @@ class UserPage extends React.Component {
     uid: this.props.navigation.state.params && this.props.navigation.state.params.uid,
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     initialized: false,
-    receivedItems: [],
-    sentItems: [],
-    // uid:
   }
 
   componentWillMount() {
@@ -47,11 +49,6 @@ class UserPage extends React.Component {
 
       this.fetchUser();
       // this.fetchPhotos();
-
-      if (isMyPage) {
-        this.fetchRequest();
-        this.fetchGifts();
-      }
     } catch (error) {
     //
     }
@@ -94,89 +91,6 @@ class UserPage extends React.Component {
     });
   }
 
-  fetchRequest = () => {
-    const db = firebase.firestore();
-    const receivedRef = db.collection('requests')
-      .where('to', '==', this.state.uid);
-
-    const { receivedItems } = this.state;
-    receivedRef.get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const { userDeleted } = doc.data();
-          if (!userDeleted) {
-            receivedItems.push({
-              id: doc.id,
-              data: doc.data(),
-              type: 'request',
-            });
-          }
-        });
-        this.setState({ receivedItems });
-      });
-
-    const sentRef = db.collection('requests')
-      .where('from', '==', this.state.uid);
-    const { sentItems } = this.state;
-    sentRef.get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const { userDeleted } = doc.data();
-          if (!userDeleted) {
-            sentItems.push({
-              id: doc.id,
-              data: doc.data(),
-              type: 'request',
-            });
-          }
-        });
-        this.setState({ sentItems });
-      });
-    // if (!receivedRequests.length) {
-    //   this.setState({ receivedRequests });
-    // }
-  }
-
-  fetchGifts = () => {
-    const db = firebase.firestore();
-    const receivedRef = db.collection('gifts')
-      .where('to', '==', this.state.uid);
-
-    const { receivedItems } = this.state;
-    receivedRef.get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const { userDeleted } = doc.data();
-          if (!userDeleted) {
-            receivedItems.push({
-              id: doc.id,
-              data: doc.data(),
-              type: 'gift',
-            });
-          }
-        });
-        this.setState({ receivedItems });
-      });
-
-    const sentRef = db.collection('gifts')
-      .where('from', '==', this.state.uid);
-    const { sentItems } = this.state;
-    sentRef.get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const { userDeleted } = doc.data();
-          if (!userDeleted) {
-            sentItems.push({
-              id: doc.id,
-              data: doc.data(),
-              type: 'gift',
-            });
-          }
-        });
-        this.setState({ sentItems });
-      });
-  }
-
   // eslint-disable-next-line
   makeListFromObject = (obj) => {
     // if (Object.keys(obj).length) { return []; }
@@ -211,13 +125,14 @@ class UserPage extends React.Component {
   }
 
   onPressRequest = () => {
+    const timestamp = Date.now().toString();
     this.props.navigation.navigate({
       routeName: 'RequestList',
       params: {
-        receivedItems: this.state.receivedItems,
-        sentItems: this.state.sentItems,
+        // receivedItems: this.state.receivedItems,
+        // sentItems: this.state.sentItems,
       },
-      // key: 'ViewRequest' + uid,
+      key: 'ViewRequest' + timestamp,
     });
   }
 

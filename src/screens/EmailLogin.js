@@ -158,7 +158,7 @@ class EmailLogin extends React.Component {
 
         <TouchableOpacity style={styles.signUp} onPress={this.navigateToEmailSignUp} >
           <Text style={styles.signUpText}>
-            新規登録
+            新規登録はこちら
           </Text>
         </TouchableOpacity>
 

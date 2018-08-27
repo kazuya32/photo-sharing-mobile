@@ -24,8 +24,8 @@ class Header extends React.Component {
   componentWillMount() {
     this.initAuthState();
   }
-
-
+  
+  // eslint-disable-next-line
   initAuthState = async () => {
     const uid = await AsyncStorage.getItem('uid');
     this.fetchLogInUser(uid);
@@ -105,18 +105,17 @@ class Header extends React.Component {
     const receivedRef = db.collection('gifts')
       .where('to', '==', uid);
 
-    receivedRef.get()
-      .then((querySnapshot) => {
-        const receivedGifts = [];
-        querySnapshot.forEach((doc) => {
-          receivedGifts.push({
-            id: doc.id,
-            data: doc.data(),
-            type: 'gift',
-          });
+    receivedRef.onSnapshot((querySnapshot) => {
+      const receivedGifts = [];
+      querySnapshot.forEach((doc) => {
+        receivedGifts.push({
+          id: doc.id,
+          data: doc.data(),
+          type: 'gift',
         });
-        this.setState({ receivedGifts });
       });
+      this.setState({ receivedGifts });
+    });
 
     // const sentRef = db.collection('gifts')
     //   .where('from', '==', uid);

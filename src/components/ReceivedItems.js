@@ -4,28 +4,94 @@ import {
   View,
   FlatList,
   Text,
+  AsyncStorage,
 } from 'react-native';
+import firebase from 'firebase';
 
 import ReceivedRequestTile from './ReceivedRequestTile.js';
 import ReceivedGiftTile from './ReceivedGiftTile.js';
 
 class ReceivedRequests extends React.Component {
-  state = {}
+  state = {
+    receivedItems: [],
+  }
 
   componentWillMount() {
-    // const { followingObject } = this.props;
+    this.fetchItems();
+  }
+  // eslint-disable-next-line
+  fetchItems = async () => {
+    const uid = await AsyncStorage.getItem('uid');
+    this.fetchRequest(uid);
+    this.fetchGifts(uid);
+  }
+
+  fetchRequest = (uid) => {
+    const db = firebase.firestore();
+    const receivedRef = db.collection('requests')
+      .where('to', '==', uid);
+
+    const { receivedItems } = this.state;
+    receivedRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const { userDeleted } = doc.data();
+          if (!userDeleted) {
+            receivedItems.push({
+              id: doc.id,
+              data: doc.data(),
+              type: 'request',
+            });
+          }
+        });
+        // this.setState({ receivedItems: [] });
+        this.setState({ receivedItems });
+      });
+  }
+
+  fetchGifts = (uid) => {
+    const db = firebase.firestore();
+    const receivedRef = db.collection('gifts')
+      .where('to', '==', uid);
+
+    const { receivedItems } = this.state;
+    receivedRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const { userDeleted } = doc.data();
+          if (!userDeleted) {
+            receivedItems.push({
+              id: doc.id,
+              data: doc.data(),
+              type: 'gift',
+            });
+          }
+        });
+        // this.setState({ receivedItems: [] });
+        this.setState({ receivedItems });
+      });
   }
 
   onPressRequest = (request, user, photo) => {
-    this.props.navigation.navigate({
-      routeName: 'ViewRequest',
-      params: {
-        request,
-        user,
-        photo,
-      },
-      key: 'ViewRequest' + request.id,
-    });
+    if (request.data.downloadByAthlete) {
+      this.props.navigation.navigate({
+        routeName: 'PhotoDetail',
+        params: {
+          photo,
+        },
+        key: 'PhotoDetail' + photo.id,
+      });
+    } else {
+      this.props.navigation.navigate({
+        routeName: 'ViewRequest',
+        params: {
+          request,
+          user,
+          photo,
+        },
+        key: 'ViewRequest' + request.id,
+      });
+    }
   }
 
   onPressGift = (photo) => {
@@ -34,6 +100,7 @@ class ReceivedRequests extends React.Component {
       params: {
         photo,
       },
+      key: 'PhotoDetail' + photo.id,
     });
   }
 
@@ -64,10 +131,7 @@ class ReceivedRequests extends React.Component {
   }
 
   render() {
-    // eslint-disable-next-line
-    const items = this.props.navigation.state.params && this.props.navigation.state.params.receivedItems;
-
-    if (!(items && items.length)) {
+    if (!(this.state.receivedItems && this.state.receivedItems.length)) {
       return (
         <View style={styles.container}>
           <Text style={styles.alert}>
@@ -80,7 +144,7 @@ class ReceivedRequests extends React.Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.sortDescUpdatedAt(items)}
+          data={this.sortDescUpdatedAt(this.state.receivedItems)}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           onEndReachedThreshold={0.2}

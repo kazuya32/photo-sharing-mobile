@@ -4,16 +4,70 @@ import {
   View,
   FlatList,
   Text,
+  AsyncStorage,
 } from 'react-native';
+import firebase from 'firebase';
 
 import SentRequestTile from './SentRequestTile.js';
 import SentGiftTile from './SentGiftTile.js';
 
 class SentItems extends React.Component {
-  state = {}
+  state = {
+    sentItems: [],
+  }
 
   componentWillMount() {
-    // const { followingObject } = this.props;
+    this.fetchItems();
+  }
+  // eslint-disable-next-line
+  fetchItems = async () => {
+    const uid = await AsyncStorage.getItem('uid');
+    this.fetchRequest(uid);
+    this.fetchGifts(uid);
+  }
+
+  // eslint-disable-next-line
+  fetchRequest = (uid) => {
+    const db = firebase.firestore();
+    const sentRef = db.collection('requests')
+      .where('from', '==', uid);
+    const { sentItems } = this.state;
+    sentRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const { userDeleted } = doc.data();
+          if (!userDeleted) {
+            sentItems.push({
+              id: doc.id,
+              data: doc.data(),
+              type: 'request',
+            });
+          }
+        });
+        this.setState({ sentItems });
+      });
+  }
+
+  fetchGifts = (uid) => {
+    const db = firebase.firestore();
+
+    const sentRef = db.collection('gifts')
+      .where('from', '==', uid);
+    const { sentItems } = this.state;
+    sentRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const { userDeleted } = doc.data();
+          if (!userDeleted) {
+            sentItems.push({
+              id: doc.id,
+              data: doc.data(),
+              type: 'gift',
+            });
+          }
+        });
+        this.setState({ sentItems });
+      });
   }
 
   onPress = (photo) => {
@@ -22,6 +76,7 @@ class SentItems extends React.Component {
       params: {
         photo,
       },
+      key: 'PhotoDetail' + photo.id,
     });
   }
 
@@ -52,10 +107,7 @@ class SentItems extends React.Component {
   }
 
   render() {
-    // eslint-disable-next-line
-    const items = this.props.navigation.state.params && this.props.navigation.state.params.sentItems;
-
-    if (!(items && items.length)) {
+    if (!(this.state.sentItems && this.state.sentItems.length)) {
       return (
         <View style={styles.container}>
           <Text style={styles.alert}>
@@ -68,7 +120,7 @@ class SentItems extends React.Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.sortDescUpdatedAt(items)}
+          data={this.sortDescUpdatedAt(this.state.sentItems)}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           onEndReachedThreshold={0.2}

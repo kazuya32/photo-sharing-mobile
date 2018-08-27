@@ -22,22 +22,77 @@ import ActionSheet from '../components/ActionSheet.js';
 class Profile extends React.Component {
   state = {
     modalVisible: false,
-    // isMyPage: this.props.isMyPage,
-    // isFollowing: this.props.isFollowing,
+    receivedRequests: [],
+    sentRequests: [],
+    receivedGifts: [],
   }
 
   componentDidMount() {
-    this.checkMyPage();
+    this.initLogInData();
   }
 
   // eslint-disable-next-line
-  checkMyPage = async () => {
+  initLogInData = async () => {
     const value = await AsyncStorage.getItem('uid');
     const isMyPage = (this.props.uid === value);
     // const isMyPage = (this.props.uid === this.props.logInUser.id);
     this.setState({
       isMyPage,
       logInUid: value,
+    });
+    if (isMyPage) {
+      this.fetchRequest(value);
+      this.fetchGifts(value);
+    }
+  }
+
+  fetchRequest = (uid) => {
+    const db = firebase.firestore();
+    const receivedRef = db.collection('requests')
+      .where('to', '==', uid);
+
+    receivedRef.onSnapshot((querySnapshot) => {
+      const receivedRequests = [];
+      querySnapshot.forEach((doc) => {
+        receivedRequests.push({
+          id: doc.id,
+          data: doc.data(),
+          type: 'request',
+        });
+      });
+      this.setState({ receivedRequests });
+    });
+
+    const sentRef = db.collection('requests')
+      .where('from', '==', uid);
+    sentRef.onSnapshot((querySnapshot) => {
+      const sentRequests = [];
+      querySnapshot.forEach((doc) => {
+        sentRequests.push({
+          id: doc.id,
+          data: doc.data(),
+          type: 'request',
+        });
+      });
+      this.setState({ sentRequests });
+    });
+  }
+
+  fetchGifts = (uid) => {
+    const db = firebase.firestore();
+    const receivedRef = db.collection('gifts')
+      .where('to', '==', uid);
+
+    receivedRef.onSnapshot((querySnapshot) => {
+      const receivedGifts = [];
+      querySnapshot.forEach((doc) => {
+        receivedGifts.push({
+          id: doc.id,
+          data: doc.data(),
+          type: 'gift',
+        });
+      });
+      this.setState({ receivedGifts });
     });
   }
 
@@ -236,15 +291,15 @@ class Profile extends React.Component {
       onPressRequest,
       photoURL,
       handleFollowButton,
-      receivedItems,
-      sentItems,
       isFollowing,
       user,
     } = this.props;
 
-    const unreadSum = this.countUnread(receivedItems);
-    const approvedSum = this.countApproved(sentItems);
-    const sum = unreadSum + approvedSum;
+    const unreadRequestsSum = this.countUnread(this.state.receivedRequests);
+    const approvedRequestsSum = this.countApproved(this.state.sentRequests);
+    const unreadGiftsSum = this.countUnread(this.state.receivedGifts);
+    // const approvedGiftsSum = this.countApproved(this.state.sentGifts);
+    const sum = unreadRequestsSum + approvedRequestsSum + unreadGiftsSum;
 
     const options = this.state.isMyPage ? this.createOptionsMyPage() : this.createOptions();
 
