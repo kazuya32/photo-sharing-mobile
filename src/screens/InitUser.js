@@ -34,6 +34,8 @@ class InitUser extends React.Component {
   createProfile = () => {
     this.setState({ isUploading: true });
 
+    const timestamp = Date.now().toString();
+
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(this.state.uid);
     userRef.set({
@@ -45,6 +47,7 @@ class InitUser extends React.Component {
       followers: {},
       following: {},
       isAthlete: false,
+      since: timestamp,
     })
       .then(() => {
         AsyncStorage.setItem('uid', this.state.uid);

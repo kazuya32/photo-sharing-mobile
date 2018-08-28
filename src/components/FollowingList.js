@@ -3,13 +3,13 @@ import {
   StyleSheet,
   View,
   FlatList,
+  Text,
 } from 'react-native';
 
 import UserTile from '../components/UserTile.js';
 
 class FollowingList extends React.Component {
   state = {
-    logInUser: this.props.logInUser,
     followingArray: this.props.followingArray,
   }
 
@@ -22,17 +22,20 @@ class FollowingList extends React.Component {
   renderItem = ({ item }) => (
     <UserTile
       uid={item}
-      logInUser={this.state.logInUser}
-      logInUid={this.props.logInUid}
       onPressUser={() => this.props.onPressUser(item)}
-      // isFollowing={this.state.logInUser.following[item]}
-      // handleFollowButton
     />
   );
 
   render() {
-    // console.log('this.props.followingList in list');
-    // console.log(this.props.followingArray);
+    if (!this.state.followingArray.length) {
+      return (
+        <View style={[styles.container, this.props.style]}>
+          <Text style={styles.alert}>
+            {this.props.emptyAlertText}
+          </Text>
+        </View>
+      );
+    }
 
     return (
       <View style={[styles.container, this.props.style]}>
@@ -54,6 +57,9 @@ class FollowingList extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  alert: {
+    padding: 16,
   },
 });
 

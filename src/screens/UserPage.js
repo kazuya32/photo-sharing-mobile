@@ -297,9 +297,8 @@ class UserPage extends React.Component {
             tabLabel={followersTitle}
             navigation={this.props.navigation}
             followingArray={this.state.followersArray}
-            logInUser={this.state.logInUser}
-            logInUid={this.state.logInUid}
             onPressUser={this.onPressUser}
+            emptyAlertText="フォロワーは0人です。"
             // numColumns={3}
             // horizontal={true}
           />
@@ -307,9 +306,8 @@ class UserPage extends React.Component {
             tabLabel={followingTitle}
             navigation={this.props.navigation}
             followingArray={this.state.followingArray}
-            logInUser={this.state.logInUser}
-            logInUid={this.state.logInUid}
             onPressUser={this.onPressUser}
+            emptyAlertText="フォローしているユーザーは0人です。"
             // numColumns={3}
             // horizontal={true}
           />

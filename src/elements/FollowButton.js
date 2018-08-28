@@ -67,8 +67,12 @@ class SendButton extends React.Component {
       style,
       buttonStyle,
       textStyle,
-      // isFollowing,
+      show,
     } = this.props;
+
+    if (!show) {
+      return null;
+    }
 
     let isFollowing;
     if (typeof this.state.isFollowing === 'undefined') {

@@ -5,6 +5,7 @@ import {
   Text,
   TouchableHighlight,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -13,9 +14,6 @@ import FollowButton from '../elements/FollowButton.js';
 
 class UserTile extends React.Component {
   state = {
-    logInUid: this.props.logInUid,
-    // isMyPage: this.props.isMyPage,
-    // isFollowing: this.props.isFollowing,
   }
 
   componentWillMount() {
@@ -74,28 +72,36 @@ class UserTile extends React.Component {
     //   const isFollowing = false;
     // }
 
+    const logInUid = await AsyncStorage.getItem('uid');
+
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(uid);
     userRef.get().then((doc) => {
-      // const user = doc.data();
-      const user = { id: doc.id, data: doc.data() };
-      const isLogInUser = (user.id === this.state.logInUid);
-      const isFollowing = user.data.followers && user.data.followers[this.state.logInUid];
+      if (doc.exists) {
+        const user = { id: doc.id, data: doc.data() };
+        const isLogInUser = (user.id === logInUid);
+        const isFollowing = user.data.followers && user.data.followers[logInUid];
 
-      this.setState({
-        user,
-        isLogInUser,
-        isFollowing,
-      });
+        this.setState({
+          user,
+          isLogInUser,
+          isFollowing,
+          logInUid,
+        });
+      } else {
+        this.setState({ userDeleted: true });
+      }
     });
   }
 
   render() {
     const {
       onPressUser,
-      // handleFollowButton,
-      // isFollowing,
     } = this.props;
+
+    if (this.state.userDeleted) {
+      return null;
+    }
 
     if (!this.state.user) {
       return (
@@ -124,11 +130,11 @@ class UserTile extends React.Component {
         <FollowButton
           style={[
             styles.followButton,
-            this.state.isLogInUser && { display: 'none' },
           ]}
           isFollowing={this.state.isFollowing}
           handleFollowButton={this.handleFollowButton}
           buttonStyle={styles.buttonStyle}
+          show={!this.state.isLogInUser}
         />
       </View>
     );

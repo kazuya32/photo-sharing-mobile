@@ -87,7 +87,7 @@ class PhotoTile extends React.Component {
     // const count = 0;
     const array = [];
     Object.keys(obj).forEach((prop) => {
-      if (obj[prop]) {
+      if (prop !== 'undefined' && obj[prop]) {
         array.push(prop);
       }
     });
@@ -278,11 +278,13 @@ class PhotoTile extends React.Component {
   }
 
   onPressReport = () => {
+    const timestamp = Date.now().toString();
     this.props.navigation.navigate({
       routeName: 'ReportPhoto',
       params: {
         photo: this.props.photo,
       },
+      key: 'ReportPhoto' + timestamp,
     });
   }
 
@@ -337,6 +339,16 @@ class PhotoTile extends React.Component {
         photo: this.props.photo,
       },
       key: 'UserPage' + timestamp,
+    });
+  }
+
+  onPressLikes = () => {
+    this.props.navigation.navigate({
+      routeName: 'LikedUsers',
+      params: {
+        photo: this.props.photo,
+      },
+      key: 'LikedUsers' + this.props.photo.id,
     });
   }
 
@@ -538,16 +550,24 @@ class PhotoTile extends React.Component {
             <TouchableHighlight
               onPress={() => { this.handleLikeButton(!this.state.liked); }}
               underlayColor="transparent"
+              style={styles.heart}
             >
               <MaterialCommunityIcon
                 name={iconName}
                 size={26}
                 style={[styles.heart]}
+                color="#D0364C"
               />
             </TouchableHighlight>
-            <Text style={styles.likesNumber}>
-              {this.state.likes && this.state.likes.length}
-            </Text>
+            <TouchableHighlight
+              onPress={this.onPressLikes}
+              underlayColor="transparent"
+              style={styles.likesNumber}
+            >
+              <Text style={styles.likesNumberText}>
+                {this.state.likes && this.state.likes.length}
+              </Text>
+            </TouchableHighlight>
           </View>
           <View style={styles.userItem}>
             <Text style={styles.userBy}>
@@ -681,23 +701,22 @@ const styles = StyleSheet.create({
     // borderBottomColor: '#EBEBEB',
   },
   heart: {
-    color: '#D0364C',
-    // borderWidth: 1,
-    // borderColor: '#D0364C',
-  },
-  heartLiked: {
-    color: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   likes: {
     flexDirection: 'row',
     alignContent: 'center',
   },
   likesNumber: {
-    paddingLeft: 8,
-    paddingRight: 12,
+    paddingLeft: 12,
+    paddingRight: 32,
+    // paddingBottom: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  likesNumberText: {
     fontSize: 18,
-    paddingBottom: 4,
-    alignSelf: 'center',
   },
   userItem: {
     flexDirection: 'row',

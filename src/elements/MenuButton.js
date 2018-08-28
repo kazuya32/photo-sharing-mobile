@@ -8,7 +8,12 @@ class MenuButton extends React.Component {
       onPress,
       style,
       isMyPage,
+      show,
     } = this.props;
+
+    if (!show) {
+      return null;
+    }
 
     return (
       <TouchableHighlight

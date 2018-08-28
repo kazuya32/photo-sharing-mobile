@@ -303,6 +303,33 @@ class Profile extends React.Component {
 
     const options = this.state.isMyPage ? this.createOptionsMyPage() : this.createOptions();
 
+    const buttonArea = this.state.isMyPage ? (
+      <View style={[styles.buttonAreaMypage]}>
+        <RequestButton
+          style={styles.requestButton}
+          onPress={onPressRequest}
+          badgeNumber={sum}
+        />
+        <MenuButton
+          show
+          style={[styles.menuButtonMyPage]}
+          onPress={this.onPressMenu}
+          isMyPage={this.state.isMyPage}
+        />
+      </View>
+    ) : (
+      <View style={[styles.buttonArea]}>
+        <FollowButton
+          style={[
+            styles.followButton,
+          ]}
+          show={user}
+          isFollowing={isFollowing}
+          handleFollowButton={handleFollowButton}
+        />
+      </View>
+    );
+
     return (
       <View style={styles.container}>
         <UserIcon
@@ -318,42 +345,19 @@ class Profile extends React.Component {
                 {user && user.data.name}
               </Text>
               <CheckMark
-                style={[
-                  styles.athleteMark,
-                  (user && !user.data.isAthlete) && { display: 'none' },
-                ]}
+                style={[styles.athleteMark]}
+                show={user && user.data.isAthlete}
               />
             </View>
-            <View style={[styles.buttonAreaMypage, !this.state.isMyPage && { display: 'none' }]}>
-              <RequestButton
-                style={styles.requestButton}
-                onPress={onPressRequest}
-                badgeNumber={sum}
-              />
-              <MenuButton
-                style={[styles.menuButtonMyPage]}
-                onPress={this.onPressMenu}
-                isMyPage={this.state.isMyPage}
-              />
-            </View>
-            <View style={[styles.buttonArea, this.state.isMyPage && { display: 'none' }]}>
-              <FollowButton
-                style={[
-                  styles.followButton,
-                  !user && { display: 'none' },
-                ]}
-                // isFollowing={this.state.isFollowing}
-                isFollowing={isFollowing}
-                handleFollowButton={handleFollowButton}
-              />
-            </View>
+            {buttonArea}
           </View>
           <View style={styles.downArea}>
             <Text style={styles.userDesc}>
               {user && user.data.desc}
             </Text>
             <MenuButton
-              style={[styles.menuButton, this.state.isMyPage && { display: 'none' }]}
+              show={!this.state.isMyPage}
+              style={[styles.menuButton]}
               onPress={this.onPressMenu}
               isMyPage={this.state.isMyPage}
             />

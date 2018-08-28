@@ -12,7 +12,7 @@ import UserSectionHeader from '../components/UserSectionHeader.js';
 import UserSectionItem from '../components/UserSectionItem.js';
 
 
-class Nortification extends React.Component {
+class PlayerList extends React.Component {
   state = {
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
   }
@@ -162,4 +162,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Nortification;
+export default PlayerList;

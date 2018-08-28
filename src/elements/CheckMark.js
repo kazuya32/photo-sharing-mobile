@@ -10,8 +10,12 @@ class CheckMark extends React.Component {
   render() {
     const {
       style,
+      show,
     } = this.props;
 
+    if (!show) {
+      return null;
+    }
     // const dia = 3;
 
     return (

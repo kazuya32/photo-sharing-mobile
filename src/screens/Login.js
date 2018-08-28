@@ -81,6 +81,7 @@ class Login extends React.Component {
 
   signUp = async (user) => {
     // const { user } = this.state;
+    const timestamp = Date.now().toString();
     const db = firebase.firestore();
     db.collection('users').doc(user.uid).set({
       name: user.displayName,
@@ -91,6 +92,7 @@ class Login extends React.Component {
       followers: {},
       following: {},
       isAthlete: false,
+      since: timestamp,
     })
       .then(() => {
         this.storeUser(user.uid, `${user.photoURL}?type=normal`);

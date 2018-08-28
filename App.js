@@ -30,6 +30,7 @@ import ReportUser from './src/screens/ReportUser.js';
 import SelectGifts from './src/screens/SelectGifts.js';
 import SendGift from './src/screens/SendGift.js';
 import EditPhoto from './src/screens/EditPhoto.js';
+import LikedUsers from './src/screens/LikedUsers.js';
 // import Match from './src/screens/Match.js';
 // import SearchMatch from './src/screens/SearchMatch.js';
 // import Nortification from './src/screens/Nortification.js';
@@ -106,6 +107,7 @@ const MainStack = createStackNavigator({
   SelectGifts: { screen: SelectGifts },
   SendGift: { screen: SendGift },
   EditPhoto: { screen: EditPhoto },
+  LikedUsers: { screen: LikedUsers },
 }, {
   headerMode: 'none',
   // initialRouteName: 'Login',
