@@ -80,12 +80,11 @@ class SearchTag extends React.Component {
     );
   }
 
-
   render() {
     const { tagType } = this.props.navigation.state.params;
     if (tagType === 'teams') {
       return (
-        <View style={{ flex: 1, paddingTop: 80, backgroundColor: '#fff' }}>
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
           <Header
             navigation={this.props.navigation}
             headerTitle="チームタグをつける"
@@ -99,7 +98,7 @@ class SearchTag extends React.Component {
 
     if (tagType === 'matches') {
       return (
-        <View style={{ flex: 1, paddingTop: 80, backgroundColor: '#fff' }}>
+        <View style={{ flex: 1, backgroundColor: '#fff' }}>
           <Header
             navigation={this.props.navigation}
             headerTitle="試合タグをつける"
