@@ -87,15 +87,8 @@ class SendSignature extends React.Component {
     const { originalPhoto } = this.props.navigation.state.params;
     const {
       uid,
-      tags,
-      people,
-      matchId,
-      matchPath,
-      teamId,
       width,
       height,
-      // likes,
-      // accesses,
     } = originalPhoto.data;
 
     const newPhotoId = originalPhoto.id + this.state.logInUid + createdAt;
@@ -113,11 +106,11 @@ class SendSignature extends React.Component {
       uid: this.state.logInUid,
       createdAt,
       updatedAt: createdAt,
-      tags,
-      people,
-      matchId,
-      matchPath,
-      teamId,
+      tags: {},
+      people: {},
+      matchId: '',
+      matchPath: '',
+      teamId: '',
       width,
       height,
       likes,
