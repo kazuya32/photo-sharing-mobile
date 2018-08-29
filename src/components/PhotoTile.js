@@ -40,15 +40,21 @@ class PhotoTile extends React.Component {
     isDownloading: false,
   }
 
+  componentDidMount() {
+    this.fetchLogInData();
+    this.getUser();
+    this.fetchLikes();
+  }
+
   render() {
     const {
-      onPressUser,
-      onPressMatch,
-      onPressTeam,
       style,
       photoStyle,
       photo,
+      show,
     } = this.props;
+
+    if (!show) { return null; }
 
     // const onPressMenu = this.state.isMyPage ? this.onPressMenuMyPage : this.onPressMenu;
     const options = this.state.isMyPage ? this.createOptionsMyPage() : this.createOptions();
@@ -70,11 +76,11 @@ class PhotoTile extends React.Component {
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <MatchTile
-              onPress={onPressMatch}
+              onPress={this.onPressMatch}
               matchId={photo.data.matchId}
             />
             <TeamTile
-              onPress={onPressTeam}
+              onPress={this.onPressTeam}
               teamId={photo.data.teamId}
             />
           </View>
@@ -85,7 +91,7 @@ class PhotoTile extends React.Component {
           />
         </View>
         <TouchableHighlight
-          onPress={this.props.onPressPhoto}
+          onPress={this.onPressPhoto}
           underlayColor="transparent"
           style={styles.photoWrap}
         >
@@ -124,7 +130,7 @@ class PhotoTile extends React.Component {
             show
           />
           <UploaderTile
-            onPressUser={onPressUser}
+            onPressUser={this.onPressUser}
             user={this.state.user}
           />
         </View>
@@ -148,12 +154,6 @@ class PhotoTile extends React.Component {
         </View>
       </View>
     );
-  }
-
-  componentDidMount() {
-    this.fetchLogInData();
-    this.getUser();
-    this.fetchLikes();
   }
 
   // eslint-disable-next-line
@@ -203,6 +203,49 @@ class PhotoTile extends React.Component {
     });
     return array;
   };
+
+  // eslint-disable-next-line
+  onPressPhoto = () => {
+    const { photo } = this.props;
+    this.props.navigation.navigate({
+      routeName: 'PhotoDetail',
+      params: {
+        photo,
+      },
+      key: 'PhotoDetail' + photo.id,
+    });
+  }
+
+  onPressUser = (user) => {
+    this.props.navigation.navigate({
+      routeName: 'UserPage',
+      params: {
+        uid: user.id,
+      },
+      key: 'UserPage' + user.id,
+    });
+  }
+
+  onPressMatch = (match) => {
+    this.props.navigation.navigate({
+      routeName: 'MatchFeed',
+      params: {
+        match,
+      },
+      key: 'MatchFeed' + match.id,
+    });
+  }
+
+  onPressTeam = (team) => {
+    this.props.navigation.navigate({
+      routeName: 'TeamFeed',
+      params: {
+        feedType: 'team',
+        itemId: team.id,
+      },
+      key: 'TeamFeed' + team.id,
+    });
+  }
 
   handleLikeButton = (nextValue) => {
     let { likes } = this.state;

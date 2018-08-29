@@ -12,7 +12,7 @@ import {
 } from 'expo';
 import firebase from 'firebase';
 
-import PhotoFeed from '../components/PhotoFeed.js';
+import Feed from '../components/Feed.js';
 import HomeHeader from '../components/HomeHeader.js';
 import UploadButton from '../elements/UploadButton.js';
 
@@ -37,7 +37,6 @@ class Home extends React.Component {
           providerData,
         } = user;
 
-        console.log('We are authenticated now! yey!');
         // firebase.auth().signOut();
 
         this.setState({ logined: true });
@@ -68,7 +67,6 @@ class Home extends React.Component {
   fetchData = async () => {
     try {
       const value = await AsyncStorage.getItem('uid');
-      this.setState({ uid: value });
       this.fetchLogInUser(value);
     } catch (error) {
     //
@@ -103,50 +101,6 @@ class Home extends React.Component {
     } catch (error) {
       // Error saving data
     }
-  }
-
-  onPressPhoto = (item) => {
-    this.props.navigation.navigate({
-      routeName: 'PhotoDetail',
-      params: {
-        photo: item,
-        logInUser: this.state.logInUser,
-      },
-      key: 'PhotoDetail' + item.id,
-    });
-  }
-
-  onPressUser = (item) => {
-    this.props.navigation.navigate({
-      routeName: 'UserPage',
-      params: {
-        uid: item,
-        logInUser: this.state.logInUser,
-        // user: item,
-      },
-      key: 'UserPage' + item.id,
-    });
-  }
-
-  onPressMatch = (item) => {
-    this.props.navigation.navigate({
-      routeName: 'MatchFeed',
-      params: {
-        match: item,
-      },
-      key: 'MatchFeed' + item.id,
-    });
-  }
-
-  onPressTeam = (team) => {
-    this.props.navigation.navigate({
-      routeName: 'TeamFeed',
-      params: {
-        feedType: 'team',
-        itemId: team.id,
-      },
-      key: 'TeamFeed' + team.id,
-    });
   }
 
   onPressUpload = () => {
@@ -210,9 +164,7 @@ class Home extends React.Component {
           headerTitle={this.state.headerTitle}
           navigation={this.props.navigation}
         />
-        <PhotoFeed
-          uid={this.state.uid}
-          itemId={this.state.itemId}
+        <Feed
           onPressUser={this.onPressUser}
           onPressPhoto={this.onPressPhoto}
           onPressMatch={this.onPressMatch}

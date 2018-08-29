@@ -10,7 +10,7 @@ class UploaderTile extends React.Component {
 
     const userName = user ? (
       <TouchableHighlight
-        onPress={() => { onPressUser(user.id); }}
+        onPress={() => { onPressUser(user); }}
         underlayColor="transparent"
       >
         <Text style={styles.userName}>

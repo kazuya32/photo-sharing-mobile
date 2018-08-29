@@ -45,29 +45,6 @@ class PhotoDetail extends React.Component {
     });
   }
 
-  onPressMatch = () => {
-    const { photo } = this.props.navigation.state.params;
-    this.props.navigation.navigate({
-      routeName: 'MatchFeed',
-      params: {
-        feedType: 'match',
-        itemId: photo.data.matchId,
-        matchPath: photo.data.matchPath,
-      },
-    });
-  }
-
-  onPressTeam = () => {
-    const { photo } = this.props.navigation.state.params;
-    this.props.navigation.navigate({
-      routeName: 'TeamFeed',
-      params: {
-        feedType: 'team',
-        itemId: photo.data.teamId,
-      },
-    });
-  }
-
   onPressBlock = () => {
     const timestamp = Date.now().toString();
     this.props.navigation.navigate({
@@ -76,17 +53,6 @@ class PhotoDetail extends React.Component {
         uid: this.state.logInUid,
       },
       key: 'UserPage' + timestamp,
-    });
-  }
-
-  onPressUser = () => {
-    this.props.navigation.navigate({
-      routeName: 'UserPage',
-      params: {
-        uid: this.props.navigation.state.params.photo.data.uid,
-        // logInUser: this.state.logInUser,
-      },
-      key: 'UserPage' + this.props.navigation.state.params.photo.data.uid,
     });
   }
 
@@ -104,15 +70,11 @@ class PhotoDetail extends React.Component {
         />
         <ScrollView>
           <PhotoTile
+            show
             photo={photo}
-            onPressUser={this.onPressUser}
-            onPressTeam={this.onPressTeam}
-            onPressMatch={this.onPressMatch}
             onPressBlock={this.onPressBlock}
             onDeleted={() => { this.props.navigation.goBack(); }}
             photoStyle={styles.photo}
-            // logInUser={this.state.logInUser}
-            uid={this.state.logInUid}
             navigation={this.props.navigation}
           />
           <DownloadRequestButton
