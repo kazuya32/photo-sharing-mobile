@@ -14,8 +14,6 @@ import firebase from 'firebase';
 
 class PhotoCollection extends React.Component {
   state = {
-    // photos: this.props.photos,
-    logInUser: this.props.logInUser,
   }
 
   componentDidMount() {
