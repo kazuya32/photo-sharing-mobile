@@ -312,6 +312,7 @@ class Profile extends React.Component {
         />
         <MenuButton
           show
+          border
           style={[styles.menuButtonMyPage]}
           onPress={this.onPressMenu}
           isMyPage={this.state.isMyPage}
@@ -351,12 +352,15 @@ class Profile extends React.Component {
             </View>
             {buttonArea}
           </View>
-          <View style={styles.downArea}>
-            <Text style={styles.userDesc}>
-              {user && user.data.desc}
-            </Text>
+          <View style={styles.underArea}>
+            <View style={styles.userDesc}>
+              <Text style={styles.userDescText}>
+                {user && user.data.desc}
+              </Text>
+            </View>
             <MenuButton
               show={!this.state.isMyPage}
+              border
               style={[styles.menuButton]}
               onPress={this.onPressMenu}
               isMyPage={this.state.isMyPage}
@@ -399,7 +403,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignContent: 'center',
   },
-  downArea: {
+  underArea: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignContent: 'center',
@@ -419,9 +423,11 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   userDesc: {
-    // flex: 1,
-    fontSize: 14,
+    flex: 1,
     marginTop: 8,
+  },
+  userDescText: {
+    fontSize: 14,
   },
   buttonArea: {
     justifyContent: 'center',
@@ -432,14 +438,19 @@ const styles = StyleSheet.create({
     alignContent: 'flex-start',
   },
   menuButton: {
+    // flex: 1,
     alignSelf: 'flex-end',
     marginTop: 12,
     marginBottom: 12,
-    // paddingRight: 8,
+    borderRadius: 20,
+    height: 40,
+    width: 40,
   },
   menuButtonMyPage: {
     alignSelf: 'flex-start',
-    // paddingRight: 8,
+    borderRadius: 20,
+    height: 40,
+    width: 40,
   },
   requestButton: {
     marginRight: 12,

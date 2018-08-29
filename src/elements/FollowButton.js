@@ -83,7 +83,7 @@ class SendButton extends React.Component {
       isFollowing = this.state.isFollowing;
     }
 
-    const text = isFollowing ? 'フォロー中' : 'フォローする';
+    const text = isFollowing ? 'フォロー中' : 'フォロー';
 
     return (
       <TouchableHighlight style={[styles.container, style]} onPress={this.onPress} underlayColor="transparent">

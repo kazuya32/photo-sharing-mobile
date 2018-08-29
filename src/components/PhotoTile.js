@@ -2,7 +2,6 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Text,
   TouchableHighlight,
   Image,
   ActivityIndicator,
@@ -19,7 +18,6 @@ import {
   FileSystem,
   // Share,
 } from 'expo';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import ActionSheet from '../components/ActionSheet.js';
 import TagTile from '../components/TagTile.js';
@@ -27,6 +25,9 @@ import MatchTile from '../elements/MatchTile.js';
 import TeamTile from '../elements/TeamTile.js';
 import DownloadButton from '../elements/DownloadButton.js';
 import SignatureButton from '../elements/SignatureButton.js';
+import LikeButton from '../elements/LikeButton.js';
+import UploaderTile from '../elements/UploaderTile.js';
+import MenuButton from '../elements/MenuButton.js';
 
 class PhotoTile extends React.Component {
   state = {
@@ -39,25 +40,126 @@ class PhotoTile extends React.Component {
     isDownloading: false,
   }
 
-  componentDidMount() {
+  render() {
     const {
+      onPressUser,
+      onPressMatch,
+      onPressTeam,
+      style,
+      photoStyle,
       photo,
     } = this.props;
 
-    this.fetchLogInData(photo.data.uid);
+    // const onPressMenu = this.state.isMyPage ? this.onPressMenuMyPage : this.onPressMenu;
+    const options = this.state.isMyPage ? this.createOptionsMyPage() : this.createOptions();
 
-    // const user = this.getUser(photo.data.uid);
-    this.getUser(photo.data.uid);
-    const likes = this.makeListFromObject(photo.data.likes);
+    const photoWidth = Dimensions.get('window').width;
+    const XYRate = photo.data.height / photo.data.width;
+    const photoHeight = photoWidth * XYRate;
 
-    this.setState({
-      // user,
-      likes,
-    });
+    const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
+
+    return (
+      <View style={[
+          styles.container,
+          this.state.deleted && { display: 'none' },
+          this.state.blocked && { display: 'none' },
+          style,
+        ]}
+      >
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <MatchTile
+              onPress={onPressMatch}
+              matchId={photo.data.matchId}
+            />
+            <TeamTile
+              onPress={onPressTeam}
+              teamId={photo.data.teamId}
+            />
+          </View>
+          <MenuButton
+            show
+            style={[styles.menuButton]}
+            onPress={this.onPressMenu}
+          />
+        </View>
+        <TouchableHighlight
+          onPress={this.props.onPressPhoto}
+          underlayColor="transparent"
+          style={styles.photoWrap}
+        >
+          <Image
+            style={[
+              styles.photo,
+              { height: photoHeight, width: photoWidth },
+              photoStyle,
+            ]}
+            source={{ uri: photo.data.downloadURL }}
+            resizeMode="contain"
+          />
+        </TouchableHighlight>
+        <View style={styles.btnArea}>
+          <DownloadButton
+            style={styles.downloadBtn}
+            onPress={this.onPressDownload}
+            hasAccess={hasAccess || this.state.isAthleteLogIn}
+          />
+          <SignatureButton
+            style={[
+              styles.signatureBtn,
+              this.state.isMyPage && { display: 'none' },
+            ]}
+            onPress={this.onPressSignature}
+
+          />
+        </View>
+        <View style={styles.bar}>
+          <LikeButton
+            // style={}
+            onPressButton={this.handleLikeButton}
+            onPressNumber={this.onPressLikes}
+            likes={this.state.likes}
+            userLiked={this.state.liked}
+            show
+          />
+          <UploaderTile
+            onPressUser={onPressUser}
+            user={this.state.user}
+          />
+        </View>
+        <TagTile
+          style={[styles.tags, !photo.data.tags && { display: 'none' }]}
+          tags={photo.data.tags}
+        />
+
+        <ActionSheet
+          visible={this.state.modalVisible}
+          setModalVisible={(visible) => { this.setModalVisible(visible); }}
+          options={options}
+        />
+        <View style={[
+            styles.activityIndicatorContainer,
+          ]}
+        >
+          <View style={styles.activityIndicator}>
+            <ActivityIndicator size="large" color="#DB4D5E" animating={this.state.isDownloading} />
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  componentDidMount() {
+    this.fetchLogInData();
+    this.getUser();
+    this.fetchLikes();
   }
 
   // eslint-disable-next-line
-  fetchLogInData = async (uid) => {
+  fetchLogInData = async () => {
+    const { photo } = this.props;
+    const { uid } = photo.data;
     const value = await AsyncStorage.getItem('uid');
     const isAthleteString = await AsyncStorage.getItem('isAthlete');
     const isAthlete = isAthleteString === 'true';
@@ -70,7 +172,15 @@ class PhotoTile extends React.Component {
     });
   }
 
-  getUser = (uid) => {
+  fetchLikes = () => {
+    const { photo } = this.props;
+    const likes = this.makeListFromObject(photo.data.likes);
+    this.setState({ likes });
+  }
+
+  getUser = () => {
+    const { photo } = this.props;
+    const { uid } = photo.data;
     let user;
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(uid);
@@ -460,156 +570,6 @@ class PhotoTile extends React.Component {
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
-
-  render() {
-    const {
-      onPressUser,
-      onPressMatch,
-      onPressTeam,
-      style,
-      photoStyle,
-      photo,
-    } = this.props;
-
-    const iconName = this.state.liked ? 'heart' : 'heart-outline';
-    // const onPressMenu = this.state.isMyPage ? this.onPressMenuMyPage : this.onPressMenu;
-    const options = this.state.isMyPage ? this.createOptionsMyPage() : this.createOptions();
-    // const options = this.createOptionsMypage();
-
-    const photoWidth = Dimensions.get('window').width;
-    const XYRate = photo.data.height / photo.data.width;
-    const photoHeight = photoWidth * XYRate;
-
-    const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
-
-    return (
-      <View style={[
-          styles.container,
-          this.state.deleted && { display: 'none' },
-          this.state.blocked && { display: 'none' },
-          style,
-        ]}
-      >
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <MatchTile
-              onPress={onPressMatch}
-              matchId={photo.data.matchId}
-            />
-            <TeamTile
-              onPress={onPressTeam}
-              teamId={photo.data.teamId}
-            />
-          </View>
-          <TouchableHighlight
-            onPress={this.onPressMenu}
-            style={styles.menuButton}
-            underlayColor="transparent"
-          >
-            <MaterialCommunityIcon
-              name="dots-horizontal"
-              size={24}
-              style={[
-                styles.menuButtonTitle,
-              ]}
-            />
-          </TouchableHighlight>
-        </View>
-        <TouchableHighlight
-          onPress={this.props.onPressPhoto}
-          underlayColor="transparent"
-          style={styles.photoWrap}
-        >
-          <Image
-            style={[
-              styles.photo,
-              { height: photoHeight, width: photoWidth },
-              photoStyle,
-            ]}
-            source={{ uri: photo.data.downloadURL }}
-            resizeMode="contain"
-          />
-        </TouchableHighlight>
-        <View style={styles.btnArea}>
-          <DownloadButton
-            style={styles.downloadBtn}
-            onPress={this.onPressDownload}
-            hasAccess={hasAccess || this.state.isAthleteLogIn}
-          />
-          <SignatureButton
-            style={[
-              styles.signatureBtn,
-              this.state.isMyPage && { display: 'none' },
-            ]}
-            onPress={this.onPressSignature}
-
-          />
-        </View>
-        <View style={styles.bar}>
-          <View style={styles.likes}>
-            <TouchableHighlight
-              onPress={() => { this.handleLikeButton(!this.state.liked); }}
-              underlayColor="transparent"
-              style={styles.heart}
-            >
-              <MaterialCommunityIcon
-                name={iconName}
-                size={26}
-                style={[styles.heart]}
-                color="#D0364C"
-              />
-            </TouchableHighlight>
-            <TouchableHighlight
-              onPress={this.onPressLikes}
-              underlayColor="transparent"
-              style={styles.likesNumber}
-            >
-              <Text style={styles.likesNumberText}>
-                {this.state.likes && this.state.likes.length}
-              </Text>
-            </TouchableHighlight>
-          </View>
-          <View style={styles.userItem}>
-            <Text style={styles.userBy}>
-              by
-            </Text>
-            <View style={[
-                styles.indicator,
-              ]}
-            >
-              <ActivityIndicator color="#DB4D5E" animating={!this.state.user} />
-            </View>
-            <TouchableHighlight
-              onPress={() => { onPressUser(this.state.user.id); }}
-              underlayColor="transparent"
-            >
-              <Text style={styles.userName}>
-                {this.state.user && this.state.user.data.name}
-              </Text>
-            </TouchableHighlight>
-          </View>
-        </View>
-        <TagTile
-          style={[styles.tags, !photo.data.tags && { display: 'none' }]}
-          tags={photo.data.tags}
-        />
-
-        <ActionSheet
-          visible={this.state.modalVisible}
-          setModalVisible={(visible) => { this.setModalVisible(visible); }}
-          options={options}
-        />
-        <View style={[
-            styles.activityIndicatorContainer,
-          ]}
-        >
-          <View style={styles.activityIndicator}>
-            <ActivityIndicator size="large" color="#DB4D5E" animating={this.state.isDownloading} />
-          </View>
-        </View>
-      </View>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
@@ -634,34 +594,20 @@ const styles = StyleSheet.create({
     borderBottomColor: '#EBEBEB',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
+    flex: 1,
   },
   headerLeft: {
     paddingTop: 12,
     paddingLeft: 16,
-    paddingRight: 16,
     paddingBottom: 12,
   },
   menuButton: {
     justifyContent: 'center',
-    paddingRight: 16,
-    paddingLeft: 16,
     marginBottom: 8,
     marginTop: 8,
-    // paddingTop: 12,
-    // height: 44,
+    paddingRight: 16,
+    paddingLeft: 16,
     alignSelf: 'flex-end',
-  },
-  menuButtonTitle: {
-    color: 'black',
-    alignSelf: 'center',
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  indicator: {
-    // height: Dimensions.get('window').height * 0.6,
-    // height: 30,
-    // width: '100%',
-    alignSelf: 'center',
   },
   photo: {
     alignSelf: 'center',
@@ -694,41 +640,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 12,
-    paddingLeft: 12,
-    paddingRight: 12,
-    // paddingBottom: 12,
-    // borderBottomWidth: 1,
-    // borderBottomColor: '#EBEBEB',
-  },
-  heart: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  likes: {
-    flexDirection: 'row',
-    alignContent: 'center',
-  },
-  likesNumber: {
-    paddingLeft: 12,
-    paddingRight: 32,
-    // paddingBottom: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  likesNumberText: {
-    fontSize: 18,
-  },
-  userItem: {
-    flexDirection: 'row',
-    alignContent: 'center',
-  },
-  userBy: {
-    marginRight: 4,
-    alignSelf: 'center',
-  },
-  userName: {
-    color: '#DB4D5E',
-    alignSelf: 'center',
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   tags: {
     // paddingTop: 8,
