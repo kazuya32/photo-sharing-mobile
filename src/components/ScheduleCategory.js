@@ -7,11 +7,15 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
 import MatchItem from '../components/MatchItem.js';
 import UserSectionHeader from '../components/UserSectionHeader.js';
 
 class ScheduleCategory extends React.Component {
   state = {
+    reloadNumber: 1,
+    showingSections: null,
+    loading: false,
   }
 
   componentDidMount() {
@@ -39,6 +43,7 @@ class ScheduleCategory extends React.Component {
         const pastMatches = this.extractPastSchedules(matches);
         const sections = this.makeSection(pastMatches);
         this.setState({ sections: sections.reverse() });
+        this.addSections();
       });
   }
 
@@ -78,6 +83,26 @@ class ScheduleCategory extends React.Component {
   }
 
   // eslint-disable-next-line
+  addSections = () => {
+    const { sections } = this.state;
+
+    if (!this.state.loading && sections.length) {
+      this.setState({ loading: true });
+
+      let { showingSections } = this.state;
+      if (!showingSections) {
+        showingSections = sections.slice(0, this.state.reloadNumber);
+        sections.splice(0, this.state.reloadNumber);
+      } else {
+        const tmp = sections.slice(0, this.state.reloadNumber);
+        sections.splice(0, this.state.reloadNumber);
+        Array.prototype.push.apply(showingSections, tmp);
+      }
+      this.setState({ showingSections, sections, loading: false });
+    }
+  }
+
+  // eslint-disable-next-line
   checkTitle = (title, sections) => {
     let index;
     sections.forEach((section) => {
@@ -104,11 +129,15 @@ class ScheduleCategory extends React.Component {
   );
 
   render() {
-    if (!this.state.sections) {
+    if (!this.state.showingSections) {
       return (
         <View style={styles.container}>
           <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-            <ActivityIndicator />
+            <ActivityIndicator
+              animating={!this.state.showingSections}
+              color={designLanguage.colorPrimary}
+              size="large"
+            />
           </View>
         </View>
       );
@@ -119,8 +148,11 @@ class ScheduleCategory extends React.Component {
         <SectionList
           renderItem={this.renderItem}
           renderSectionHeader={this.renderSectionHeader}
-          sections={this.state.sections}
+          sections={this.state.showingSections}
           keyExtractor={this.keyExtractor}
+          onEndReachedThreshold={0.7}
+          onEndReached={this.addSections}
+          extraData={this.state}
         />
       </View>
     );

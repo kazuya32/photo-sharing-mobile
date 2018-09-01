@@ -39,8 +39,8 @@ class Feed extends React.Component {
   // eslint-disable-next-line
   fetchPhotos = async () => {
     const db = firebase.firestore();
-    const maxResults = 90;
-    const recentNumber = 30;
+    const maxResults = 100;
+    const recentNumber = 50;
 
     const photosRef = db.collection('photos')
       .orderBy('createdAt', 'desc')
@@ -82,6 +82,10 @@ class Feed extends React.Component {
     if (!isReloading) {
       this.setState({ isReloading: true });
 
+      if (recentPhotos.length) {
+        showingPhotos.push(recentPhotos[0]);
+        recentPhotos.shift();
+      }
       if (recentPhotos.length) {
         showingPhotos.push(recentPhotos[0]);
         recentPhotos.shift();

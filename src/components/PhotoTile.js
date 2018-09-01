@@ -250,9 +250,9 @@ class PhotoTile extends React.Component {
   handleLikeButton = (nextValue) => {
     let { likes } = this.state;
     if (nextValue) {
-      likes.push(this.state.uid);
+      likes.push(this.state.logInUid);
     } else {
-      likes = this.deletePropFromArray(likes, this.state.uid);
+      likes = this.deletePropFromArray(likes, this.state.logInUid);
     }
 
     this.setState({ liked: nextValue, likes });
@@ -260,7 +260,7 @@ class PhotoTile extends React.Component {
     const db = firebase.firestore();
     const ref = db.collection('photos').doc(this.props.photo.id);
     ref.update({
-      [`likes.${this.state.uid}`]: nextValue,
+      [`likes.${this.state.logInUid}`]: nextValue,
       likesSum: likes.length,
     })
       .then(() => {

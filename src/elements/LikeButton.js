@@ -1,11 +1,24 @@
 import React from 'react';
 import { View, StyleSheet, TouchableHighlight, Text } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class LikeButton extends React.Component {
+  // eslint-disable-next-line
+  handleViewtRef = (ref) => {
+    this.animationRef = ref;
+  }
+
+  onPress = () => {
+    const { onPressButton, userLiked } = this.props;
+    if (!userLiked) {
+      this.animationRef.swing(600);
+    }
+    onPressButton(!userLiked);
+  }
+
   render() {
     const {
-      onPressButton,
       onPressNumber,
       likes,
       userLiked,
@@ -19,30 +32,33 @@ class LikeButton extends React.Component {
     const iconName = userLiked ? 'heart' : 'heart-outline';
 
     return (
-      <View style={styles.likes}>
-        <TouchableHighlight
-          onPress={() => { onPressButton(!userLiked); }}
-          underlayColor="transparent"
-          style={styles.heart}
-        >
-          <Icon
-            name={iconName}
-            size={26}
-            style={[styles.heart]}
-            color="#D0364C"
-          />
-        </TouchableHighlight>
-        <TouchableHighlight
-          onPress={onPressNumber}
-          underlayColor="transparent"
-          style={styles.likesNumber}
-        >
-          <Text style={styles.likesNumberText}>
-            {likes && likes.length}
-          </Text>
-        </TouchableHighlight>
-      </View>
-
+      <Animatable.View
+        ref={this.handleViewtRef}
+      >
+        <View style={styles.likes}>
+          <TouchableHighlight
+            onPress={this.onPress}
+            underlayColor="transparent"
+            style={styles.heart}
+          >
+            <Icon
+              name={iconName}
+              size={26}
+              style={[styles.heart]}
+              color="#D0364C"
+            />
+          </TouchableHighlight>
+          <TouchableHighlight
+            onPress={onPressNumber}
+            underlayColor="transparent"
+            style={styles.likesNumber}
+          >
+            <Text style={styles.likesNumberText}>
+              {likes && likes.length}
+            </Text>
+          </TouchableHighlight>
+        </View>
+      </Animatable.View>
     );
   }
 }
