@@ -3,8 +3,6 @@ import {
   StyleSheet,
   View,
   FlatList,
-  TouchableOpacity,
-  Image,
   Dimensions,
   ActivityIndicator,
   Text,
@@ -12,10 +10,14 @@ import {
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
+import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
 
 class TeamFeed extends React.Component {
   state = {
     headerTitle: 'FLEGO',
+    reloadNumber: 40,
+    showingPhotos: null,
+    loading: false,
   }
 
   componentWillMount() {
@@ -57,8 +59,31 @@ class TeamFeed extends React.Component {
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
         this.setState({ photos, lastVisible });
-        // this.setState({ photosRef, lastVisible });
+        if (photos.length) {
+          this.addPhotos();
+        } else {
+          this.setState({ showingPhotos: [] });
+        }
       });
+  }
+
+  addPhotos = () => {
+    const { photos } = this.state;
+
+    if (!this.state.loading && photos.length) {
+      this.setState({ loading: true });
+
+      let { showingPhotos } = this.state;
+      if (!showingPhotos) {
+        showingPhotos = photos.slice(0, this.state.reloadNumber);
+        photos.splice(0, this.state.reloadNumber);
+      } else {
+        const tmp = photos.slice(0, this.state.reloadNumber);
+        photos.splice(0, this.state.reloadNumber);
+        Array.prototype.push.apply(showingPhotos, tmp);
+      }
+      this.setState({ showingPhotos, photos, loading: false });
+    }
   }
 
   sortDesc = (array) => {
@@ -69,28 +94,36 @@ class TeamFeed extends React.Component {
 
   keyExtractor = (item, index) => index.toString();
 
+  // renderItem = ({ item }) => (
+  //   <TouchableOpacity
+  //     onPress={() => {
+  //       this.props.navigation.navigate({
+  //         routeName: 'PhotoDetail',
+  //         params: {
+  //           photo: item,
+  //         },
+  //         key: 'PhotoDetail' + item.id,
+  //       });
+  //     }}
+  //   >
+  //     <Image
+  //       style={styles.photoItem}
+  //       source={{ uri: item.data.downloadURL }}
+  //       resizeMode="cover"
+  //     />
+  //   </TouchableOpacity>
+  // );
+
   renderItem = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => {
-        this.props.navigation.navigate({
-          routeName: 'PhotoDetail',
-          params: {
-            photo: item,
-          },
-          key: 'PhotoDetail' + item.id,
-        });
-      }}
-    >
-      <Image
-        style={styles.photoItem}
-        source={{ uri: item.data.downloadURL }}
-        resizeMode="cover"
-      />
-    </TouchableOpacity>
+    <PhotoCollectionItem
+      navigation={this.props.navigation}
+      photo={item}
+      photoStyle={styles.photoItem}
+    />
   );
 
   render() {
-    if (!this.state.photos) {
+    if (!this.state.showingPhotos) {
       return (
         <View style={styles.container}>
           <Header
@@ -104,7 +137,7 @@ class TeamFeed extends React.Component {
       );
     }
 
-    if (!this.state.photos.length) {
+    if (!this.state.showingPhotos.length) {
       return (
         <View style={styles.container}>
           <Header
@@ -126,12 +159,14 @@ class TeamFeed extends React.Component {
         />
         <FlatList
           navigation={this.props.navigation}
-          data={this.sortDesc(this.state.photos)}
+          data={this.sortDesc(this.state.showingPhotos)}
           renderItem={this.renderItem}
           numColumns={4}
           // horizontal={true}
           keyExtractor={this.keyExtractor}
           columnWrapperStyle={styles.column}
+          onEndReachedThreshold={0.5}
+          onEndReached={this.addPhotos}
         />
         <View style={styles.whitelineLeft} />
         <View style={styles.whitelineRight} />

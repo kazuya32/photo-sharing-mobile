@@ -50,9 +50,9 @@ class Feed extends React.Component {
     photosRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          const { userDeleted } = doc.data();
+          const { userDeleted, unlisted } = doc.data();
           const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.uid];
-          if (!(userDeleted || isBlocked)) {
+          if (!(unlisted || userDeleted || isBlocked)) {
             photos.push({
               id: doc.id,
               data: doc.data(),

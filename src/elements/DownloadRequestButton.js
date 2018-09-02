@@ -12,12 +12,11 @@ class DownloadRequestButton extends React.Component {
       style,
       buttonStyle,
       textStyle,
-      hasAccess,
       isPending,
-      isMyPage,
+      show,
     } = this.props;
 
-    if (hasAccess || isMyPage) { return null; }
+    if (!show) { return null; }
 
     const text = isPending ? 'リクエスト送信済み' : 'ダウンロードリクエスト';
 

@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import { FileSystem } from 'expo';
 import firebase from 'firebase';
 
 class MatchItem extends React.Component {
@@ -14,58 +15,42 @@ class MatchItem extends React.Component {
 
   componentDidMount() {
     const { match } = this.props;
-    this.fetchHomeTeam(match.data.homeTeam.id);
-    this.fetchAwayTeam(match.data.awayTeam.id);
+    this.getLocalImage(true, match.data.homeTeam.id);
+    this.getLocalImage(false, match.data.awayTeam.id);
   }
 
-  fetchHomeTeam = (teamId) => {
+  getLocalImage = async (isHome, teamId) => {
+    const path = FileSystem.documentDirectory + 'logo' + teamId + '.jpg';
+    const info = await FileSystem.getInfoAsync(path);
+    if (!info.exists) {
+      this.fetchTeam(isHome, teamId, path);
+    } else if (isHome) {
+      this.setState({ homeLogoURL: path });
+    } else {
+      this.setState({ awayLogoURL: path });
+    }
+  };
+
+  fetchTeam = async (isHome, teamId, path) => {
     let team;
     const db = firebase.firestore();
     const Ref = db.collection('teams').doc(teamId);
     Ref.get().then((doc) => {
       team = { id: doc.id, data: doc.data() };
-      this.setState({ homeTeam: team });
-    });
-  }
-
-  fetchAwayTeam = (teamId) => {
-    let team;
-    const db = firebase.firestore();
-    const Ref = db.collection('teams').doc(teamId);
-    Ref.get().then((doc) => {
-      team = { id: doc.id, data: doc.data() };
-      this.setState({ awayTeam: team });
+      FileSystem.downloadAsync(team.data.logoURL, path)
+        .then(() => {
+          if (isHome) {
+            this.setState({ homeLogoURL: path });
+          } else {
+            this.setState({ awayLogoURL: path });
+          }
+        });
     });
   }
 
   render() {
     const { onPress, match } = this.props;
     const dia = 32;
-
-    if (!(this.state.homeTeam && this.state.awayTeam)) {
-      return (
-        <TouchableHighlight style={styles.container} onPress={onPress} underlayColor="transparent">
-          <View style={styles.item}>
-            <View style={styles.team}>
-              <Text style={styles.name}>
-                {match.data.homeTeam.fullname}
-              </Text>
-            </View>
-            <Text style={styles.text}>
-              vs
-            </Text>
-            <View style={styles.team}>
-              <Text style={styles.name}>
-                {match.data.awayTeam.fullname}
-              </Text>
-            </View>
-          </View>
-        </TouchableHighlight>
-      );
-    }
-
-    const homeLogoURL = this.state.homeTeam && this.state.homeTeam.data.logoURL;
-    const awayLogoURL = this.state.awayTeam && this.state.awayTeam.data.logoURL;
 
     return (
       <TouchableHighlight style={styles.container} onPress={onPress} underlayColor="transparent">
@@ -76,7 +61,7 @@ class MatchItem extends React.Component {
                 styles.logo,
                 { width: dia, height: dia },
               ]}
-              source={{ uri: homeLogoURL }}
+              source={{ uri: this.state.homeLogoURL }}
               resizeMode="cover"
             />
             <Text style={styles.name}>
@@ -94,7 +79,7 @@ class MatchItem extends React.Component {
                 styles.logo,
                 { width: dia, height: dia },
               ]}
-              source={{ uri: awayLogoURL }}
+              source={{ uri: this.state.awayLogoURL }}
               resizeMode="cover"
             />
             <Text style={styles.name}>

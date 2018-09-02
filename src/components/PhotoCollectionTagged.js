@@ -2,8 +2,6 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  TouchableOpacity,
-  Image,
   Dimensions,
   FlatList,
   Text,
@@ -12,8 +10,13 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 
+import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
+
 class PhotoCollection extends React.Component {
   state = {
+    reloadNumber: 24,
+    showingPhotos: null,
+    loading: false,
   }
 
   componentDidMount() {
@@ -55,8 +58,33 @@ class PhotoCollection extends React.Component {
             });
           }
         });
-        this.setState({ photos });
+        this.setState({ photos: this.sortDesc(photos) });
+
+        if (photos.length) {
+          this.addPhotos();
+        } else {
+          this.setState({ showingPhotos: [] });
+        }
       });
+  }
+
+  addPhotos = () => {
+    const { photos } = this.state;
+
+    if (!this.state.loading && photos.length) {
+      this.setState({ loading: true });
+
+      let { showingPhotos } = this.state;
+      if (!showingPhotos) {
+        showingPhotos = photos.slice(0, this.state.reloadNumber);
+        photos.splice(0, this.state.reloadNumber);
+      } else {
+        const tmp = photos.slice(0, this.state.reloadNumber);
+        photos.splice(0, this.state.reloadNumber);
+        Array.prototype.push.apply(showingPhotos, tmp);
+      }
+      this.setState({ showingPhotos, photos, loading: false });
+    }
   }
 
   sortDesc = (array) => {
@@ -68,29 +96,19 @@ class PhotoCollection extends React.Component {
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => {
-        this.props.navigation.navigate({
-          routeName: 'PhotoDetail',
-          params: {
-            photo: item,
-            // logInUser: this.state.logInUser,
-          },
-          key: 'PhotoDetail' + item.id,
-        });
-      }}
-    >
-      <Image
-        style={styles.photoItem}
-        source={{ uri: item.data.downloadURL }}
-        resizeMode="cover"
-      />
-    </TouchableOpacity>
+    <PhotoCollectionItem
+      navigation={this.props.navigation}
+      photo={item}
+      // style={item.data.hasArranged && { display: 'none' }}
+      photoStyle={styles.photoItem}
+      iconStyle={styles.ribbon}
+      iconDia={24}
+    />
   );
 
 
   render() {
-    if (!this.state.photos) {
+    if (!this.state.showingPhotos) {
       return (
         <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
           <ActivityIndicator />
@@ -98,7 +116,7 @@ class PhotoCollection extends React.Component {
       );
     }
 
-    if (!this.state.photos.length) {
+    if (!this.state.showingPhotos.length) {
       return (
         <Text style={styles.alert}>
            投稿画像はありません.
@@ -109,13 +127,15 @@ class PhotoCollection extends React.Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={this.sortDesc(this.state.photos)}
+          data={this.state.showingPhotos}
           renderItem={this.renderItem}
           numColumns={3}
           // horizontal={true}
           keyExtractor={this.keyExtractor}
           extraData={this.state}
           columnWrapperStyle={styles.column}
+          onEndReachedThreshold={0.5}
+          onEndReached={this.addPhotos}
         />
         <View style={styles.whitelineLeft} />
         <View style={styles.whitelineRight} />

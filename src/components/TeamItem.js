@@ -7,8 +7,27 @@ import {
   Image,
   // Dimensions,
 } from 'react-native';
+import { FileSystem } from 'expo';
 
 class TeamItem extends React.Component {
+  state = {
+
+  }
+
+  componentDidMount() {
+    this.cacheLogoImage();
+  }
+
+  cacheLogoImage = async () => {
+    const { team } = this.props;
+    const path = FileSystem.documentDirectory + 'logo' + team.id + '.jpg';
+    const info = await FileSystem.getInfoAsync(path);
+    if (!info.exists) {
+      await FileSystem.downloadAsync(team.data.logoURL, path);
+    }
+    this.setState({ logoURL: path });
+  };
+
   render() {
     const { onPress, team, numColumns } = this.props;
     // const dia = Dimensions.get('window').width / numColumns; // 画質が悪すぎた
@@ -23,7 +42,7 @@ class TeamItem extends React.Component {
               styles.logo,
               { width: dia, height: dia },
             ]}
-            source={{ uri: team.data.logoURL }}
+            source={{ uri: this.state.logoURL }}
             resizeMode="cover"
           />
           <Text style={styles.text}>

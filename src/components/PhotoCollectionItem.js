@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import { FileSystem } from 'expo';
 import firebase from 'firebase';
 // import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -14,7 +15,8 @@ class PhotoCollectionItem extends React.Component {
 
   }
 
-  componentWillMount() {
+  componentDidMount() {
+    this.cacheImage();
     if (this.props.isCertificated) {
       this.getUser(this.props.photo.data.uid);
     }
@@ -53,12 +55,21 @@ class PhotoCollectionItem extends React.Component {
     });
   }
 
+  cacheImage = async () => {
+    const { photo } = this.props;
+    const path = FileSystem.cacheDirectory + photo.id + '.jpg';
+    const info = await FileSystem.getInfoAsync(path);
+    if (!info.exists) {
+      await FileSystem.downloadAsync(photo.data.downloadURL, path);
+    }
+    this.setState({ uri: path });
+  };
+
   render() {
     const {
       style,
       photoStyle,
       iconStyle,
-      photo,
       isCertificated,
       iconDia,
     } = this.props;
@@ -70,7 +81,7 @@ class PhotoCollectionItem extends React.Component {
         <View style={style}>
           <Image
             style={photoStyle}
-            source={{ uri: photo.data.downloadURL }}
+            source={{ uri: this.state.uri }}
             resizeMode="cover"
           />
           <UserIcon
@@ -81,8 +92,8 @@ class PhotoCollectionItem extends React.Component {
             isAthlete
             style={[
               iconStyle,
-              !isCertificated && { display: 'none' },
             ]}
+            invisible={!isCertificated}
             borderWidth={2}
             // borderColor="black"
           />

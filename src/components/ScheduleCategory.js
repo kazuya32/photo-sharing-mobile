@@ -136,7 +136,7 @@ class ScheduleCategory extends React.Component {
             <ActivityIndicator
               animating={!this.state.showingSections}
               color={designLanguage.colorPrimary}
-              size="large"
+              // size="large"
             />
           </View>
         </View>

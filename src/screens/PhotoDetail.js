@@ -82,10 +82,9 @@ class PhotoDetail extends React.Component {
             style={[
               styles.reqBtn,
             ]}
-            hasAccess={hasAccess}
-            isMyPage={(photo.data.uid === this.state.logInUid)}
             isPending={isPending}
             textStyle={styles.btnTitle}
+            show={!photo.data.private && (!hasAccess || photo.data.uid !== this.state.logInUid)}
           />
         </ScrollView>
       </View>

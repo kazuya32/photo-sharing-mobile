@@ -6,11 +6,21 @@ import {
   View,
   // Platform,
 } from 'react-native';
+import { FileSystem } from 'expo';
 
 import IconBadge from '../elements/IconBadge.js';
 
-
 class UserIcon extends React.Component {
+  // cacheImage = async () => {
+  //   const { photo } = this.props;
+  //   const path = FileSystem.cacheDirectory + photo.id + '.jpg';
+  //   const info = await FileSystem.getInfoAsync(path);
+  //   if (!info.exists) {
+  //     await FileSystem.downloadAsync(photo.data.downloadURL, path);
+  //   }
+  //   return path;
+  // };
+
   render() {
     const {
       onPress,
@@ -18,7 +28,11 @@ class UserIcon extends React.Component {
       style,
       isAthlete,
       badgeNumber,
+      invisible,
     } = this.props;
+
+    if (invisible) { return null; }
+
     let photoURL;
 
     if (this.props.photoURL) {

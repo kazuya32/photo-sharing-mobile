@@ -33,7 +33,6 @@ class PhotoTile extends React.Component {
   state = {
     // eslint-disable-next-line
     stadium: null,
-    uid: this.props.uid,
     deleted: false,
     blocked: false,
     modalVisible: false,
@@ -41,6 +40,7 @@ class PhotoTile extends React.Component {
   }
 
   componentDidMount() {
+    this.cacheImage();
     this.fetchLogInData();
     this.getUser();
     this.fetchLikes();
@@ -101,7 +101,8 @@ class PhotoTile extends React.Component {
               { height: photoHeight, width: photoWidth },
               photoStyle,
             ]}
-            source={{ uri: photo.data.downloadURL }}
+            // source={{ uri: photo.data.downloadURL }}
+            source={{ uri: this.state.uri }}
             resizeMode="contain"
           />
         </TouchableHighlight>
@@ -109,7 +110,7 @@ class PhotoTile extends React.Component {
           <DownloadButton
             style={styles.downloadBtn}
             onPress={this.onPressDownload}
-            hasAccess={hasAccess || this.state.isAthleteLogIn}
+            hasAccess={hasAccess || (!photo.data.private && this.state.isAthleteLogIn)}
           />
           <SignatureButton
             style={[
@@ -191,6 +192,16 @@ class PhotoTile extends React.Component {
     });
     // return user;
   }
+
+  cacheImage = async () => {
+    const { photo } = this.props;
+    const path = FileSystem.cacheDirectory + photo.id + '.jpg';
+    const info = await FileSystem.getInfoAsync(path);
+    if (!info.exists) {
+      await FileSystem.downloadAsync(photo.data.downloadURL, path);
+    }
+    this.setState({ uri: path });
+  };
 
   // eslint-disable-next-line
   makeListFromObject = (obj) => {

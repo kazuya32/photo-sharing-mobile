@@ -115,6 +115,8 @@ class SendSignature extends React.Component {
       height,
       likes,
       accesses,
+      unlisted: 'feed', // ユーザーページにも表示したくない時は'all'にする
+      private: true,
     })
       .then(() => {
         this.setState({ isUploading: false });
