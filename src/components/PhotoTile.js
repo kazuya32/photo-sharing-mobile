@@ -54,7 +54,9 @@ class PhotoTile extends React.Component {
       show,
     } = this.props;
 
-    if (!show) { return null; }
+    if (!show || this.state.deleted || this.state.blocked) {
+      return null;
+    }
 
     // const onPressMenu = this.state.isMyPage ? this.onPressMenuMyPage : this.onPressMenu;
     const options = this.state.isMyPage ? this.createOptionsMyPage() : this.createOptions();
@@ -68,8 +70,6 @@ class PhotoTile extends React.Component {
     return (
       <View style={[
           styles.container,
-          this.state.deleted && { display: 'none' },
-          this.state.blocked && { display: 'none' },
           style,
         ]}
       >
@@ -136,7 +136,7 @@ class PhotoTile extends React.Component {
           />
         </View>
         <TagTile
-          style={[styles.tags, !photo.data.tags && { display: 'none' }]}
+          style={[styles.tags]}
           tags={photo.data.tags}
         />
 

@@ -54,7 +54,7 @@ class MatchFeed extends React.Component {
           }
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        this.setState({ photos, lastVisible });
+        this.setState({ photos: this.sortDesc(photos), lastVisible });
 
         if (photos.length) {
           this.addPhotos();
@@ -136,7 +136,7 @@ class MatchFeed extends React.Component {
         />
         <FlatList
           navigation={this.props.navigation}
-          data={this.sortDesc(this.state.showingPhotos)}
+          data={this.state.showingPhotos}
           renderItem={this.renderItem}
           numColumns={4}
           // horizontal={true}

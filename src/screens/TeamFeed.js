@@ -58,7 +58,7 @@ class TeamFeed extends React.Component {
           }
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        this.setState({ photos, lastVisible });
+        this.setState({ photos: this.sortDesc(photos), lastVisible });
         if (photos.length) {
           this.addPhotos();
         } else {
@@ -159,7 +159,7 @@ class TeamFeed extends React.Component {
         />
         <FlatList
           navigation={this.props.navigation}
-          data={this.sortDesc(this.state.showingPhotos)}
+          data={this.state.showingPhotos}
           renderItem={this.renderItem}
           numColumns={4}
           // horizontal={true}
@@ -167,6 +167,7 @@ class TeamFeed extends React.Component {
           columnWrapperStyle={styles.column}
           onEndReachedThreshold={0.5}
           onEndReached={this.addPhotos}
+          // extraData={this.state}
         />
         <View style={styles.whitelineLeft} />
         <View style={styles.whitelineRight} />

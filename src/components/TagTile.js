@@ -23,14 +23,11 @@ class TagTile extends React.Component {
 
   makeTagArray = (tags) => {
     const tagArray = [];
-    console.log(tags);
-
     Object.entries(tags).map(([key, value]) => {
       if (value) {
         tagArray.push(key);
       }
-    })
-    console.log(tagArray);
+    });
     this.setState({ tags: tagArray });
   }
 
@@ -54,6 +51,10 @@ class TagTile extends React.Component {
       style,
       // tags,
     } = this.props;
+
+    if (!(this.state.tags && this.state.tags.length)) {
+      return null;
+    }
 
     return (
       <View style={[styles.container, style]}>
@@ -79,10 +80,6 @@ const styles = StyleSheet.create({
   tags: {
     width: '100%',
     alignContent: 'center',
-    // paddingLeft: 8,
-    // paddingRight: 8,
-    // flexWrap: 'wrap',
-    // backgroundColor: 'blue',
   },
 });
 
