@@ -12,7 +12,7 @@ class Search extends React.Component {
     headerTitle: '探す',
   }
 
-  onPressPlayer = () => {
+  onPressAthlete = () => {
     this.props.navigation.navigate({
       routeName: 'PlayerList',
     });
@@ -30,6 +30,12 @@ class Search extends React.Component {
     });
   }
 
+  onPressUser = () => {
+    this.props.navigation.navigate({
+      routeName: 'SearchUser',
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -39,7 +45,7 @@ class Search extends React.Component {
           logInUser={this.state.logInUser}
         />
         <SelectItem
-          onPress={this.onPressPlayer}
+          onPress={this.onPressAthlete}
           title="公式アスリート"
           itemColor="black"
         />
@@ -53,21 +59,15 @@ class Search extends React.Component {
           title="公式マッチ"
           itemColor="black"
         />
+        <SelectItem
+          onPress={this.onPressUser}
+          title="ユーザーを探す"
+          itemColor="black"
+        />
       </View>
     );
   }
 }
-
-// <SearchBar
-//   lightTheme
-//   onChangeText={searchText => this.setState({ searchText })}
-//   onClear={searchText => this.onPressTest({ searchText })}
-//   placeholder="Search"
-//   value={this.state.searchText}
-//   showLoading
-//   containerStyle={styles.searchBar}
-//   inputContainerStyle={styles.inputArea}
-// />
 
 const styles = StyleSheet.create({
   container: {

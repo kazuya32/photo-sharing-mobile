@@ -28,7 +28,7 @@ class UserSectionItem extends React.Component {
           <UserIcon
             // onPress
             photoURL={user.data.photoURL}
-            dia={32}
+            dia={40}
             isAthlete={(user && user.data.isAthlete)}
           />
           <View style={styles.contents} >
@@ -48,23 +48,22 @@ class UserSectionItem extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    paddingLeft: 16,
-    paddingRight: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 32,
+    paddingRight: 32,
     // justifyContent: 'center',
     alignItems: 'center',
   },
   userName: {
     // alignSelf: 'center',
-    fontSize: 16,
+    fontSize: 20,
     color: 'black',
   },
   contents: {
     justifyContent: 'center',
     flex: 1,
-    paddingLeft: 16,
-    paddingRight: 16,
+    marginLeft: 24,
   },
 });
 

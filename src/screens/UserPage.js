@@ -255,7 +255,6 @@ class UserPage extends React.Component {
         <Header
           headerTitle="FLEGO"
           navigation={this.props.navigation}
-          logInUser={this.state.logInUser}
         />
         <Profile
           navigation={this.props.navigation}

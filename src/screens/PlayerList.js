@@ -14,7 +14,6 @@ import UserSectionItem from '../components/UserSectionItem.js';
 
 class PlayerList extends React.Component {
   state = {
-    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
   }
 
   componentDidMount() {
@@ -94,8 +93,6 @@ class PlayerList extends React.Component {
       routeName: 'UserPage',
       params: {
         uid: item.id,
-        logInUser: this.state.logInUser,
-        // user: item,
       },
       key: 'UserPage' + item.id,
     });

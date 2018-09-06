@@ -22,6 +22,7 @@ import SendSignature from './src/screens/SendSignature.js';
 import PhotoUploader from './src/screens/PhotoUploader.js';
 import Schedule from './src/screens/Schedule.js';
 import Team from './src/screens/Team.js';
+import SearchUser from './src/screens/SearchUser.js';
 import SearchTag from './src/screens/SearchTag.js';
 import Search from './src/screens/Search.js';
 import PlayerList from './src/screens/PlayerList.js';
@@ -101,6 +102,7 @@ const MainStack = createStackNavigator({
   PlayerList: { screen: PlayerList },
   Team: { screen: Team },
   Schedule: { screen: Schedule },
+  SearchUser: { screen: SearchUser },
   // Match: { screen: Match },
   ReportPhoto: { screen: ReportPhoto },
   ReportUser: { screen: ReportUser },

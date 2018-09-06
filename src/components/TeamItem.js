@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   text: {
     marginLeft: 16,
     marginRight: 16,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '500',
   },
   logo: {
