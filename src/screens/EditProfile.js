@@ -24,6 +24,7 @@ class EditProfile extends React.Component {
     name: this.props.navigation.state.params.user.data.name,
     desc: this.props.navigation.state.params.user.data.desc,
     photoURL: this.props.navigation.state.params.user.data.photoURL,
+    iconLoading: false,
   }
 
   // eslint-disable-next-line
@@ -91,6 +92,7 @@ class EditProfile extends React.Component {
       // this.props.navigation.navigate({ routeName: 'Home' });
       // Alert.alert('カメラロールの使用が許可されていません。');
     } else {
+      this.setState({ iconLoading: true });
       const { uri } = result;
       // this.setState({ photoURL: uri, photoChanged: true })
       // eslint-disable-next-line
@@ -104,7 +106,7 @@ class EditProfile extends React.Component {
 
       imageRef.put(file).then((snapshot) => {
         if (snapshot.state) {
-          this.setState({ photoURL: snapshot.downloadURL });
+          this.setState({ photoURL: snapshot.downloadURL, iconLoading: false });
         } else {
           // Alert.alert('アップロードに失敗しました。');
         }
@@ -125,6 +127,7 @@ class EditProfile extends React.Component {
             photoURL={this.state.photoURL}
             dia={80}
             style={styles.icon}
+            loading={this.state.iconLoading}
           />
           <EditItem
             onChangeText={this.onChangeTextName}
@@ -163,9 +166,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   icon: {
-    left: 24,
+    marginLeft: 24,
     marginTop: 24,
     marginBottom: 20,
+    alignItems: 'flex-start',
   },
   footer: {
     // position: 'absolute',

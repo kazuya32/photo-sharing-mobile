@@ -573,6 +573,7 @@ class PhotoTile extends React.Component {
           this.deletePhoto();
           // eslint-disable-next-line
           this.props.onDeleted && this.props.onDeleted();
+          this.setModalVisible(false);
         },
         cancel: false,
         destructive: true,

@@ -8,10 +8,14 @@ import {
   AsyncStorage,
 } from 'react-native';
 import firebase from 'firebase';
+import { CheckBox } from 'react-native-elements';
 
-import PhotoHeader from '../components/PhotoHeader.js';
+import designLanguage from '../../designLanguage.json';
+import Header from '../components/Header.js';
 import SelectItem from '../components/SelectItem.js';
 import TagBox from '../components/TagBox.js';
+import SaveButton from '../elements/SaveButton.js';
+import CancelButton from '../elements/CancelButton.js';
 
 class EditPhoto extends React.Component {
   state = {
@@ -32,6 +36,7 @@ class EditPhoto extends React.Component {
         people,
         matchId,
         teamId,
+        unlisted,
       } = photo.data;
 
       if (tags) {
@@ -47,6 +52,8 @@ class EditPhoto extends React.Component {
       if (matchId) { this.fetchMatch(matchId); }
 
       if (teamId) { this.fetchTeam(teamId); }
+
+      this.setState({ unlisted });
     }
   }
 
@@ -176,6 +183,7 @@ class EditPhoto extends React.Component {
         matchId: this.state.match && this.state.match.id,
         matchPath: this.state.match && `matchSchedules/${this.state.match.data.scheduleId}/matches/${this.state.match.id}`,
         teamId: this.state.team && this.state.team.id,
+        unlisted: this.state.unlisted,
       })
         .then(() => {
           this.props.navigation.goBack();
@@ -241,6 +249,14 @@ class EditPhoto extends React.Component {
     });
   }
 
+  onIconPress = () => {
+    if (this.state.unlisted) {
+      this.setState({ unlisted: false });
+    } else {
+      this.setState({ unlisted: 'feed' });
+    }
+  }
+
   render() {
     let textPeople = '';
 
@@ -255,11 +271,9 @@ class EditPhoto extends React.Component {
 
     return (
       <View style={styles.container}>
-        <PhotoHeader
-          onPressLeft={() => { this.props.navigation.goBack(); }}
-          onPressRight={this.updatePhoto}
+        <Header
           headerTitle="写真を編集する"
-          rightButtonTitle="Save"
+          navigation={this.props.navigation}
         />
         <View style={styles.body}>
           <View style={styles.top}>
@@ -294,6 +308,28 @@ class EditPhoto extends React.Component {
               this.state.match && `${this.state.match.data.homeTeam.fullname} vs ${this.state.match.data.awayTeam.fullname}`,
             ]}
           />
+          <CheckBox
+            iconType="material-community"
+            checkedIcon="checkbox-marked-outline"
+            uncheckedIcon="checkbox-blank-outline"
+            title="フィード画面に非表示にする"
+            checked={this.state.unlisted && true}
+            containerStyle={styles.unlisted}
+            // onIconPress={this.onIconPress}
+            onPress={this.onIconPress}
+            checkedColor={designLanguage.color900}
+          />
+        </View>
+        <View style={styles.footer}>
+          <CancelButton
+            onPress={() => { this.props.navigation.goBack(); }}
+            style={{ marginRight: 12 }}
+          >
+            キャンセル
+          </CancelButton>
+          <SaveButton onPress={this.updatePhoto}>
+            保存
+          </SaveButton>
         </View>
       </View>
     );
@@ -326,6 +362,25 @@ const styles = StyleSheet.create({
   },
   tagBox: {
     height: Dimensions.get('window').width / 3,
+  },
+  unlisted: {
+    backgroundColor: '#fff',
+    shadowColor: '#fff',
+    borderWidth: 0,
+  },
+  footer: {
+    position: 'absolute',
+    width: '100%',
+    borderTopWidth: 1,
+    borderColor: designLanguage.footerBorderColor,
+    // paddingTop: 20,
+    paddingBottom: 20,
+    paddingRight: 20,
+    paddingLeft: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    bottom: 0,
+    height: 80,
   },
 });
 
