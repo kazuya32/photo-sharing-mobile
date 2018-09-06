@@ -214,10 +214,12 @@ class PhotoUploader extends React.Component {
   }
 
   onIconPress = () => {
-    if (this.state.unlisted) {
-      this.setState({ unlisted: false });
-    } else {
-      this.setState({ unlisted: 'feed' });
+    if (!this.state.isUploading) {
+      if (this.state.unlisted) {
+        this.setState({ unlisted: false });
+      } else {
+        this.setState({ unlisted: 'feed' });
+      }
     }
   }
 
@@ -284,7 +286,7 @@ class PhotoUploader extends React.Component {
             iconType="material-community"
             checkedIcon="checkbox-marked-outline"
             uncheckedIcon="checkbox-blank-outline"
-            title="フィード画面に非表示にする"
+            title="タイムラインに非表示にする"
             checked={this.state.unlisted && true}
             containerStyle={styles.unlisted}
             // onIconPress={this.onIconPress}

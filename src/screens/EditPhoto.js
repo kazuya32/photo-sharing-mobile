@@ -312,7 +312,7 @@ class EditPhoto extends React.Component {
             iconType="material-community"
             checkedIcon="checkbox-marked-outline"
             uncheckedIcon="checkbox-blank-outline"
-            title="フィード画面に非表示にする"
+            title="タイムラインに非表示にする"
             checked={this.state.unlisted && true}
             containerStyle={styles.unlisted}
             // onIconPress={this.onIconPress}
