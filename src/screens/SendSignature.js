@@ -68,7 +68,7 @@ class SendSignature extends React.Component {
 
       const createdAt = Date.now();
 
-      const path = `photos/${this.state.uid}/${createdAt.toString()}.jpg`;
+      const path = `photos/${this.state.uid}/${createdAt.toString()}.png`;
       const storageRef = firebase.storage().ref();
       const imageRef = storageRef.child(path);
 

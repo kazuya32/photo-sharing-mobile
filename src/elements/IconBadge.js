@@ -3,14 +3,13 @@ import {
   StyleSheet,
   Text,
   View,
-  Platform,
 } from 'react-native';
 
 
 class IconBadge extends React.Component {
   render() {
-    const isAndroid = Platform.OS === 'android';
-    if (isAndroid) { return null; }
+    // const isAndroid = Platform.OS === 'android';
+    // if (isAndroid) { return null; }
 
     const {
       style,

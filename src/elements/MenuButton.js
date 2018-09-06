@@ -30,7 +30,7 @@ class MenuButton extends React.Component {
         onPress={onPress}
         underlayColor="transparent"
       >
-        <View>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Icon
             name="dots-horizontal"
             size={24}

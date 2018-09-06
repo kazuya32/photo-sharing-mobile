@@ -97,7 +97,8 @@ class EditProfile extends React.Component {
       const res = await fetch(uri);
       const file = await res.blob();
 
-      const path = `photos/${this.state.uid}/profile.jpg`;
+      const timestamp = Date.now().toString();
+      const path = `photos/${this.state.uid}/profile${timestamp}.png`;
       const storageRef = firebase.storage().ref();
       const imageRef = storageRef.child(path);
 

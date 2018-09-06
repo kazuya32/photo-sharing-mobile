@@ -57,13 +57,16 @@ class PhotoCollectionItem extends React.Component {
 
   cacheImage = async () => {
     const { photo } = this.props;
-    const path = FileSystem.cacheDirectory + photo.id + '.jpg';
+    const ext = await this.getFileExtension(photo.data.downloadURL);
+    const path = FileSystem.cacheDirectory + photo.id + '.' + ext;
     const info = await FileSystem.getInfoAsync(path);
     if (!info.exists) {
       await FileSystem.downloadAsync(photo.data.downloadURL, path);
     }
     this.setState({ uri: path });
   };
+
+  getFileExtension = async filename => filename.split('.').pop().split('?').shift();
 
   render() {
     const {

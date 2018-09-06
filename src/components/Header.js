@@ -24,7 +24,7 @@ class Header extends React.Component {
   componentWillMount() {
     this.initAuthState();
   }
-  
+
   // eslint-disable-next-line
   initAuthState = async () => {
     const uid = await AsyncStorage.getItem('uid');

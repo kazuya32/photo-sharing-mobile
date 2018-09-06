@@ -3,23 +3,16 @@ import {
   StyleSheet,
   View,
   Text,
-  Platform,
 } from 'react-native';
 
 class ButtonBadge extends React.Component {
   render() {
-    const isAndroid = Platform.OS === 'android';
-    if (isAndroid) { return null; }
-
     const {
       style,
       badgeNumber,
     } = this.props;
 
     if (!badgeNumber) { return null; }
-
-    let num = badgeNumber;
-    if (num > 99) { num = 99; }
 
     return (
       <View
@@ -33,7 +26,7 @@ class ButtonBadge extends React.Component {
             styles.badgeTitle,
           ]}
         >
-          {num}
+          {badgeNumber}
         </Text>
       </View>
     );

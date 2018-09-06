@@ -118,7 +118,7 @@ class Signature extends Component {
       // width: Dimensions.get('window').width,
       // height: Dimensions.get('window').height * 0.7,
       quality: 1,
-      format: 'jpg',
+      format: 'png',
     });
     // console.log(this.photoContainer.current);
     this.setState({

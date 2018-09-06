@@ -20,18 +20,18 @@ class RequestButton extends React.Component {
     if (num > 99) { num = 99; }
 
     return (
-      <TouchableHighlight
+      <View
         style={[
           style,
         ]}
-        onPress={onPress}
-        underlayColor="transparent"
       >
-        <View
+        <TouchableHighlight
           style={[
             styles.menuButton,
             badgeNumber && styles.hasRequest,
           ]}
+          onPress={onPress}
+          underlayColor="transparent"
         >
           <Icon
             name="card-giftcard"
@@ -41,12 +41,12 @@ class RequestButton extends React.Component {
               badgeNumber && styles.hasRequestTitle,
             ]}
           />
-          <ButtonBadge
-            style={[styles.badge]}
-            badgeNumber={badgeNumber}
-          />
-        </View>
-      </TouchableHighlight>
+        </TouchableHighlight>
+        <ButtonBadge
+          style={[styles.badge]}
+          badgeNumber={num}
+        />
+      </View>
     );
   }
 }
@@ -79,8 +79,8 @@ const styles = StyleSheet.create({
   },
   badge: {
     position: 'absolute',
-    right: -8,
-    top: -8,
+    right: -6,
+    top: -6,
   },
   followButton: {
     position: 'absolute',

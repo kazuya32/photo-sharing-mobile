@@ -108,7 +108,7 @@ class InitUser extends React.Component {
       const res = await fetch(uri);
       const file = await res.blob();
 
-      const path = `photos/${this.state.uid}/profile.jpg`;
+      const path = `photos/${this.state.uid}/profile.png`;
       const storageRef = firebase.storage().ref();
       const imageRef = storageRef.child(path);
 

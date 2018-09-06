@@ -195,13 +195,16 @@ class PhotoTile extends React.Component {
 
   cacheImage = async () => {
     const { photo } = this.props;
-    const path = FileSystem.cacheDirectory + photo.id + '.jpg';
+    const ext = await this.getFileExtension(photo.data.downloadURL);
+    const path = FileSystem.cacheDirectory + photo.id + '.' + ext;
     const info = await FileSystem.getInfoAsync(path);
     if (!info.exists) {
       await FileSystem.downloadAsync(photo.data.downloadURL, path);
     }
     this.setState({ uri: path });
   };
+
+  getFileExtension = async filename => filename.split('.').pop().split('?').shift();
 
   // eslint-disable-next-line
   makeListFromObject = (obj) => {
@@ -294,15 +297,16 @@ class PhotoTile extends React.Component {
   };
 
   // eslint-disable-next-line
-  downloadPhoto = () => {
+  downloadPhoto = async () => {
     const { photo } = this.props;
     const remoteURL = photo.data.downloadURL;
     const isAndroid = Platform.OS === 'android';
 
     if (isAndroid) {
+      const ext = await this.getFileExtension(photo.data.downloadURL);
       FileSystem.downloadAsync(
         remoteURL,
-        FileSystem.documentDirectory + photo.id + '.jpg',
+        FileSystem.documentDirectory + photo.id + '.' + ext,
       )
         .then(({ uri }) => {
           // console.log('Finished downloading to ', uri);
