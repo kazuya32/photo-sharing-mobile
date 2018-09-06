@@ -9,6 +9,8 @@ import {
   Alert,
 } from 'react-native';
 
+import designLanguage from '../../designLanguage.json';
+
 class SendButton extends React.Component {
   state = {
     isFollowing: this.props.isFollowing,
@@ -115,13 +117,13 @@ const styles = StyleSheet.create({
     // alignSelf: 'flex-start',
   },
   button: {
-    backgroundColor: '#DB4D5E',
+    backgroundColor: designLanguage.color400,
     borderRadius: 20,
     paddingTop: 4,
     paddingBottom: 4,
     paddingRight: 12,
     paddingLeft: 12,
-    shadowColor: '#000',
+    shadowColor: '#102330',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
