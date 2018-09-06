@@ -43,7 +43,9 @@ class PhotoCollection extends React.Component {
 
     photosRef.onSnapshot((querySnapshot) => {
       const photos = [];
-      this.setState({ photos });
+      if (this.state.showingPhotos) {
+        this.setState({ showingPhotos: [] });
+      }
       querySnapshot.forEach((doc) => {
         const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
         const { userDeleted } = doc.data();

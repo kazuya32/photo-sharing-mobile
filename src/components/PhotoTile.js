@@ -418,7 +418,7 @@ class PhotoTile extends React.Component {
       });
   }
 
-  deletePhoto = () => {
+  deletePhoto = async () => {
     const { photo } = this.props;
     const db = firebase.firestore();
     db.collection('photos').doc(photo.id).delete()
@@ -430,7 +430,6 @@ class PhotoTile extends React.Component {
         // eslint-disable-next-line
         console.error("Error removing document: ", error);
       });
-    this.setState({ deleted: true });
   }
 
   onPressEdit = () => {
@@ -559,6 +558,17 @@ class PhotoTile extends React.Component {
     this.setModalVisible(true);
   }
 
+  onPressDelete = () => {
+    this.deletePhoto()
+      .then(this.onDeleted);
+  }
+
+  onDeleted = () => {
+    // eslint-disable-next-line
+    this.props.onDeleted && this.props.onDeleted();
+    this.setState({ deleted: true });
+  }
+
   createOptionsMyPage = () => {
     const optionsMyPage = [
       {
@@ -569,12 +579,7 @@ class PhotoTile extends React.Component {
       },
       {
         title: '削除',
-        onPress: () => {
-          this.deletePhoto();
-          // eslint-disable-next-line
-          this.props.onDeleted && this.props.onDeleted();
-          this.setModalVisible(false);
-        },
+        onPress: this.onPressDelete,
         cancel: false,
         destructive: true,
       },
