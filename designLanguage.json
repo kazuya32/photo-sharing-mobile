@@ -11,5 +11,6 @@
   "color100": "#F6E6EA",
   "headerHeight": 56,
   "headerPaddingTop": 8,
-  "headerPaddingBottom": 8
+  "headerPaddingBottom": 8,
+  "footerBorderColor": "#C4C4C4"
 }

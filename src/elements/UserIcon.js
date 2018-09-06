@@ -4,10 +4,12 @@ import {
   TouchableHighlight,
   Image,
   View,
+  ActivityIndicator,
   // Platform,
 } from 'react-native';
 import { FileSystem } from 'expo';
 
+import designLanguage from '../../designLanguage.json';
 import IconBadge from '../elements/IconBadge.js';
 
 class UserIcon extends React.Component {
@@ -41,9 +43,30 @@ class UserIcon extends React.Component {
       isAthlete,
       badgeNumber,
       invisible,
+      loading,
     } = this.props;
 
     if (invisible) { return null; }
+
+    if (loading) {
+      return (
+        <View
+          style={[
+            style,
+          ]}
+        >
+          <View
+            style={[
+              styles.container,
+              { width: dia, height: dia },
+              isAthlete && { borderWidth, borderColor },
+            ]}
+          >
+            <ActivityIndicator animating={loading} color={designLanguage.color200} />
+          </View>
+        </View>
+      );
+    }
 
     const borderWidth = this.props.borderWidth || 3;
     const borderColor = this.props.borderColor || '#DB4D5E';
@@ -55,7 +78,6 @@ class UserIcon extends React.Component {
           styles.photo,
           { width: dia, height: dia },
           isAthlete && { borderWidth, borderColor },
-          // isAndroid && { top: 0 },
         ]}
         source={{
           uri: this.props.photoURL,
@@ -101,17 +123,14 @@ class UserIcon extends React.Component {
     return (
       <View
         style={[
-          { justifyContent: 'center', alignItems: 'center' },
+          styles.container,
           style,
-          // styles.profilePhoto,
-          // { width: dia, height: dia, borderRadius: dia * 0.5 },
         ]}
       >
         <TouchableHighlight
           style={[
             styles.profilePhoto,
             { width: dia, height: dia, borderRadius: dia * 0.5 },
-            // isAndroid && { paddingTop: 6, paddingRight: 6 },
           ]}
           onPress={onPress}
           underlayColor="transparent"
@@ -128,6 +147,10 @@ class UserIcon extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   profilePhoto: {
     // padding: 9,
     justifyContent: 'center',
