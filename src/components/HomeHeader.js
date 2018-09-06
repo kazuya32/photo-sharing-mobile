@@ -10,7 +10,7 @@ import {
 import { Constants } from 'expo';
 import firebase from 'firebase';
 
-import DesignLanguage from '../../designLanguage.json';
+import designLanguage from '../../designLanguage.json';
 import HeaderLeftButton from '../elements/HeaderLeftButton.js';
 import UserIcon from '../elements/UserIcon.js';
 
@@ -214,9 +214,9 @@ class HomeHeader extends React.Component {
     const sum = unreadRequestsSum + approvedRequestsSum + unreadGiftsSum;
 
     console.log(Constants.statusBarHeight);
-    const height = Constants.statusBarHeight + DesignLanguage.headerHeight;
-    const paddingTop = Constants.statusBarHeight + DesignLanguage.headerPaddingTop;
-    const paddingBottom = DesignLanguage.headerPaddingBottom;
+    const height = Constants.statusBarHeight + designLanguage.headerHeight;
+    const paddingTop = Constants.statusBarHeight + designLanguage.headerPaddingTop;
+    const paddingBottom = designLanguage.headerPaddingBottom;
 
     return (
       <View

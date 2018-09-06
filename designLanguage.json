@@ -1,5 +1,14 @@
 {
   "colorPrimary": "#DB4D5E",
+  "color900": "#7A3449",
+  "color800": "#A03C52",
+  "color700": "#B54256",
+  "color600": "#CB485B",
+  "color500": "#DB4D5E",
+  "color400": "#E15C73",
+  "color300": "#E8738A",
+  "color200": "#EF98AA",
+  "color100": "#F6E6EA",
   "headerHeight": 56,
   "headerPaddingTop": 8,
   "headerPaddingBottom": 8

@@ -3,6 +3,8 @@ import { View, StyleSheet, TouchableHighlight, Text } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import designLanguage from '../../designLanguage.json';
+
 class LikeButton extends React.Component {
   // eslint-disable-next-line
   handleViewtRef = (ref) => {
@@ -45,7 +47,7 @@ class LikeButton extends React.Component {
               name={iconName}
               size={26}
               style={[styles.heart]}
-              color="#D0364C"
+              color={designLanguage.color600}
             />
           </TouchableHighlight>
           <TouchableHighlight

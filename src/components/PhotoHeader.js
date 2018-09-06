@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Button, TouchableHighlight, StatusBar } from 'react-native';
 import { Constants } from 'expo';
 
-import DesignLanguage from '../../designLanguage.json';
+import designLanguage from '../../designLanguage.json';
 
 class Appbar extends React.Component {
   render() {
@@ -13,9 +13,9 @@ class Appbar extends React.Component {
       rightButtonTitle,
     } = this.props;
 
-    const height = Constants.statusBarHeight + DesignLanguage.headerHeight;
-    const paddingTop = Constants.statusBarHeight + DesignLanguage.headerPaddingTop;
-    const paddingBottom = DesignLanguage.headerPaddingBottom;
+    const height = Constants.statusBarHeight + designLanguage.headerHeight;
+    const paddingTop = Constants.statusBarHeight + designLanguage.headerPaddingTop;
+    const paddingBottom = designLanguage.headerPaddingBottom;
 
     return (
       <View

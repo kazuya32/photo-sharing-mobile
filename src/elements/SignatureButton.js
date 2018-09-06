@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, TouchableHighlight } from 'react-native';
-
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import designLanguage from '../../designLanguage.json';
 
 class UploadButton extends React.Component {
   render() {
@@ -17,7 +18,7 @@ class UploadButton extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#DB4D5E',
+    backgroundColor: designLanguage.color300,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#102330',

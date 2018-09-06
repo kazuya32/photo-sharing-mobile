@@ -10,7 +10,7 @@ import {
 import { Constants } from 'expo';
 import firebase from 'firebase';
 
-import DesignLanguage from '../../designLanguage.json';
+import designLanguage from '../../designLanguage.json';
 import BackButton from '../elements/BackButton.js';
 import UserIcon from '../elements/UserIcon.js';
 
@@ -201,9 +201,9 @@ class Header extends React.Component {
     // const approvedGiftsSum = this.countApproved(this.state.sentGifts);
     const sum = unreadRequestsSum + approvedRequestsSum + unreadGiftsSum;
 
-    const height = Constants.statusBarHeight + DesignLanguage.headerHeight;
-    const paddingTop = Constants.statusBarHeight + DesignLanguage.headerPaddingTop;
-    const paddingBottom = DesignLanguage.headerPaddingBottom;
+    const height = Constants.statusBarHeight + designLanguage.headerHeight;
+    const paddingTop = Constants.statusBarHeight + designLanguage.headerPaddingTop;
+    const paddingBottom = designLanguage.headerPaddingBottom;
 
     return (
       <View
