@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   FlatList,
+  Platform,
 } from 'react-native';
 import firebase from 'firebase';
 import { SearchBar } from 'react-native-elements';
@@ -17,13 +18,6 @@ class SearchUser extends React.Component {
   }
 
   componentDidMount() {
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.value !== nextState.value) {
-      return false;
-    }
-    return true;
   }
 
   // eslint-disable-next-line
@@ -59,6 +53,10 @@ class SearchUser extends React.Component {
     });
   }
 
+  // clearUsers = () => {
+  //   this.setState({ users: [] });
+  // }
+
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({ item }) => (
@@ -86,12 +84,14 @@ class SearchUser extends React.Component {
           lightTheme
           clearIcon
           onChangeText={(searchText) => {
-            this.setState({ searchText });
+            if (Platform.OS === 'android') { this.setState({ searchText }); }
             this.searchUser(searchText);
           }}
           onClear={searchText => this.onPressTest({ searchText })}
+          // onClear={this.clearUsers}
           placeholder="名前が一致したユーザーを一覧表示します"
           value={this.state.searchText}
+          // onBlur={(searchText) => { this.setState({ searchText }); }}
           containerStyle={styles.searchBar}
           inputContainerStyle={styles.input}
           inputStyle={styles.inputText}
@@ -100,6 +100,7 @@ class SearchUser extends React.Component {
           data={this.state.users}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
+          extraData={this.state}
         />
       </View>
     );
