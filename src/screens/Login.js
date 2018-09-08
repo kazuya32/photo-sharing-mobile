@@ -88,6 +88,8 @@ class Login extends React.Component {
       facebookId: user.providerData[0].uid,
       phoneNumber: user.phoneNumber,
       photoURL: `${user.photoURL}?type=normal`,
+      myTeams: {},
+      primaryMyTeamId: '',
       desc: '',
       followers: {},
       following: {},

@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, AsyncStorage, Alert, KeyboardAvoidingView, Platform, ScrollView, Dimensions, ActivityIndicator } from 'react-native';
-import firebase from 'firebase';
+import { StyleSheet, View, Alert, KeyboardAvoidingView, Platform, ScrollView, Dimensions, ActivityIndicator } from 'react-native';
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 
 import TermOfService from '../components/TermOfService.js';
