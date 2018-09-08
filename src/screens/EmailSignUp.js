@@ -115,30 +115,6 @@ class EmailSignUp extends React.Component {
   //     });
   // }
 
-  signUpWithEmail = async () => {
-    this.setState({ isUploading: true });
-    const {
-      email,
-      pass,
-    } = this.state;
-
-    firebase.auth().createUserWithEmailAndPassword(email, pass)
-      .then((user) => {
-        // this.indexUser(user);
-        this.setState({ isUploading: false });
-        this.navigateToInitUser(user.uid);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        const customErrorMessage = '新規ユーザー登録に失敗しました。お手数ですが、再度実行してください。';
-        this.errorHandler(errorCode, customErrorMessage);
-        this.setState({ isUploading: false, showTerm: false });
-      });
-  }
-
   // indexUser = async (user) => {
   //   console.log(user);
   //   const db = firebase.firestore();
@@ -162,12 +138,18 @@ class EmailSignUp extends React.Component {
   //     });
   // }
 
-  navigateToInitUser = (uid) => {
+  navigateToInitUser = () => {
+    const {
+      email,
+      pass,
+    } = this.state;
+
     const timestamp = Date.now().toString();
+    const key = 'InitUser' + timestamp;
     this.props.navigation.navigate({
       routeName: 'InitUser',
-      params: { uid },
-      key: 'InitUser' + timestamp,
+      params: { email, pass, key },
+      key,
     });
   }
 
@@ -194,7 +176,7 @@ class EmailSignUp extends React.Component {
   }
 
   handleAgree = () => {
-    this.signUpWithEmail();
+    this.navigateToInitUser();
   }
 
   handleDisagree = () => {

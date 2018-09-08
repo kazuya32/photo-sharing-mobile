@@ -97,6 +97,18 @@ class UserIcon extends React.Component {
       />
     );
 
+    const teamLogo = this.props.logoURL ? (
+      <Image
+        style={[
+          styles.logo,
+          { width: dia * 0.3, height: dia * 0.3, position: 'absolute' },
+          { right: 0, bottom: 0 },
+        ]}
+        source={{ uri: this.props.logoURL }}
+        resizeMode="contain"
+      />
+    ) : null;
+
     // const image = this.state.uri ? (
     //   <Image
     //     style={[
@@ -141,6 +153,7 @@ class UserIcon extends React.Component {
           style={styles.badge}
           badgeNumber={badgeNumber}
         />
+        {teamLogo}
       </View>
     );
   }

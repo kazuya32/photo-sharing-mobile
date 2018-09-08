@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 
+import designLanguage from '../../designLanguage.json';
+
 class SaveButton extends React.Component {
   render() {
     const {
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   sendButton: {
-    backgroundColor: '#DB4D5E',
+    backgroundColor: designLanguage.colorPrimary,
     borderRadius: 21,
     paddingTop: 8,
     paddingBottom: 8,

@@ -20,8 +20,8 @@ class UploadButton extends React.Component {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 20,
-    right: 20,
+    bottom: 32,
+    right: 32,
     width: 56,
     height: 56,
     zIndex: 100,

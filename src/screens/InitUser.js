@@ -7,6 +7,7 @@ import {
   AsyncStorage,
   Dimensions,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import {
   ImagePicker,
@@ -14,34 +15,63 @@ import {
 } from 'expo';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
 import LogInHeader from '../components/LogInHeader.js';
 import UserIcon from '../elements/UserIcon.js';
 import EditItem from '../components/EditItem.js';
 import SaveButton from '../elements/SaveButton.js';
 import CancelButton from '../elements/CancelButton.js';
+import MyTeams from '../components/MyTeams.js';
+import TeamTabView from '../components/TeamTabView.js';
 
 class InitUser extends React.Component {
   state = {
-    uid: this.props.navigation.state.params.uid,
     name: null,
     desc: null,
     photoURL: null,
     headerTitle: '初期プロフィール',
+    myTeams: null,
+    primaryMyTeamId: null,
     isUploading: false,
+    modalVisible: false,
   }
 
   // eslint-disable-next-line
-  createProfile = () => {
-    this.setState({ isUploading: true });
+  signUpWithEmail = async () => {
+    if (!this.state.isUploading) {
+      this.setState({ isUploading: true });
+      const {
+        email,
+        pass,
+      } = this.props.navigation.state.params;
 
+      firebase.auth().createUserWithEmailAndPassword(email, pass)
+        .then((user) => {
+          this.createProfile(user.uid);
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+          Alert.alert('ユーザー登録に失敗しました。お手数ですが、再度実行してください。');
+          this.setState({ isUploading: false });
+        });
+    }
+  }
+
+  // eslint-disable-next-line
+  createProfile = (uid) => {
     const timestamp = Date.now().toString();
 
     const db = firebase.firestore();
-    const userRef = db.collection('users').doc(this.state.uid);
+    const userRef = db.collection('users').doc(uid);
     userRef.set({
       name: this.state.name || '',
       desc: this.state.desc || '',
       photoURL: this.state.photoURL || '',
+      myTeams: this.state.myTeams || {},
+      primaryMyTeamId: this.state.primaryMyTeamId || '',
       facebookId: '',
       phoneNumber: '',
       followers: {},
@@ -50,14 +80,14 @@ class InitUser extends React.Component {
       since: timestamp,
     })
       .then(() => {
-        AsyncStorage.setItem('uid', this.state.uid);
+        AsyncStorage.setItem('uid', uid);
         this.setState({ isUploading: false });
         this.navigateToMain();
       })
       .catch((error) => {
         // eslint-disable-next-line
         console.error('Error updating document: ', error);
-        Alert.alert('ユーザー登録に失敗しました。再度実行してください。');
+        Alert.alert('ユーザー登録に失敗しました。お手数ですが、再度実行してください。');
         this.setState({ isUploading: false });
       });
   }
@@ -130,6 +160,42 @@ class InitUser extends React.Component {
     });
   }
 
+  onPressTeam = (item) => {
+    const myTeams = this.state.myTeams || {};
+    myTeams[item.id] = true;
+    console.log(myTeams);
+
+    if (!this.state.primaryMyTeamId) {
+      this.setState({ myTeams, primaryMyTeamId: item.id });
+    } else {
+      this.setState({ myTeams });
+    }
+
+    this.setModalVisible(false);
+  }
+
+  addTeam = () => {
+    this.setModalVisible(true);
+  }
+
+  // eslint-disable-next-line
+  makeListFromObject = (obj) => {
+    if (!obj) { return null; }
+
+    const array = [];
+    Object.keys(obj).forEach((prop) => {
+      if (obj[prop]) {
+        array.push(prop);
+      }
+    });
+    return array;
+    // this.setState({ temas: array });
+  };
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -151,6 +217,16 @@ class InitUser extends React.Component {
             dia={80}
             style={styles.icon}
           />
+          <MyTeams
+            teams={this.makeListFromObject(this.state.myTeams)}
+          />
+          <SaveButton
+            onPress={this.addTeam}
+            style={styles.addTeam}
+            buttonStyle={styles.addTeamButton}
+          >
+            マイチーム追加
+          </SaveButton>
           <EditItem
             onChangeText={this.onChangeTextName}
             title="ユーザー名（最大20文字）"
@@ -173,10 +249,22 @@ class InitUser extends React.Component {
           >
             キャンセル
           </CancelButton>
-          <SaveButton onPress={this.createProfile}>
+          <SaveButton onPress={this.signUpWithEmail}>
             登録
           </SaveButton>
         </View>
+        <Modal
+          animationType="slide"
+          // transparent
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            this.setModalVisible(false);
+          }}
+        >
+          <TeamTabView
+            onPressTeam={this.onPressTeam}
+          />
+        </Modal>
       </View>
     );
   }
@@ -201,9 +289,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {
-    left: 24,
+    marginLeft: 24,
     marginTop: 24,
-    marginBottom: 20,
+    marginBottom: 24,
+    alignItems: 'flex-start',
   },
   footer: {
     // position: 'absolute',
@@ -218,6 +307,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     bottom: 0,
     height: 80,
+  },
+  addTeam: {
+    marginTop: 16,
+    marginBottom: 32,
+  },
+  addTeamButton: {
+    backgroundColor: designLanguage.color300,
   },
 });
 
