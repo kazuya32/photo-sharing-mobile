@@ -28,10 +28,11 @@ class EditItem extends React.Component {
       onChangeText,
       title,
       maxLength,
+      style,
     } = this.props;
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, style]}>
         <Text style={styles.title}>
           {title}
         </Text>

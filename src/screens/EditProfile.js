@@ -11,11 +11,13 @@ import {
 } from 'expo';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
 import Header from '../components/Header.js';
 import UserIcon from '../elements/UserIcon.js';
 import EditItem from '../components/EditItem.js';
 import SaveButton from '../elements/SaveButton.js';
 import CancelButton from '../elements/CancelButton.js';
+import MyTeams from '../components/MyTeams.js';
 
 class EditProfile extends React.Component {
   state = {
@@ -25,17 +27,20 @@ class EditProfile extends React.Component {
     desc: this.props.navigation.state.params.user.data.desc,
     photoURL: this.props.navigation.state.params.user.data.photoURL,
     iconLoading: false,
+    myTeams: this.props.navigation.state.params.user.data.myTeams,
+    primaryMyTeamId: this.props.navigation.state.params.user.data.primaryMyTeamId,
   }
 
   // eslint-disable-next-line
   updateProfile = () => {
-
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(this.state.uid);
     userRef.update({
       name: this.state.name || '',
       desc: this.state.desc || '',
       photoURL: this.state.photoURL || '',
+      myTeams: this.state.myTeams || {},
+      primaryMyTeamId: this.state.primaryMyTeamId || '',
     })
       .then(() => {
         this.props.navigation.goBack();
@@ -81,6 +86,59 @@ class EditProfile extends React.Component {
     }
   }
 
+  deleteMyTeam = (teamId) => {
+    Alert.alert(
+      'チームリストから削除します。よろしいでですか？',
+      undefined,
+      [
+        // eslint-disable-next-line
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: () => {
+            const { myTeams } = this.state;
+            delete myTeams[teamId];
+            if (this.state.primaryMyTeamId === teamId) {
+              let primaryMyTeamId;
+              if (Object.keys(myTeams).length) {
+                // eslint-disable-next-line
+                primaryMyTeamId = Object.keys(myTeams)[0];
+              } else {
+                primaryMyTeamId = null;
+              }
+              this.setState({ myTeams, primaryMyTeamId });
+            } else {
+              this.setState({ myTeams });
+            }
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  }
+
+  onPressTeam = (tagType, item) => {
+    const myTeams = this.state.myTeams || {};
+    myTeams[item.id] = true;
+
+    if (!this.state.primaryMyTeamId) {
+      this.setState({ myTeams, primaryMyTeamId: item.id });
+    } else {
+      this.setState({ myTeams });
+    }
+    this.props.navigation.navigate({ routeName: 'EditProfile' });
+  }
+
+  addTeam = () => {
+    this.props.navigation.navigate({
+      routeName: 'SearchTag',
+      params: {
+        tagType: 'teams',
+        onPress: this.onPressTeam,
+      },
+    });
+  }
+
   pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -114,7 +172,23 @@ class EditProfile extends React.Component {
     }
   };
 
+  // eslint-disable-next-line
+  makeListFromObject = (obj) => {
+    if (!obj) { return null; }
+
+    const array = [];
+    Object.keys(obj).forEach((prop) => {
+      if (obj[prop]) {
+        array.push(prop);
+      }
+    });
+    return array;
+    // this.setState({ temas: array });
+  };
+
   render() {
+    const { isAthlete } = this.props.navigation.state.params.user.data;
+
     return (
       <View style={styles.container}>
         <Header
@@ -128,20 +202,31 @@ class EditProfile extends React.Component {
             dia={80}
             style={styles.icon}
             loading={this.state.iconLoading}
+            // logoURL={this.state.logoURL}
           />
+          <MyTeams
+            teams={this.makeListFromObject(this.state.myTeams)}
+            onPress={this.deleteMyTeam}
+          />
+          <SaveButton
+            onPress={this.addTeam}
+            style={styles.addTeam}
+            buttonStyle={styles.addTeamButton}
+            invisible={isAthlete && this.state.myTeams && Object.keys(this.state.myTeams).length}
+          >
+            マイチーム追加
+          </SaveButton>
           <EditItem
             onChangeText={this.onChangeTextName}
             title="ユーザー名（最大20文字）"
             maxLength={20}
             value={this.state.name}
-            // style={styles.icon}
           />
           <EditItem
             onChangeText={this.onChangeTextDesc}
             title="自己紹介（最大200文字）"
             value={this.state.desc}
             maxLength={200}
-            // style={styles.icon}
           />
         </ScrollView>
         <View style={styles.footer}>
@@ -168,7 +253,7 @@ const styles = StyleSheet.create({
   icon: {
     marginLeft: 24,
     marginTop: 24,
-    marginBottom: 20,
+    marginBottom: 24,
     alignItems: 'flex-start',
   },
   footer: {
@@ -184,6 +269,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     bottom: 0,
     height: 80,
+  },
+  addTeam: {
+    marginTop: 16,
+    marginBottom: 32,
+  },
+  addTeamButton: {
+    backgroundColor: designLanguage.color300,
   },
 });
 

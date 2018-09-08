@@ -16,6 +16,8 @@ class Feed extends React.Component {
     showingPhotos: [],
     isReloading: false,
     refreshing: false,
+    photoCollectionList: [],
+    showedPhotos: {},
   }
 
   componentWillMount() {
@@ -27,9 +29,9 @@ class Feed extends React.Component {
     try {
       const value = await AsyncStorage.getItem('uid');
       if (value !== null) {
-        this.setState({ uid: value });
+        this.setState({ logInUid: value });
         // this.fetchUser();
-        this.fetchPhotos();
+        this.fetchPhotoCollections(value);
       }
     } catch (error) {
     //
@@ -37,10 +39,110 @@ class Feed extends React.Component {
   }
 
   // eslint-disable-next-line
-  fetchPhotos = async () => {
+  fetchPhotoCollections = async (logInUid) => {
     const db = firebase.firestore();
-    const maxResults = 100;
-    const recentNumber = 50;
+    const userRef = db.collection('users').doc(logInUid);
+    userRef.get().then((doc) => {
+      // const user = doc.data();
+      const logInUser = { id: doc.id, data: doc.data() };
+      // this.setState({ logInUser });
+
+      const { isAthlete, myTeams } = logInUser.data;
+
+      if (isAthlete) {
+        this.fetchTagged(logInUid, 100);
+      }
+
+      if (myTeams && Object.keys(myTeams).length) {
+        Object.keys(myTeams).forEach((teamId) => {
+          if (teamId !== 'undefined' && myTeams[teamId]) {
+            this.fetchTeamPhotos(teamId, 100);
+          }
+        });
+      } else {
+        this.fetchRecent(100);
+      }
+
+      this.fetchPopular(30);
+    });
+  }
+
+  // eslint-disable-next-line
+  fetchTagged = (uid, maxResults) => {
+    const db = firebase.firestore();
+    const photosRef = db.collection('photos').where(`people.${uid}`, '==', true);
+
+    photosRef.get()
+      .then((querySnapshot) => {
+        const photos = [];
+        querySnapshot.forEach((doc) => {
+          const { userDeleted, unlisted } = doc.data();
+          const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
+          if (!(unlisted || userDeleted || isBlocked)) {
+            photos.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          }
+        });
+        // this.setState({ photos: this.sortDesc(photos) });
+        if (photos.length) {
+          const taggedPhotos = this.sortDesc(photos);
+          const { photoCollectionList } = this.state;
+          photoCollectionList.push(taggedPhotos);
+          this.setState({ photoCollectionList });
+        }
+
+        // if (photos.length) {
+        //   this.addPhotos();
+        // } else {
+        //   this.setState({ showingPhotos: [] });
+        // }
+      });
+  }
+
+  fetchTeamPhotos = (teamId, maxResults) => {
+    const db = firebase.firestore();
+    const photosRef = db.collection('photos')
+      .where('teamId', '==', teamId);
+
+    const photos = [];
+    photosRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const { userDeleted, unlisted } = doc.data();
+          const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
+          if (!(unlisted || userDeleted || isBlocked)) {
+            const photo = {
+              id: doc.id,
+              data: doc.data(),
+            };
+            // photo.uri = doc.data().downloadURL;
+            // photo.onPress = () => { this.onPressPhoto(photo); };
+            photos.push(photo);
+          }
+        });
+
+        if (photos.length) {
+          const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+          const teamPhotos = this.sortDesc(photos);
+          const { photoCollectionList } = this.state;
+          photoCollectionList.push(teamPhotos);
+          this.setState({ photoCollectionList });
+          this.addPhotos();
+        }
+
+        if (photos.length < 30) {
+          this.fetchRecent(100);
+        }
+      });
+  }
+
+
+  fetchRecent = async (maxResults) => {
+    const db = firebase.firestore();
+    // const maxResults = 100;
 
     const photosRef = db.collection('photos')
       .orderBy('createdAt', 'desc')
@@ -51,7 +153,7 @@ class Feed extends React.Component {
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           const { userDeleted, unlisted } = doc.data();
-          const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.uid];
+          const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
           if (!(unlisted || userDeleted || isBlocked)) {
             photos.push({
               id: doc.id,
@@ -61,10 +163,48 @@ class Feed extends React.Component {
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-        const recentPhotos = photos.slice(0, recentNumber);
-        photos.splice(0, recentNumber);
+        // const recentPhotos = photos.slice(0, recentNumber);
+        // photos.splice(0, recentNumber);
+        // const generalPhotos = this.shuffle(photos);
+        const { photoCollectionList } = this.state;
+        photoCollectionList.push(photos);
+        this.setState({ photoCollectionList });
 
-        this.setState({ generalPhotos: this.shuffle(photos), recentPhotos, lastVisible });
+        // this.setState({ generalPhotos, recentPhotos, lastVisible });
+        // this.setState({ photos, lastVisible });
+
+        // this.addPhotos();
+      });
+  }
+
+  fetchPopular = async (maxResults) => {
+    const db = firebase.firestore();
+
+    const photosRef = db.collection('photos')
+      .orderBy('likesSum', 'desc')
+      .limit(maxResults);
+
+    const photos = [];
+    photosRef.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const { userDeleted, unlisted } = doc.data();
+          const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
+          if (!(unlisted || userDeleted || isBlocked)) {
+            photos.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          }
+        });
+        const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+        const popularPhotos = this.shuffle(photos);
+        const { photoCollectionList } = this.state;
+        photoCollectionList.push(popularPhotos);
+        this.setState({ photoCollectionList });
+
+        // this.setState({ generalPhotos, recentPhotos, lastVisible });
         // this.setState({ photos, lastVisible });
         this.addPhotos();
       });
@@ -75,35 +215,30 @@ class Feed extends React.Component {
     const {
       isReloading,
       showingPhotos,
-      recentPhotos,
-      generalPhotos,
+      photoCollectionList,
+      showedPhotos,
     } = this.state;
 
-    if (!isReloading) {
+    if (photoCollectionList.length && !isReloading) {
       this.setState({ isReloading: true });
 
-      if (recentPhotos.length) {
-        showingPhotos.push(recentPhotos[0]);
-        recentPhotos.shift();
-      }
-      if (recentPhotos.length) {
-        showingPhotos.push(recentPhotos[0]);
-        recentPhotos.shift();
-      }
-      if (generalPhotos.length) {
-        showingPhotos.push(generalPhotos[0]);
-        generalPhotos.shift();
-      }
-      if (generalPhotos.length) {
-        showingPhotos.push(generalPhotos[0]);
-        generalPhotos.shift();
-      }
+      photoCollectionList.forEach((collection) => {
+        if (collection.length) {
+          const photo = collection[0];
+          const photoId = photo.id;
+          if (!showedPhotos[photoId]) {
+            showingPhotos.push(photo);
+            showedPhotos[photoId] = true;
+          }
+          collection.shift();
+        }
+      });
 
       this.setState({
         isReloading: false,
         showingPhotos,
-        recentPhotos,
-        generalPhotos,
+        photoCollectionList,
+        showedPhotos,
       });
     }
   }
@@ -128,7 +263,7 @@ class Feed extends React.Component {
   //     photosRef.get()
   //       .then((querySnapshot) => {
   //         querySnapshot.forEach((doc) => {
-  //           const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.uid];
+  //           const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
   //           const { userDeleted } = doc.data();
   //           if (!(userDeleted || isBlocked)) {
   //             photos.push({
@@ -149,6 +284,12 @@ class Feed extends React.Component {
     this.fetchPhotos().then(() => {
       this.setState({ refreshing: false });
     });
+  }
+
+  sortDesc = (array) => {
+    array.sort((a, b) => (a.data.createdAt - b.data.createdAt));
+    array.reverse();
+    return array;
   }
 
   shuffle = (array) => {

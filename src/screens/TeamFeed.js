@@ -8,6 +8,7 @@ import {
   Text,
 } from 'react-native';
 import firebase from 'firebase';
+// import Masonry from 'react-native-masonry';
 
 import Header from '../components/Header.js';
 import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
@@ -15,7 +16,7 @@ import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
 class TeamFeed extends React.Component {
   state = {
     headerTitle: 'FLEGO',
-    reloadNumber: 40,
+    reloadNumber: 12,
     showingPhotos: null,
     loading: false,
   }
@@ -51,10 +52,13 @@ class TeamFeed extends React.Component {
           const { userDeleted } = doc.data();
           const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
           if (!(userDeleted || isBlocked)) {
-            photos.push({
+            const photo = {
               id: doc.id,
               data: doc.data(),
-            });
+            };
+            // photo.uri = doc.data().downloadURL;
+            // photo.onPress = () => { this.onPressPhoto(photo); };
+            photos.push(photo);
           }
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
@@ -85,6 +89,16 @@ class TeamFeed extends React.Component {
       this.setState({ showingPhotos, photos, loading: false });
     }
   }
+
+  // onPressPhoto = (photo) => {
+  //   this.props.navigation.navigate({
+  //     routeName: 'PhotoDetail',
+  //     params: {
+  //       photo,
+  //     },
+  //     key: 'PhotoDetail' + photo.id,
+  //   });
+  // }
 
   sortDesc = (array) => {
     array.sort((a, b) => (a.data.createdAt - b.data.createdAt));
@@ -150,6 +164,19 @@ class TeamFeed extends React.Component {
         </View>
       );
     }
+
+    // return (
+    //   <View style={styles.container}>
+    //     <Header
+    //       navigation={this.props.navigation}
+    //       headerTitle={this.state.headerTitle}
+    //     />
+    //     <Masonry
+    //       columns={3}
+    //       bricks={this.state.showingPhotos}
+    //     />
+    //   </View>
+    // );
 
     return (
       <View style={styles.container}>

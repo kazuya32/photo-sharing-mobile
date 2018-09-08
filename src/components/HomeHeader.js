@@ -249,6 +249,7 @@ class HomeHeader extends React.Component {
             isAthlete={this.state.isAthlete}
             badgeNumber={sum}
             style={styles.icon}
+            // notify
           />
         </View>
       </View>

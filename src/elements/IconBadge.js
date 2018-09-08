@@ -4,7 +4,9 @@ import {
   Text,
   View,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import designLanguage from '../../designLanguage.json';
 
 class IconBadge extends React.Component {
   render() {
@@ -14,7 +16,28 @@ class IconBadge extends React.Component {
     const {
       style,
       badgeNumber,
+      notify,
     } = this.props;
+
+    if (notify) {
+      return (
+        <View
+          style={[
+            styles.badge,
+            { backgroundColor: 'transparent', borderWidth: 0 },
+            style,
+          ]}
+        >
+          <Icon
+            style={[
+              styles.notification,
+            ]}
+            name="alert-box"
+            size={18}
+          />
+        </View>
+      );
+    }
 
     if (!badgeNumber) { return null; }
 
@@ -42,13 +65,13 @@ class IconBadge extends React.Component {
 
 const styles = StyleSheet.create({
   badge: {
-    backgroundColor: '#DB4D5E',
+    backgroundColor: designLanguage.colorPrimary,
     alignSelf: 'center',
     height: 18,
     width: 18,
     borderRadius: 9,
     borderWidth: 1,
-    borderColor: '#DB4D5E',
+    borderColor: designLanguage.colorPrimary,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -57,6 +80,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 10,
     textAlign: 'center',
+  },
+  notification: {
+    color: designLanguage.colorPrimary,
+    // backgroundColor: '#fff',
   },
 });
 

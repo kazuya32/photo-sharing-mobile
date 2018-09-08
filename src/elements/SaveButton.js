@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
 
+import designLanguage from '../../designLanguage.json';
+
 class SaveButton extends React.Component {
   render() {
     const {
@@ -9,7 +11,12 @@ class SaveButton extends React.Component {
       buttonStyle,
       textStyle,
       shadow,
+      invisible,
     } = this.props;
+
+    if (invisible) {
+      return null;
+    }
 
     return (
       <TouchableHighlight style={[styles.container, style]} onPress={onPress} underlayColor="transparent">
@@ -35,7 +42,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   sendButton: {
-    backgroundColor: '#DB4D5E',
+    backgroundColor: designLanguage.colorPrimary,
     borderRadius: 21,
     paddingTop: 8,
     paddingBottom: 8,
