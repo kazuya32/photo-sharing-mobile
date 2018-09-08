@@ -37,7 +37,7 @@ class MyTeams extends React.Component {
     <TeamItem
       teamId={item}
       numColumns={this.state.numColumns}
-      // onPress={this.addTeam}
+      onPress={() => { this.props.onPress(item); }}
       style={styles.myTeam}
     />
   )

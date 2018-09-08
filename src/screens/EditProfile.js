@@ -39,8 +39,8 @@ class EditProfile extends React.Component {
       name: this.state.name || '',
       desc: this.state.desc || '',
       photoURL: this.state.photoURL || '',
-      myTeams: this.state.myTeams,
-      primaryMyTeamId: this.state.primaryMyTeamId,
+      myTeams: this.state.myTeams || {},
+      primaryMyTeamId: this.state.primaryMyTeamId || '',
     })
       .then(() => {
         this.props.navigation.goBack();
@@ -86,10 +86,40 @@ class EditProfile extends React.Component {
     }
   }
 
+  deleteMyTeam = (teamId) => {
+    Alert.alert(
+      'チームリストから削除します。よろしいでですか？',
+      undefined,
+      [
+        // eslint-disable-next-line
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: () => {
+            const { myTeams } = this.state;
+            delete myTeams[teamId];
+            if (this.state.primaryMyTeamId === teamId) {
+              let primaryMyTeamId;
+              if (Object.keys(myTeams).length) {
+                // eslint-disable-next-line
+                primaryMyTeamId = Object.keys(myTeams)[0];
+              } else {
+                primaryMyTeamId = null;
+              }
+              this.setState({ myTeams, primaryMyTeamId });
+            } else {
+              this.setState({ myTeams });
+            }
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  }
+
   onPressTeam = (tagType, item) => {
     const myTeams = this.state.myTeams || {};
     myTeams[item.id] = true;
-    console.log(myTeams);
 
     if (!this.state.primaryMyTeamId) {
       this.setState({ myTeams, primaryMyTeamId: item.id });
@@ -157,6 +187,8 @@ class EditProfile extends React.Component {
   };
 
   render() {
+    const { isAthlete } = this.props.navigation.state.params.user.data;
+
     return (
       <View style={styles.container}>
         <Header
@@ -174,11 +206,13 @@ class EditProfile extends React.Component {
           />
           <MyTeams
             teams={this.makeListFromObject(this.state.myTeams)}
+            onPress={this.deleteMyTeam}
           />
           <SaveButton
             onPress={this.addTeam}
             style={styles.addTeam}
             buttonStyle={styles.addTeamButton}
+            invisible={isAthlete && this.state.myTeams && Object.keys(this.state.myTeams).length}
           >
             マイチーム追加
           </SaveButton>

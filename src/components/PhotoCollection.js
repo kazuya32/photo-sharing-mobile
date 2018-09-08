@@ -15,7 +15,7 @@ import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
 
 class PhotoCollection extends React.Component {
   state = {
-    reloadNumber: 24,
+    reloadNumber: 12,
     showingPhotos: null,
     loading: false,
   }

@@ -15,7 +15,7 @@ import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
 class MatchFeed extends React.Component {
   state = {
     headerTitle: 'FLEGO',
-    reloadNumber: 40,
+    reloadNumber: 12,
     showingPhotos: null,
     loading: false,
   }

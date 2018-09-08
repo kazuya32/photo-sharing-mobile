@@ -44,6 +44,7 @@ class UserIcon extends React.Component {
       badgeNumber,
       invisible,
       loading,
+      notify,
     } = this.props;
 
     if (invisible) { return null; }
@@ -69,7 +70,7 @@ class UserIcon extends React.Component {
     }
 
     const borderWidth = this.props.borderWidth || 3;
-    const borderColor = this.props.borderColor || '#DB4D5E';
+    const borderColor = this.props.borderColor || designLanguage.colorPrimary;
 
 
     const image = this.props.photoURL ? (
@@ -97,40 +98,17 @@ class UserIcon extends React.Component {
       />
     );
 
-    const teamLogo = this.props.logoURL ? (
-      <Image
-        style={[
-          styles.logo,
-          { width: dia * 0.3, height: dia * 0.3, position: 'absolute' },
-          { right: 0, bottom: 0 },
-        ]}
-        source={{ uri: this.props.logoURL }}
-        resizeMode="contain"
-      />
-    ) : null;
-
-    // const image = this.state.uri ? (
+    // const teamLogo = this.props.logoURL ? (
     //   <Image
     //     style={[
-    //       styles.photo,
-    //       { width: dia, height: dia },
-    //       isAthlete && { borderWidth, borderColor },
-    //       // isAndroid && { top: 0 },
+    //       styles.logo,
+    //       { width: dia * 0.3, height: dia * 0.3, position: 'absolute' },
+    //       { right: 0, bottom: 0 },
     //     ]}
-    //     source={{ uri: this.state.uri }}
-    //     resizeMode="cover"
-    //     borderRadius={dia * 0.5}
+    //     source={{ uri: this.props.logoURL }}
+    //     resizeMode="contain"
     //   />
-    // ) : (
-    //   <View
-    //     style={[
-    //       styles.photo,
-    //       styles.blank,
-    //       { width: dia, height: dia, borderRadius: dia * 0.5 },
-    //       isAthlete && { borderWidth, borderColor },
-    //     ]}
-    //   />
-    // );
+    // ) : null;
 
     return (
       <View
@@ -152,8 +130,8 @@ class UserIcon extends React.Component {
         <IconBadge
           style={styles.badge}
           badgeNumber={badgeNumber}
+          notify={notify}
         />
-        {teamLogo}
       </View>
     );
   }
@@ -176,7 +154,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
   },
   blank: {
-    backgroundColor: 'gray',
+    backgroundColor: '#D2D5DA',
   },
   badge: {
     position: 'absolute',

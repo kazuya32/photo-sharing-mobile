@@ -11,7 +11,12 @@ class SaveButton extends React.Component {
       buttonStyle,
       textStyle,
       shadow,
+      invisible,
     } = this.props;
+
+    if (invisible) {
+      return null;
+    }
 
     return (
       <TouchableHighlight style={[styles.container, style]} onPress={onPress} underlayColor="transparent">
