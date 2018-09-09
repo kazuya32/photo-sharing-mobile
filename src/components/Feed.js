@@ -31,7 +31,7 @@ class Feed extends React.Component {
       if (value !== null) {
         this.setState({ logInUid: value });
         // this.fetchUser();
-        this.fetchPhotoCollections(value);
+        this.fetchPhotoCollections();
       }
     } catch (error) {
     //
@@ -39,9 +39,9 @@ class Feed extends React.Component {
   }
 
   // eslint-disable-next-line
-  fetchPhotoCollections = async (logInUid) => {
+  fetchPhotoCollections = async () => {
     const db = firebase.firestore();
-    const userRef = db.collection('users').doc(logInUid);
+    const userRef = db.collection('users').doc(this.state.logInUid);
     userRef.get().then((doc) => {
       // const user = doc.data();
       const logInUser = { id: doc.id, data: doc.data() };
@@ -50,7 +50,7 @@ class Feed extends React.Component {
       const { isAthlete, myTeams } = logInUser.data;
 
       if (isAthlete) {
-        this.fetchTagged(logInUid, 100);
+        this.fetchTagged(100);
       }
 
       if (myTeams && Object.keys(myTeams).length) {
@@ -68,9 +68,9 @@ class Feed extends React.Component {
   }
 
   // eslint-disable-next-line
-  fetchTagged = (uid, maxResults) => {
+  fetchTagged = (maxResults) => {
     const db = firebase.firestore();
-    const photosRef = db.collection('photos').where(`people.${uid}`, '==', true);
+    const photosRef = db.collection('photos').where(`people.${this.state.logInUid}`, '==', true);
 
     photosRef.get()
       .then((querySnapshot) => {
@@ -281,7 +281,7 @@ class Feed extends React.Component {
 
   onRefresh = () => {
     this.setState({ refreshing: true, showingPhotos: [] }); // photosに一旦空の配列を入れるとリフレッシュ時にバグらない
-    this.fetchPhotos().then(() => {
+    this.fetchPhotoCollections().then(() => {
       this.setState({ refreshing: false });
     });
   }

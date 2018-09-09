@@ -64,7 +64,11 @@ class EditProfile extends React.Component {
 
   // eslint-disable-next-line
   onPressSave = () => {
-    this.updateProfile();
+    if (!this.state.name) {
+      Alert.alert('ユーザー名が空欄になっています。');
+    } else {
+      this.updateProfile();
+    }
   }
 
   // eslint-disable-next-line

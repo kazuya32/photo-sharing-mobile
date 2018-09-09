@@ -56,7 +56,7 @@ class LikedUsers extends React.Component {
   renderItem = ({ item }) => (
     <UserTile
       uid={item}
-      onPressUser={() => this.props.onPressUser(item)}
+      onPressUser={() => this.onPressUser(item)}
     />
   );
 

@@ -1,8 +1,7 @@
-import React from 'react';
 import firebase from 'firebase';
-import { AsyncStorage, Easing, Animated } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 // import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
+import { Segment } from 'expo';
 
 import Login from './src/screens/Login.js';
 import EmailLogin from './src/screens/EmailLogin.js';
@@ -53,6 +52,11 @@ const config = {
   messagingSenderId: ENV.FIREBASE_SENDER_ID,
 };
 firebase.initializeApp(config);
+
+const androidWriteKey = ENV.SEGMENT_WRITE_KEY;
+const iosWriteKey = ENV.SEGMENT_WRITE_KEY;
+
+Segment.initialize({ androidWriteKey, iosWriteKey });
 
 // firebase.auth().onAuthStateChanged(async (user) => {
 //   if (user) {

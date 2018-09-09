@@ -38,7 +38,9 @@ class InitUser extends React.Component {
 
   // eslint-disable-next-line
   signUpWithEmail = async () => {
-    if (!this.state.isUploading) {
+    if (!this.state.name) {
+      Alert.alert('ユーザー名が空欄になっています。');
+    } else if (!this.state.isUploading) {
       this.setState({ isUploading: true });
       const {
         email,

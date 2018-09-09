@@ -9,6 +9,7 @@ import {
 import {
   ImagePicker,
   Permissions,
+  Segment,
 } from 'expo';
 import firebase from 'firebase';
 
@@ -38,6 +39,10 @@ class Home extends React.Component {
         } = user;
 
         // firebase.auth().signOut();
+
+        Segment.identify(uid);
+        // Expo.Segment.identifyWithTraits(userId, traits)
+        Segment.screen('Home');
 
         this.setState({ logined: true });
 
