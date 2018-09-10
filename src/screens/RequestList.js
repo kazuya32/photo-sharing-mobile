@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { Segment } from 'expo';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 
 import Header from '../components/Header.js';
@@ -15,6 +16,7 @@ class RequestList extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('RequestList');
     // const { followingObject } = this.props;
   }
 

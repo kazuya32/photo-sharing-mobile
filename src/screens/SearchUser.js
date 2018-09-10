@@ -5,6 +5,7 @@ import {
   FlatList,
   Platform,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 import { SearchBar } from 'react-native-elements';
 
@@ -15,6 +16,10 @@ import UserSectionItem from '../components/UserSectionItem.js';
 class SearchUser extends React.Component {
   state = {
     searchText: '',
+  }
+
+  componentWillMount() {
+    Segment.screen('SearchUser');
   }
 
   componentDidMount() {

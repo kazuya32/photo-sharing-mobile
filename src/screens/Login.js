@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Image, Dimensions, AsyncStorage, Platform } from 'react-native';
-import Expo, { Constants } from 'expo';
+import Expo, { Constants, Segment } from 'expo';
 import firebase from 'firebase';
 
 import TermOfService from '../components/TermOfService.js';
@@ -16,6 +16,7 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('Login');
     AsyncStorage.setItem('uid', '');
   }
 

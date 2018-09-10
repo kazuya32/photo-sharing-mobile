@@ -5,6 +5,7 @@ import {
   ScrollView,
   AsyncStorage,
 } from 'react-native';
+import { Segment } from 'expo';
 
 import DownloadRequestButton from '../elements/DownloadRequestButton';
 import PhotoTile from '../components/PhotoTile';
@@ -14,6 +15,8 @@ class PhotoDetail extends React.Component {
   state = {}
 
   componentWillMount() {
+    Segment.screen('PhotoDetail');
+
     this.retrieveLogInUser();
   }
 

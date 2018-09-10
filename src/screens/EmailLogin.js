@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, AsyncStorage, Alert, TouchableOpacity, Text, Dimensions, ActivityIndicator } from 'react-native';
 import firebase from 'firebase';
+import { Segment } from 'expo';
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 
 import SaveButton from '../elements/SaveButton.js';
@@ -13,6 +14,10 @@ class EmailLogin extends React.Component {
     headerTitle: 'ログインする',
     // emailErrorMessage: 'Emailの形式が間違っています。',
     // passErrorMessage: 'パスワードが空白になっています。',
+  }
+
+  componentsWillMount() {
+    Segment.screen('EmailLogin');
   }
 
   // eslint-disable-next-line

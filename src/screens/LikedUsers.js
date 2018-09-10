@@ -5,6 +5,7 @@ import {
   FlatList,
   Text,
 } from 'react-native';
+import { Segment } from 'expo';
 
 import Header from '../components/Header.js';
 import UserTile from '../components/UserTile.js';
@@ -13,6 +14,10 @@ import UserTile from '../components/UserTile.js';
 class LikedUsers extends React.Component {
   state = {
     headerTitle: 'Likes',
+  }
+
+  componentWillMount() {
+    Segment.screen('LikedUsers');
   }
 
   componentDidMount() {

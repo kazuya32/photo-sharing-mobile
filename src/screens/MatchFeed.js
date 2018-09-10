@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Text,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
@@ -21,6 +22,8 @@ class MatchFeed extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('MatchFeed');
+
     this.fetchMatchTitle();
     this.fetchMatchPhotos();
   }

@@ -8,6 +8,7 @@ import {
 import {
   ImagePicker,
   Permissions,
+  Segment,
 } from 'expo';
 import firebase from 'firebase';
 
@@ -29,6 +30,10 @@ class EditProfile extends React.Component {
     iconLoading: false,
     myTeams: this.props.navigation.state.params.user.data.myTeams,
     primaryMyTeamId: this.props.navigation.state.params.user.data.primaryMyTeamId,
+  }
+
+  componentWillMount() {
+    Segment.screen('EditProfile');
   }
 
   // eslint-disable-next-line

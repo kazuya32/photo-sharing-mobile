@@ -4,6 +4,7 @@ import {
   View,
   FlatList,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 import { SearchBar } from 'react-native-elements';
 
@@ -14,6 +15,10 @@ import SearchItem from '../components/SearchItem.js';
 
 class SearchTag extends React.Component {
   state = {}
+
+  componentWillMount() {
+    Segment.screen('SearchTag');
+  }
 
   componentDidMount() {
     const { tagType } = this.props.navigation.state.params;

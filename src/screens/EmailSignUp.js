@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Alert, KeyboardAvoidingView, Platform, ScrollView, Dimensions, ActivityIndicator } from 'react-native';
+import { Segment } from 'expo';
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
 
 import TermOfService from '../components/TermOfService.js';
@@ -14,6 +15,10 @@ class EmailSignUp extends React.Component {
     headerTitle: '新規ユーザー登録',
     // emailErrorMessage: 'Emailの形式が間違っています。',
     // passErrorMessage: 'パスワードが空白になっています。',
+  }
+
+  componentsWillMount() {
+    Segment.screen('EmailSignUp');
   }
 
   // eslint-disable-next-line

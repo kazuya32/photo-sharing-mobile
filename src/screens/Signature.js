@@ -13,7 +13,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { takeSnapshotAsync } from 'expo';
+import { takeSnapshotAsync, Segment } from 'expo';
 
 import PhotoHeader from '../components/PhotoHeader.js';
 import PenSelector from '../components/PenSelector.js';
@@ -49,6 +49,10 @@ class Signature extends Component {
     // ],
     appState: AppState.currentState,
   };
+
+  componentWillMount() {
+    Segment.screen('Signature');
+  }
 
   // eslint-disable-next-line
   handleAppStateChangeAsync = nextAppState => {

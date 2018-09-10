@@ -3,12 +3,17 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { Segment } from 'expo';
 
 import Header from '../components/Header.js';
 import TeamTabView from '../components/TeamTabView.js';
 
 class Team extends React.Component {
   state = {
+  }
+
+  componentWillMount() {
+    Segment.screen('Team');
   }
 
   onPressTeam = (team) => {

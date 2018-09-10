@@ -9,6 +9,7 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
@@ -20,6 +21,10 @@ class ViewRequest extends React.Component {
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     // headerTitle: 'リクエスト',
     placeholder: '  お返事を書きましょう！（任意）',
+  }
+
+  componentWillMount() {
+    Segment.screen('ViewRequest');
   }
 
   onPressApprove = () => {

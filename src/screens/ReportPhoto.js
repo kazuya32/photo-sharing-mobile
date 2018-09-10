@@ -11,13 +11,14 @@ import {
   ActivityIndicator,
   AsyncStorage,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
 import SaveButton from '../elements/SaveButton.js';
 import CancelButton from '../elements/CancelButton.js';
 
-class Report extends React.Component {
+class ReportPhoto extends React.Component {
   state = {
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     headerTitle: 'レポート',
@@ -30,6 +31,8 @@ class Report extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('ReportPhoto');
+
     this.getUser(this.props.navigation.state.params.photo.data.uid);
     this.retrieveLogInUser();
   }
@@ -270,4 +273,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Report;
+export default ReportPhoto;

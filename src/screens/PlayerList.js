@@ -5,6 +5,7 @@ import {
   SectionList,
   ActivityIndicator,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
@@ -14,6 +15,10 @@ import UserSectionItem from '../components/UserSectionItem.js';
 
 class PlayerList extends React.Component {
   state = {
+  }
+
+  componentWillMount() {
+    Segment.screen('PlayerList');
   }
 
   componentDidMount() {

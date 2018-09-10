@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Text,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 // import Masonry from 'react-native-masonry';
 
@@ -22,6 +23,8 @@ class TeamFeed extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('TeamFeed');
+
     const { itemId } = this.props.navigation.state.params;
     this.getTeam(itemId);
     this.fetchPhotos();

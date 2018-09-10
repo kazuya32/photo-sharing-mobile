@@ -9,6 +9,7 @@ import {
   ScrollView,
   AsyncStorage,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
@@ -16,7 +17,7 @@ import SaveButton from '../elements/SaveButton.js';
 import CancelButton from '../elements/CancelButton.js';
 import UserIcon from '../elements/UserIcon.js';
 
-class Report extends React.Component {
+class ReportUser extends React.Component {
   state = {
     logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     headerTitle: 'レポート',
@@ -28,6 +29,8 @@ class Report extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('ReportUser');
+
     this.retrieveLogInUser();
   }
 
@@ -260,4 +263,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Report;
+export default ReportUser;

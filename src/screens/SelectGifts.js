@@ -8,9 +8,9 @@ import {
   Dimensions,
   ActivityIndicator,
   Text,
-  Alert,
   AsyncStorage,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
@@ -21,6 +21,8 @@ class SelectGifts extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('SelectGifts');
+
     this.fetchLogInUser();
   }
 

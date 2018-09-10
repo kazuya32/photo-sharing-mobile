@@ -11,6 +11,7 @@ import {
 import {
   ImagePicker,
   Permissions,
+  Segment,
 } from 'expo';
 import firebase from 'firebase';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
@@ -31,6 +32,8 @@ class UserPage extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('UserPage');
+    
     this.fetchData();
   }
 

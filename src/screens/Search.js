@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { Segment } from 'expo';
 
 import SelectItem from '../components/SelectItem.js';
 import Header from '../components/Header.js';
@@ -10,6 +11,10 @@ import Header from '../components/Header.js';
 class Search extends React.Component {
   state = {
     headerTitle: '探す',
+  }
+
+  componentWillMount() {
+    Segment.screen('Search');
   }
 
   onPressAthlete = () => {

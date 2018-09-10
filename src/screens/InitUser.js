@@ -12,6 +12,7 @@ import {
 import {
   ImagePicker,
   Permissions,
+  Segment,
 } from 'expo';
 import firebase from 'firebase';
 
@@ -34,6 +35,10 @@ class InitUser extends React.Component {
     primaryMyTeamId: null,
     isUploading: false,
     modalVisible: false,
+  }
+
+  componentsWillMount() {
+    Segment.screen('InitUser');
   }
 
   // eslint-disable-next-line

@@ -4,12 +4,17 @@ import {
   View,
   Dimensions,
 } from 'react-native';
+import { Segment } from 'expo';
 
 import Header from '../components/Header.js';
 import ScheduleTabView from '../components/ScheduleTabView.js';
 
 class Schedule extends React.Component {
   state = {
+  }
+
+  componentWillMount() {
+    Segment.screen('Schedule');
   }
 
   onPressMatch= (item) => {

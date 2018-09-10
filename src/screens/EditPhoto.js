@@ -7,6 +7,7 @@ import {
   Dimensions,
   AsyncStorage,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 import { CheckBox } from 'react-native-elements';
 
@@ -27,6 +28,8 @@ class EditPhoto extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('EditPhoto');
+
     if (this.props.navigation.state.params && this.props.navigation.state.params.photo) {
       const { photo } = this.props.navigation.state.params;
       this.setState({ photo });

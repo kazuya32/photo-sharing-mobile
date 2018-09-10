@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   AsyncStorage,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
@@ -27,6 +28,8 @@ class SendRequest extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('SendRequest');
+
     this.getUser(this.props.navigation.state.params.photo.data.uid);
     this.retrieveLogInUser();
   }

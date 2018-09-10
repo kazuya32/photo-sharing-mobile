@@ -8,6 +8,7 @@ import {
   AsyncStorage,
   ActivityIndicator,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 import { CheckBox } from 'react-native-elements';
 
@@ -29,6 +30,8 @@ class PhotoUploader extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('PhotoUploader');
+
     this.fetchData();
     if (this.props.navigation.state.params && this.props.navigation.state.params.taggedUser) {
       this.setState({ people: [this.props.navigation.state.params.taggedUser] });

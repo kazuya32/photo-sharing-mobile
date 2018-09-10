@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   AsyncStorage,
 } from 'react-native';
+import { Segment } from 'expo';
 import firebase from 'firebase';
 
 import Header from '../components/Header.js';
@@ -29,6 +30,8 @@ class SendGift extends React.Component {
   }
 
   componentWillMount() {
+    Segment.screen('SendGift');
+
     this.retrieveLogInUser();
   }
 
