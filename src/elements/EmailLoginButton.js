@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import designLanguage from '../../designLanguage.json';
+
 class EmailLoginButton extends React.Component {
   render() {
     const {
@@ -42,15 +44,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    backgroundColor: '#DB4D5E',
+    backgroundColor: designLanguage.color700,
     borderRadius: 30,
-    paddingTop: 14,
-    paddingBottom: 14,
+    paddingTop: 16,
+    paddingBottom: 16,
     paddingRight: 16,
     paddingLeft: 16,
     width: Dimensions.get('window').width * 0.8,
-    marginTop: 12,
-    marginBottom: 12,
+    marginTop: 16,
+    marginBottom: 16,
   },
   shadow: {
     shadowColor: 'rgba(0,0,0, .4)',

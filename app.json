@@ -6,14 +6,14 @@
     "privacy": "unlisted",
     "sdkVersion": "27.0.0",
     "platforms": ["ios", "android"],
-    "version": "1.4.2",
+    "version": "1.5.0",
     "orientation": "portrait",
-    "primaryColor": "#DB4D5E",
-    "icon": "./assets/icon-ios.png",
+    "primaryColor": "#E15C73",
+    "icon": "./assets/icon-ios-color400.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-simple-color400.png",
       "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#E15C73"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -31,8 +31,8 @@
     },
     "android": {
       "package": "com.flego.android",
-      "versionCode": 17,
-      "icon": "./assets/icon-android.png",
+      "versionCode": 18,
+      "icon": "./assets/icon-android-color400.png",
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"

@@ -40,10 +40,6 @@ class Home extends React.Component {
 
         // firebase.auth().signOut();
 
-        Segment.identify(uid);
-        // Expo.Segment.identifyWithTraits(userId, traits)
-        Segment.screen('Home');
-
         this.setState({ logined: true });
 
         try {
@@ -87,6 +83,9 @@ class Home extends React.Component {
           id: doc.id,
           data: doc.data(),
         };
+        
+        this.sendAnalytics(logInUser);
+
         this.storeLogInUser(logInUser);
         this.setState({ logInUser });
       } else {
@@ -94,6 +93,16 @@ class Home extends React.Component {
         this.props.navigation.navigate({ routeName: 'LoginStack' });
       }
     });
+  }
+
+  sendAnalytics = (logInUser) => {
+    const userId = logInUser.id;
+    const traits = {
+      athlete: logInUser.data.isAthlete.toString(),
+    };
+
+    Segment.identifyWithTraits(userId, traits);
+    Segment.screen('Home');
   }
 
   storeLogInUser = async (logInUser) => {

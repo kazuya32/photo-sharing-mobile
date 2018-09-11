@@ -4,7 +4,7 @@ import Expo, { Constants, Segment } from 'expo';
 import firebase from 'firebase';
 
 import TermOfService from '../components/TermOfService.js';
-import BackgroundImage from '../../assets/splash.png';
+import BackgroundImage from '../../assets/splash-simple-color400.png';
 import ENV from '../../env.json';
 import EmailLoginButton from '../elements/EmailLoginButton';
 import FacebookLoginButton from '../elements/FacebookLoginButton';
@@ -203,28 +203,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: 'flex-end',
   },
   termOfService: {
     position: 'absolute',
     zIndex: 100,
   },
   bgImage: {
-    opacity: 0.8,
+    // opacity: 0.8,
     position: 'absolute',
     height: Dimensions.get('window').height,
     width: Dimensions.get('window').width,
     justifyContent: 'center',
   },
-  upperArea: {
-    flex: 2,
-    alignContent:'center',
-    justifyContent: 'center',
-  },
   underArea: {
-    flex: 2,
-    padding: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
     alignContent:'center',
     justifyContent: 'center',
+    marginBottom: Dimensions.get('window').height * 0.1,
   },
 });
 
