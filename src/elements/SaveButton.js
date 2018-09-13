@@ -38,7 +38,7 @@ class SaveButton extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 30,
+    height: 40,
     alignSelf: 'center',
   },
   sendButton: {

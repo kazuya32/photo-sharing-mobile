@@ -5,11 +5,13 @@ import {
   Alert,
   AsyncStorage,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import {
   ImagePicker,
   Permissions,
   Segment,
+  Notifications,
 } from 'expo';
 import firebase from 'firebase';
 
@@ -44,13 +46,13 @@ class Home extends React.Component {
 
         try {
           await AsyncStorage.setItem('uid', uid);
-          // await AsyncStorage.setItem('facebookId', providerData[0].uid);
-          // this.fetchData();
         } catch (error) {
+          // eslint-disable-next-line
           console.log('failed to saving AsyncStorage');
         }
       // eslint-disable-next-line
       } else {
+        // eslint-disable-next-line
         console.log('not login');
         // unsubscribe();
         this.props.navigation.navigate({ routeName: 'LoginStack' });
@@ -59,15 +61,55 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    // console.log('home');
-    // this.props.navigation.navigate({ routeName: 'LoginStack' });
     this.fetchData();
+  }
+
+  // eslint-disable-next-line
+  getPushToken = (uid) => {
+    // if (Platform.OS === 'android') {
+    //   this.registerFCMPushToken(uid);
+    // } else {
+    //   this.registerForPushNotificationsAsync(uid);
+    // }
+    this.registerForPushNotificationsAsync(uid);
+  }
+
+  // eslint-disable-next-line
+  registerForPushNotificationsAsync = async (uid) => {
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+
+    if (finalStatus !== 'granted') {
+      return;
+    }
+
+    const token = await Notifications.getExpoPushTokenAsync();
+    this.updatePushToken(uid, token);
+  }
+
+  // eslint-disable-next-line
+  updatePushToken = (uid, token) => {
+    const db = firebase.firestore();
+    const userRef = db.collection('users').doc(uid);
+    userRef.update({
+      pushToken: token,
+    })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error('Error updating document: ', error);
+      });
   }
 
   // eslint-disable-next-line
   fetchData = async () => {
     try {
       const value = await AsyncStorage.getItem('uid');
+      this.getPushToken(value);
       this.fetchLogInUser(value);
     } catch (error) {
     //
@@ -83,7 +125,7 @@ class Home extends React.Component {
           id: doc.id,
           data: doc.data(),
         };
-        
+
         this.sendAnalytics(logInUser);
 
         this.storeLogInUser(logInUser);
@@ -199,3 +241,46 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
+
+// // eslint-disable-next-line
+// registerFCMPushToken = (uid) => {
+//   const messaging = firebase.messaging();
+//
+//   messaging.requestPermission().then(() => {
+//     console.log('Notification permission granted.');
+//     // Get Instance ID token. Initially this makes a network call, once retrieved
+//     // subsequent calls to getToken will return from cache.
+//     messaging.getToken().then((currentToken) => {
+//       if (currentToken) {
+//         this.updateFCMPushToken(uid, currentToken);
+//         // updateUIForPushEnabled(currentToken);
+//       } else {
+//         // Show permission request.
+//         console.log('No Instance ID token available. Request permission to generate one.');
+//         // Show permission UI.
+//         // updateUIForPushPermissionRequired();
+//         // setTokenSentToServer(false);
+//       }
+//     }).catch((err) => {
+//       console.log('An error occurred while retrieving token. ', err);
+//       // showToken('Error retrieving Instance ID token. ', err);
+//       // setTokenSentToServer(false);
+//     });
+//   }).catch((err) => {
+//     console.log('Unable to get permission to notify.', err);
+//   });
+// }
+//
+// // eslint-disable-next-line
+// updateFCMPushToken = (uid, token) => {
+//   const db = firebase.firestore();
+//
+//   const userRef = db.collection('users').doc(uid);
+//   userRef.update({
+//     FCMPushToken: token,
+//   })
+//     .catch((error) => {
+//       // eslint-disable-next-line
+//       console.error('Error updating document: ', error);
+//     });
+// }

@@ -6,7 +6,7 @@
     "privacy": "unlisted",
     "sdkVersion": "27.0.0",
     "platforms": ["ios", "android"],
-    "version": "1.5.0",
+    "version": "1.5.2",
     "orientation": "portrait",
     "primaryColor": "#E15C73",
     "icon": "./assets/icon-ios-color400.png",
@@ -31,12 +31,9 @@
     },
     "android": {
       "package": "com.flego.android",
-      "versionCode": 18,
+      "versionCode": 20,
       "icon": "./assets/icon-android-color400.png",
-      "permissions": [
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
-      ]
+      "googleServicesFile": "./google-services.json"
     },
     "facebookScheme": "fb2113813658871952",
     "facebookAppId": "2113813658871952",
