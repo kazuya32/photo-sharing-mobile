@@ -61,6 +61,40 @@ class SendSignature extends React.Component {
     });
   }
 
+  // eslint-disable-next-line
+  pushSignatureNotification = async () => {
+    const { user } = this.state;
+    const token = user && user.data.pushToken;
+
+    if (typeof token !== 'undefined') {
+      const db = firebase.firestore();
+      const userRef = db.collection('users').doc(this.state.logInUid);
+      userRef.get().then((doc) => {
+        // const user = doc.data();
+        const logInUser = { id: doc.id, data: doc.data() };
+        const logInUserName = logInUser.data.name;
+        const suffix = logInUser.data.isAthlete ? '選手' : 'さん';
+
+        const message = `${logInUserName}${suffix}があなたにデジタルサインを贈りました。`;
+
+        const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
+        fetch(expoPushEndpoint, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Encoding': 'gzip,deflate',
+          },
+          body: JSON.stringify({
+            to: token,
+            title: 'FLEGO',
+            body: message,
+          }),
+        });
+      });
+    }
+  }
+
   uploadPhoto = async () => {
     if (!this.state.isUploading) {
       this.setState({ isUploading: true });
@@ -125,6 +159,7 @@ class SendSignature extends React.Component {
         this.setState({ isUploading: false });
         this.setSigned();
         this.sendGift(newPhotoId);
+        this.pushSignatureNotification();
         Alert.alert('デジタルサインを贈りました。');
         this.props.navigation.navigate({
           routeName: 'Home',

@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   ScrollView,
+  AsyncStorage,
 } from 'react-native';
 import { Segment } from 'expo';
 import firebase from 'firebase';
@@ -18,7 +19,6 @@ import CancelButton from '../elements/CancelButton.js';
 
 class ViewRequest extends React.Component {
   state = {
-    logInUser: this.props.navigation.state.params && this.props.navigation.state.params.logInUser,
     // headerTitle: 'リクエスト',
     placeholder: '  お返事を書きましょう！（任意）',
   }
@@ -42,6 +42,41 @@ class ViewRequest extends React.Component {
   }
 
   // eslint-disable-next-line
+  pushApproveNotification = async () => {
+    const { user } = this.props.navigation.state.params;
+    const token = user && user.data.pushToken;
+
+    if (typeof token !== 'undefined') {
+      const db = firebase.firestore();
+      const logInUid = await AsyncStorage.getItem('uid');
+      const userRef = db.collection('users').doc(logInUid);
+      userRef.get().then((doc) => {
+        // const user = doc.data();
+        const logInUser = { id: doc.id, data: doc.data() };
+        const logInUserName = logInUser.data.name;
+        const suffix = logInUser.data.isAthlete ? '選手' : 'さん';
+
+        const message = `${logInUserName}${suffix}があなたのダウンロードリクエストを承認しました。`;
+
+        const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
+        fetch(expoPushEndpoint, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Encoding': 'gzip,deflate',
+          },
+          body: JSON.stringify({
+            to: token,
+            title: 'FLEGO',
+            body: message,
+          }),
+        });
+      });
+    }
+  }
+
+  // eslint-disable-next-line
   giveAccess = async () => {
     const db = firebase.firestore();
     const Ref = db.collection('photos').doc(this.props.navigation.state.params.photo.id);
@@ -50,6 +85,7 @@ class ViewRequest extends React.Component {
     })
       .then(() => {
         this.setApproved();
+        this.pushApproveNotification();
         // eslint-disable-next-line
         console.log('Document successfully written!');
       })
@@ -125,6 +161,10 @@ class ViewRequest extends React.Component {
       isApproved = (this.state.status === 'approved');
     }
 
+    const photoWidth = Dimensions.get('window').width;
+    const XYRate = photo.data.height / photo.data.width;
+    const photoHeight = photoWidth * XYRate;
+
     return (
       <View style={styles.container}>
         <Header
@@ -136,7 +176,10 @@ class ViewRequest extends React.Component {
             {user.data.name}さんからのダウンロードリクエスト
           </Text>
           <Image
-            style={styles.image}
+            style={[
+              styles.image,
+              { height: photoHeight, width: photoWidth },
+            ]}
             source={{ uri: photo.data.downloadURL }}
             resizeMode="contain"
           />
@@ -211,8 +254,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   image: {
-    width: Dimensions.get('window').width / 3,
-    height: Dimensions.get('window').width / 3,
+    // width: Dimensions.get('window').width / 1,
+    // height: Dimensions.get('window').width / 1,
     alignSelf: 'center',
     // marginTop: 16,
     marginBottom: 16,

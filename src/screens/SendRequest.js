@@ -61,6 +61,38 @@ class SendRequest extends React.Component {
     });
   }
 
+  pushRequestNotification = async () => {
+    const token = this.state.user && this.state.user.data.pushToken;
+
+    if (typeof token !== 'undefined') {
+      const db = firebase.firestore();
+      const userRef = db.collection('users').doc(this.state.logInUid);
+      userRef.get().then((doc) => {
+        // const user = doc.data();
+        const logInUser = { id: doc.id, data: doc.data() };
+        const logInUserName = logInUser.data.name;
+        const suffix = logInUser.data.isAthlete ? '選手' : 'さん';
+
+        const message = `${logInUserName}${suffix}からダウンロードリクエストが届いています。`;
+
+        const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
+        fetch(expoPushEndpoint, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Encoding': 'gzip,deflate',
+          },
+          body: JSON.stringify({
+            to: token,
+            title: 'FLEGO',
+            body: message,
+          }),
+        });
+      });
+    }
+  }
+
   // eslint-disable-next-line
   uploadRequest = () => {
     if (!this.state.isUploading) {
@@ -81,6 +113,7 @@ class SendRequest extends React.Component {
         .then(() => {
           this.setPending();
           Alert.alert('ダウンロードリクエストを送信しました。');
+          this.pushRequestNotification();
           this.setState({ isUploading: false });
           this.props.navigation.navigate({
             routeName: 'Home',
@@ -129,6 +162,12 @@ class SendRequest extends React.Component {
       );
     }
 
+    const { photo } = this.props.navigation.state.params;
+
+    const photoWidth = Dimensions.get('window').width;
+    const XYRate = photo.data.height / photo.data.width;
+    const photoHeight = photoWidth * XYRate;
+
     return (
       <View style={styles.container}>
         <Header
@@ -148,8 +187,11 @@ class SendRequest extends React.Component {
             {this.state.user.data.name}さんにダウンロードリクエストを送信します。
           </Text>
           <Image
-            style={styles.image}
-            source={{ uri: this.props.navigation.state.params.photo.data.downloadURL }}
+            style={[
+              styles.image,
+              { height: photoHeight, width: photoWidth },
+            ]}
+            source={{ uri: photo.data.downloadURL }}
             resizeMode="contain"
           />
           <TextInput
@@ -205,8 +247,8 @@ const styles = StyleSheet.create({
     margin: 16,
   },
   image: {
-    width: Dimensions.get('window').width / 1,
-    height: Dimensions.get('window').width / 1,
+    // width: Dimensions.get('window').width / 1,
+    // height: Dimensions.get('window').width / 1,
     alignSelf: 'center',
     // marginTop: 16,
     marginBottom: 16,

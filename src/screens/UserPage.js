@@ -33,7 +33,7 @@ class UserPage extends React.Component {
 
   componentWillMount() {
     Segment.screen('UserPage');
-    
+
     this.fetchData();
   }
 
@@ -316,7 +316,7 @@ class UserPage extends React.Component {
         </ScrollableTabView>
 
         <PhotoGivingButton
-          show={this.state.isMyPage}
+          show={!this.state.isMyPage}
           onPress={this.onPressGifting}
         />
         <UploadButton onPress={this.onPressUpload} show={this.state.isMyPage} />

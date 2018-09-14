@@ -46,6 +46,40 @@ class SendGift extends React.Component {
   }
 
   // eslint-disable-next-line
+  pushGiftNotification = async () => {
+    const { user } = this.state;
+    const token = user && user.data.pushToken;
+
+    if (typeof token !== 'undefined') {
+      const db = firebase.firestore();
+      const userRef = db.collection('users').doc(this.state.logInUid);
+      userRef.get().then((doc) => {
+        // const user = doc.data();
+        const logInUser = { id: doc.id, data: doc.data() };
+        const logInUserName = logInUser.data.name;
+        const suffix = logInUser.data.isAthlete ? '選手' : 'さん';
+
+        const message = `${logInUserName}${suffix}があなたにフォトギフトを贈りました。`;
+
+        const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
+        fetch(expoPushEndpoint, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Encoding': 'gzip,deflate',
+          },
+          body: JSON.stringify({
+            to: token,
+            title: 'FLEGO',
+            body: message,
+          }),
+        });
+      });
+    }
+  }
+
+  // eslint-disable-next-line
   sendGift = () => {
     if (!this.state.isUploading) {
       this.setState({ isUploading: true });
@@ -89,6 +123,7 @@ class SendGift extends React.Component {
       [`accesses.${this.state.user.id}`]: true,
     })
       .then(() => {
+        this.pushGiftNotification();
         // eslint-disable-next-line
         console.log('Document successfully written!');
       })

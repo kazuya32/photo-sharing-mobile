@@ -393,6 +393,7 @@ class PhotoTile extends React.Component {
 
       if (!hasAccess && this.state.isAthleteLogIn) {
         this.setDownloadRequestByAthlete();
+        this.pushAthleteDownloadNotification();
       }
       this.downloadPhoto();
     }
@@ -402,6 +403,38 @@ class PhotoTile extends React.Component {
   setDownloadRequestByAthlete = () => {
     this.makeRequest();
     this.giveAccessToAthlete();
+  }
+
+  pushAthleteDownloadNotification = async () => {
+    const token = this.state.user && this.state.user.data.pushToken;
+
+    if (typeof token !== 'undefined') {
+      const db = firebase.firestore();
+      const userRef = db.collection('users').doc(this.state.logInUid);
+      userRef.get().then((doc) => {
+        // const user = doc.data();
+        const logInUser = { id: doc.id, data: doc.data() };
+        const logInUserName = logInUser.data.name;
+        const suffix = logInUser.data.isAthlete ? '選手' : 'さん';
+
+        const message = `${logInUserName}${suffix}があなたの写真をダウンロードしました！`;
+
+        const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
+        fetch(expoPushEndpoint, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Encoding': 'gzip,deflate',
+          },
+          body: JSON.stringify({
+            to: token,
+            title: 'FLEGO',
+            body: message,
+          }),
+        });
+      });
+    }
   }
 
   // eslint-disable-next-line
