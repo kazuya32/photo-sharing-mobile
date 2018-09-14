@@ -261,10 +261,43 @@ class PhotoTile extends React.Component {
     });
   }
 
+  pushLikeNotification = async () => {
+    const token = this.state.user && this.state.user.data.pushToken;
+
+    if (typeof token !== 'undefined') {
+      const db = firebase.firestore();
+      const userRef = db.collection('users').doc(this.state.logInUid);
+      userRef.get().then((doc) => {
+        // const user = doc.data();
+        const logInUser = { id: doc.id, data: doc.data() };
+        const logInUserName = logInUser.data.name;
+        const suffix = logInUser.data.isAthlete ? '選手' : 'さん';
+
+        const message = `${logInUserName}${suffix}があなたの写真にいいねしました。`;
+
+        const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
+        fetch(expoPushEndpoint, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Encoding': 'gzip,deflate',
+          },
+          body: JSON.stringify({
+            to: token,
+            title: 'FLEGO',
+            body: message,
+          }),
+        });
+      });
+    }
+  }
+
   handleLikeButton = (nextValue) => {
     let { likes } = this.state;
     if (nextValue) {
       likes.push(this.state.logInUid);
+      this.pushLikeNotification();
     } else {
       likes = this.deletePropFromArray(likes, this.state.logInUid);
     }

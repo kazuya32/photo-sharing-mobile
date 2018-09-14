@@ -16,7 +16,7 @@ import {
 import firebase from 'firebase';
 
 import Feed from '../components/Feed.js';
-import HomeHeader from '../components/HomeHeader.js';
+import Header from '../components/Header.js';
 import UploadButton from '../elements/UploadButton.js';
 
 class Home extends React.Component {
@@ -141,6 +141,7 @@ class Home extends React.Component {
     const userId = logInUser.id;
     const traits = {
       athlete: logInUser.data.isAthlete.toString(),
+      os: Platform.OS,
     };
 
     Segment.identifyWithTraits(userId, traits);
@@ -216,7 +217,8 @@ class Home extends React.Component {
 
     return (
       <View style={styles.container}>
-        <HomeHeader
+        <Header
+          home
           headerTitle={this.state.headerTitle}
           navigation={this.props.navigation}
         />

@@ -13,6 +13,7 @@ import firebase from 'firebase';
 import designLanguage from '../../designLanguage.json';
 import BackButton from '../elements/BackButton.js';
 import UserIcon from '../elements/UserIcon.js';
+import HeaderLeftButton from '../elements/HeaderLeftButton.js';
 
 class Header extends React.Component {
   state = {
@@ -48,6 +49,7 @@ class Header extends React.Component {
           uid,
           photoURL: user.data.photoURL,
           isAthlete: user.data.isAthlete,
+          logInUser: user,
         });
       }
     });
@@ -186,6 +188,35 @@ class Header extends React.Component {
     }
   }
 
+  navigateToSearch = () => {
+    this.props.navigation.navigate({
+      routeName: 'Search',
+      params: {
+        logInUser: this.state.logInUser,
+      },
+    });
+  }
+
+  updateNotificationBadge = (sum) => {
+    const token = this.state.logInUser && this.state.logInUser.data.pushToken;
+
+    if (typeof token !== 'undefined') {
+      const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
+      fetch(expoPushEndpoint, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Accept-Encoding': 'gzip,deflate',
+        },
+        body: JSON.stringify({
+          to: token,
+          badge: sum,
+        }),
+      });
+    }
+  }
+
   onPressBack = () => {
     this.props.navigation.goBack();
   }
@@ -193,6 +224,7 @@ class Header extends React.Component {
   render() {
     const {
       headerTitle,
+      home,
     } = this.props;
 
     const unreadRequestsSum = this.countUnread(this.state.receivedRequests);
@@ -200,10 +232,24 @@ class Header extends React.Component {
     const unreadGiftsSum = this.countUnread(this.state.receivedGifts);
     // const approvedGiftsSum = this.countApproved(this.state.sentGifts);
     const sum = unreadRequestsSum + approvedRequestsSum + unreadGiftsSum;
+    // this.updateNotificationBadge(sum);
 
     const height = Constants.statusBarHeight + designLanguage.headerHeight;
     const paddingTop = Constants.statusBarHeight + designLanguage.headerPaddingTop;
     const paddingBottom = designLanguage.headerPaddingBottom;
+
+    const leftButton = home ? (
+      <HeaderLeftButton
+        onPress={this.navigateToSearch}
+        style={styles.leftButton}
+      />
+    ) : (
+      <BackButton
+        onPress={this.onPressBack}
+        style={styles.back}
+        size={32}
+      />
+    );
 
     return (
       <View
@@ -219,11 +265,7 @@ class Header extends React.Component {
         <StatusBar
           barStyle="dark-content"
         />
-        <BackButton
-          onPress={this.onPressBack}
-          style={styles.back}
-          size={32}
-        />
+        {leftButton}
         <TouchableHighlight onPress={this.onPressTitle} underlayColor="transparent" style={styles.title}>
           <Text style={styles.titleText}>
             {headerTitle}
@@ -267,6 +309,13 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 18,
     fontWeight: '700',
+  },
+  leftButton: {
+    position: 'absolute',
+    left: 0,
+    bottom: 12,
+    paddingLeft: 18,
+    paddingRight: 18,
   },
   back: {
     position: 'absolute',

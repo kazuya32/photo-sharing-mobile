@@ -6,7 +6,7 @@
     "privacy": "unlisted",
     "sdkVersion": "27.0.0",
     "platforms": ["ios", "android"],
-    "version": "1.5.2",
+    "version": "1.5.3",
     "orientation": "portrait",
     "primaryColor": "#E15C73",
     "icon": "./assets/icon-ios-color400.png",
@@ -26,12 +26,13 @@
       "bundleIdentifier": "com.flego.ios",
       "infoPlist": {
         "NSPhotoLibraryAddUsageDescription": "FLEGOがあなたのお気に入りのフォトや受け取ったデジタルサインフォトを保存することを許可します。",
-        "NSPhotoLibraryUsageDescription": "FLEGOがカメラロールにアクセスすることとお気に入りの写真やデジタルサイン付きフォトを保存することを許可します。"
+        "NSPhotoLibraryUsageDescription": "FLEGOがカメラロールにアクセスすることとお気に入りの写真やデジタルサイン付きフォトを保存することを許可します。",
+        "CFBundleDisplayName": "FLEGO"
       }
     },
     "android": {
       "package": "com.flego.android",
-      "versionCode": 20,
+      "versionCode": 21,
       "icon": "./assets/icon-android-color400.png",
       "googleServicesFile": "./google-services.json"
     },

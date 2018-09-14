@@ -33,7 +33,6 @@ class Schedule extends React.Component {
         <Header
           headerTitle="Match Schedule"
           navigation={this.props.navigation}
-          logInUser={this.state.logInUser}
         />
         <ScheduleTabView
           navigation={this.props.navigation}

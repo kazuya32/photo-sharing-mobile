@@ -47,7 +47,6 @@ class Search extends React.Component {
         <Header
           headerTitle={this.state.headerTitle}
           navigation={this.props.navigation}
-          logInUser={this.state.logInUser}
         />
         <SelectItem
           onPress={this.onPressAthlete}
