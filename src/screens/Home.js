@@ -15,6 +15,7 @@ import {
 } from 'expo';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
 import Feed from '../components/Feed.js';
 import Header from '../components/Header.js';
 import UploadButton from '../elements/UploadButton.js';
@@ -22,8 +23,6 @@ import UploadButton from '../elements/UploadButton.js';
 class Home extends React.Component {
   state = {
     headerTitle: 'FLEGO',
-    // feedType: 'home',
-    // logInUser: null,
   }
 
   componentWillMount() {
@@ -40,12 +39,14 @@ class Home extends React.Component {
           providerData,
         } = user;
 
-        // firebase.auth().signOut();
 
-        this.setState({ logined: true });
+        // await this.validateUser(uid);
+        // this.validateUser(uid);
 
         try {
           await AsyncStorage.setItem('uid', uid);
+          this.setState({ uid });
+          this.fetchData();
         } catch (error) {
           // eslint-disable-next-line
           console.log('failed to saving AsyncStorage');
@@ -54,28 +55,38 @@ class Home extends React.Component {
       } else {
         // eslint-disable-next-line
         console.log('not login');
-        // unsubscribe();
+        this.setState({ uid: null });
+        unsubscribe();
         this.props.navigation.navigate({ routeName: 'LoginStack' });
       }
     });
   }
 
+  // // eslint-disable-next-line
+  // validateUser = (uid) => {
+  //   try {
+  //     const db = firebase.firestore();
+  //     const userRef = db.collection('users').doc(uid);
+  //     userRef.get().then((doc) => {
+  //       if (!doc.exists) {
+  //         firebase.auth().signOut();
+  //         this.props.navigation.navigate({ routeName: 'LoginStack' });
+  //       } else {
+  //         console.lgo('validate')
+  //       }
+  //     });
+  //   } catch (error) {
+  //     // eslint-disable-next-line
+  //     console.log('failed to validateUser');
+  //   }
+  // }
+
   componentDidMount() {
-    this.fetchData();
+    // this.fetchData();
   }
 
   // eslint-disable-next-line
-  getPushToken = (uid) => {
-    // if (Platform.OS === 'android') {
-    //   this.registerFCMPushToken(uid);
-    // } else {
-    //   this.registerForPushNotificationsAsync(uid);
-    // }
-    this.registerForPushNotificationsAsync(uid);
-  }
-
-  // eslint-disable-next-line
-  registerForPushNotificationsAsync = async (uid) => {
+  registerForPushNotificationsAsync = async () => {
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
     let finalStatus = existingStatus;
 
@@ -89,52 +100,55 @@ class Home extends React.Component {
     }
 
     const token = await Notifications.getExpoPushTokenAsync();
-    this.updatePushToken(uid, token);
+    this.updatePushToken(token);
   }
 
   // eslint-disable-next-line
-  updatePushToken = (uid, token) => {
-    const db = firebase.firestore();
-    const userRef = db.collection('users').doc(uid);
-    userRef.update({
-      pushToken: token,
-    })
-      .catch((error) => {
-        // eslint-disable-next-line
-        console.error('Error updating document: ', error);
+  updatePushToken = (token) => {
+    if (this.state.uid) {
+      const db = firebase.firestore();
+      const userRef = db.collection('users').doc(this.state.uid);
+      userRef.get().then((doc) => {
+        if (doc.exists) {
+          userRef.update({
+            pushToken: token,
+          })
+            .catch((error) => {
+              // eslint-disable-next-line
+              console.error('Error updating document: ', error);
+            });
+        }
       });
+    }
   }
 
   // eslint-disable-next-line
   fetchData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('uid');
-      this.getPushToken(value);
-      this.fetchLogInUser(value);
-    } catch (error) {
-    //
-    }
+    this.registerForPushNotificationsAsync();
+    this.fetchLogInUser();
   }
 
-  fetchLogInUser = (uid) => {
-    const db = firebase.firestore();
-    const userRef = db.collection('users').doc(uid);
-    userRef.get().then((doc) => {
-      if (doc.exists) {
-        const logInUser = {
-          id: doc.id,
-          data: doc.data(),
-        };
+  fetchLogInUser = () => {
+    if (this.state.uid) {
+      const db = firebase.firestore();
+      const userRef = db.collection('users').doc(this.state.uid);
+      userRef.get().then((doc) => {
+        if (doc.exists) {
+          const logInUser = {
+            id: doc.id,
+            data: doc.data(),
+          };
 
-        this.sendAnalytics(logInUser);
+          this.sendAnalytics(logInUser);
 
-        this.storeLogInUser(logInUser);
-        this.setState({ logInUser });
-      } else {
-        firebase.auth().signOut();
-        this.props.navigation.navigate({ routeName: 'LoginStack' });
-      }
-    });
+          this.storeLogInUser(logInUser);
+          this.setState({ logInUser });
+        } else {
+          firebase.auth().signOut();
+          // this.props.navigation.navigate({ routeName: 'LoginStack' });
+        }
+      });
+    }
   }
 
   sendAnalytics = (logInUser) => {
@@ -205,11 +219,11 @@ class Home extends React.Component {
 
 
   render() {
-    if (!this.state.logined) {
+    if (!this.state.uid) {
       return (
         <View style={styles.container}>
           <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-            <ActivityIndicator />
+            <ActivityIndicator color={designLanguage.colorPrimary} />
           </View>
         </View>
       );

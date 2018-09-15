@@ -74,14 +74,14 @@ class Login extends React.Component {
       } else {
         // eslint-disable-next-line
         console.log('No exist in handle facebook user');
-        // this.setState({ user });
-        this.handleGuest(user);
+        this.setState({ user });
+        this.handleGuest();
       }
     });
   }
 
-  signUp = async (user) => {
-    // const { user } = this.state;
+  signUp = async () => {
+    const { user } = this.state;
     const timestamp = Date.now().toString();
     const db = firebase.firestore();
     db.collection('users').doc(user.uid).set({

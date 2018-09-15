@@ -11,6 +11,7 @@ import {
 import firebase from 'firebase';
 // import Icon from 'react-native-vector-icons/Ionicons';
 
+import designLanguage from '../../designLanguage.json';
 import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
 
 class PhotoCollection extends React.Component {
@@ -179,7 +180,7 @@ class PhotoCollection extends React.Component {
     if (!this.state.showingPhotos) {
       return (
         <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-          <ActivityIndicator />
+          <ActivityIndicator color={designLanguage.colorPrimary} />
         </View>
       );
     }

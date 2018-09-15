@@ -126,7 +126,6 @@ class Profile extends React.Component {
       .then(() => {
         // eslint-disable-next-line
         console.log('Signed Out');
-        this.props.navigation.navigate('Login');
       })
       .catch((error) => {
         // eslint-disable-next-line

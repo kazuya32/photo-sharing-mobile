@@ -29,9 +29,11 @@ class Header extends React.Component {
   // eslint-disable-next-line
   initAuthState = async () => {
     const uid = await AsyncStorage.getItem('uid');
-    this.fetchLogInUser(uid);
-    this.fetchRequest(uid);
-    this.fetchGifts(uid);
+    if (uid) {
+      this.fetchLogInUser(uid);
+      this.fetchRequest(uid);
+      this.fetchGifts(uid);
+    }
   }
 
   fetchLogInUser = (uid) => {

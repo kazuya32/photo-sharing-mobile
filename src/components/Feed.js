@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
 import PhotoTile from '../components/PhotoTile.js';
 
 class Feed extends React.Component {
@@ -321,6 +322,16 @@ class Feed extends React.Component {
   );
 
   render() {
+    if (!this.state.showingPhotos.length) {
+      return (
+        <View style={styles.container}>
+          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+            <ActivityIndicator color={designLanguage.colorPrimary} />
+          </View>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <FlatList

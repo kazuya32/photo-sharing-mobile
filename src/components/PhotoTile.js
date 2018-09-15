@@ -115,7 +115,7 @@ class PhotoTile extends React.Component {
           <SignatureButton
             style={[
               styles.signatureBtn,
-              this.state.isMyPage && { display: 'none' },
+              (Platform.OS === 'android' || this.state.isMyPage) && { display: 'none' },
             ]}
             onPress={this.onPressSignature}
 
