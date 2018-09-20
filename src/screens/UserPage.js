@@ -65,32 +65,34 @@ class UserPage extends React.Component {
     const db = firebase.firestore();
     const userRef = db.collection('users').doc(this.state.uid);
     userRef.onSnapshot((doc) => {
-      // const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
-      const user = {
-        id: doc.id,
-        data: doc.data(),
-      };
+      if (doc.exists) {
+        // const source = doc.metadata.hasPendingWrites ? 'Local' : 'Server';
+        const user = {
+          id: doc.id,
+          data: doc.data(),
+        };
 
-      const followersArray = this.makeListFromObject(user.data.followers);
-      const followingArray = this.makeListFromObject(user.data.following);
+        const followersArray = this.makeListFromObject(user.data.followers);
+        const followingArray = this.makeListFromObject(user.data.following);
 
-      if (this.state.initialized) {
-        if (this.state.isMyPage) {
-          this.setState({ user });
+        if (this.state.initialized) {
+          if (this.state.isMyPage) {
+            this.setState({ user });
+          }
+        } else {
+          this.setState({
+            user,
+            followersArray,
+            followingArray,
+            isFollowing: !this.state.isMyPage && user.data.followers[this.state.logInUid],
+            // initialized: true,
+          });
         }
-      } else {
-        this.setState({
-          user,
-          followersArray,
-          followingArray,
-          isFollowing: !this.state.isMyPage && user.data.followers[this.state.logInUid],
-          // initialized: true,
-        });
-      }
 
-      // if (this.state.isMyPage) {
-      //   this.storeLogInUser(user);
-      // }
+        // if (this.state.isMyPage) {
+        //   this.storeLogInUser(user);
+        // }
+      }
     });
   }
 
