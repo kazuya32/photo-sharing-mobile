@@ -29,7 +29,7 @@ import LikeButton from '../elements/LikeButton.js';
 import UploaderTile from '../elements/UploaderTile.js';
 import MenuButton from '../elements/MenuButton.js';
 
-class PhotoTile extends React.Component {
+class PhotoTile extends React.PureComponent {
   state = {
     // eslint-disable-next-line
     stadium: null,

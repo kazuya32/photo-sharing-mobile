@@ -10,6 +10,7 @@ import {
 import { Segment } from 'expo';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
 import Header from '../components/Header.js';
 import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
 
@@ -111,7 +112,7 @@ class MatchFeed extends React.Component {
             headerTitle={this.state.headerTitle}
           />
           <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-            <ActivityIndicator />
+            <ActivityIndicator color={designLanguage.colorPrimary} />
           </View>
         </View>
       );
@@ -147,6 +148,8 @@ class MatchFeed extends React.Component {
           columnWrapperStyle={styles.column}
           onEndReachedThreshold={0.5}
           onEndReached={this.addPhotos}
+          disableVirtualization // deprecated
+          removeClippedSubviews
         />
         <View style={styles.whitelineLeft} />
         <View style={styles.whitelineRight} />

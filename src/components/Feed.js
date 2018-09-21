@@ -341,6 +341,7 @@ class Feed extends React.Component {
           onEndReachedThreshold={0.5}
           onEndReached={this.addPhotos}
           extraData={this.state}
+          removeClippedSubviews
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}

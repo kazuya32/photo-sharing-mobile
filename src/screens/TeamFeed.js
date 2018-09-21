@@ -11,6 +11,7 @@ import { Segment } from 'expo';
 import firebase from 'firebase';
 // import Masonry from 'react-native-masonry';
 
+import designLanguage from '../../designLanguage.json';
 import Header from '../components/Header.js';
 import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
 
@@ -148,7 +149,7 @@ class TeamFeed extends React.Component {
             headerTitle={this.state.headerTitle}
           />
           <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-            <ActivityIndicator />
+            <ActivityIndicator color={designLanguage.colorPrimary} />
           </View>
         </View>
       );
@@ -197,6 +198,8 @@ class TeamFeed extends React.Component {
           columnWrapperStyle={styles.column}
           onEndReachedThreshold={0.5}
           onEndReached={this.addPhotos}
+          removeClippedSubviews // deprecated
+          disableVirtualization
           // extraData={this.state}
         />
         <View style={styles.whitelineLeft} />

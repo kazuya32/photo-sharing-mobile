@@ -10,7 +10,7 @@ import firebase from 'firebase';
 
 import UserIcon from '../elements/UserIcon.js';
 
-class PhotoCollectionItem extends React.Component {
+class PhotoCollectionItem extends React.PureComponent {
   state = {
 
   }

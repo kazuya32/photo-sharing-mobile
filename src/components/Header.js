@@ -234,7 +234,7 @@ class Header extends React.Component {
     const unreadGiftsSum = this.countUnread(this.state.receivedGifts);
     // const approvedGiftsSum = this.countApproved(this.state.sentGifts);
     const sum = unreadRequestsSum + approvedRequestsSum + unreadGiftsSum;
-    this.updateNotificationBadge(sum);
+    // this.updateNotificationBadge(sum);
 
     const height = Constants.statusBarHeight + designLanguage.headerHeight;
     const paddingTop = Constants.statusBarHeight + designLanguage.headerPaddingTop;

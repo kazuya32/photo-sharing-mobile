@@ -137,6 +137,7 @@ class PhotoCollection extends React.Component {
           columnWrapperStyle={styles.column}
           onEndReachedThreshold={0.5}
           onEndReached={this.addPhotos}
+          removeClippedSubviews
         />
         <View style={styles.whitelineLeft} />
         <View style={styles.whitelineRight} />
