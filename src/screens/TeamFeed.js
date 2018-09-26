@@ -5,6 +5,7 @@ import {
   FlatList,
   Dimensions,
   ActivityIndicator,
+  Platform,
   Text,
 } from 'react-native';
 import { Segment } from 'expo';
@@ -196,10 +197,10 @@ class TeamFeed extends React.Component {
           // horizontal={true}
           keyExtractor={this.keyExtractor}
           columnWrapperStyle={styles.column}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.8}
           onEndReached={this.addPhotos}
-          removeClippedSubviews // deprecated
-          disableVirtualization
+          removeClippedSubviews={Platform.OS === 'android'}
+          maxToRenderPerBatch={3}
           // extraData={this.state}
         />
         <View style={styles.whitelineLeft} />

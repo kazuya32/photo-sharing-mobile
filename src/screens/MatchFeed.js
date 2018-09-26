@@ -6,6 +6,7 @@ import {
   Dimensions,
   ActivityIndicator,
   Text,
+  Platform,
 } from 'react-native';
 import { Segment } from 'expo';
 import firebase from 'firebase';
@@ -149,7 +150,7 @@ class MatchFeed extends React.Component {
           onEndReachedThreshold={0.5}
           onEndReached={this.addPhotos}
           disableVirtualization // deprecated
-          removeClippedSubviews
+          removeClippedSubviews={Platform.OS === 'android'}
         />
         <View style={styles.whitelineLeft} />
         <View style={styles.whitelineRight} />

@@ -12,7 +12,6 @@ import UserIcon from '../elements/UserIcon.js';
 
 class PhotoCollectionItem extends React.PureComponent {
   state = {
-
   }
 
   componentDidMount() {
@@ -21,6 +20,11 @@ class PhotoCollectionItem extends React.PureComponent {
       this.getUser(this.props.photo.data.uid);
     }
   }
+
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return this.state.uri !== nextState.uri;
+  // }
+  
   // eslint-disable-next-line
   getUser = (uid) => {
     let user;

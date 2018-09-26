@@ -7,6 +7,7 @@ import {
   Text,
   ActivityIndicator,
   AsyncStorage,
+  Platform,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -137,7 +138,7 @@ class PhotoCollection extends React.Component {
           columnWrapperStyle={styles.column}
           onEndReachedThreshold={0.5}
           onEndReached={this.addPhotos}
-          removeClippedSubviews
+          removeClippedSubviews={Platform.OS === 'android'}
         />
         <View style={styles.whitelineLeft} />
         <View style={styles.whitelineRight} />
