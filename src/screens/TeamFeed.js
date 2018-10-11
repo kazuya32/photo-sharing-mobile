@@ -15,13 +15,16 @@ import firebase from 'firebase';
 import designLanguage from '../../designLanguage.json';
 import Header from '../components/Header.js';
 import PhotoCollectionItem from '../components/PhotoCollectionItem.js';
+import PhotoRollFooter from '../components/PhotoRollFooter.js';
 
 class TeamFeed extends React.Component {
   state = {
     headerTitle: 'FLEGO',
-    reloadNumber: 12,
+    reloadNumber: 24,
     showingPhotos: null,
-    loading: false,
+    // loading: false,
+    index: 0,
+    photoPages: null,
   }
 
   componentWillMount() {
@@ -69,41 +72,39 @@ class TeamFeed extends React.Component {
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
         this.setState({ photos: this.sortDesc(photos), lastVisible });
         if (photos.length) {
-          this.addPhotos();
+          this.devidePhotos(photos);
         } else {
           this.setState({ showingPhotos: [] });
         }
       });
   }
 
-  addPhotos = () => {
-    const { photos } = this.state;
+  devidePhotos = (photos) => {
+    if (photos.length) {
+      const photoPages = [];
 
-    if (!this.state.loading && photos.length) {
-      this.setState({ loading: true });
-
-      let { showingPhotos } = this.state;
-      if (!showingPhotos) {
-        showingPhotos = photos.slice(0, this.state.reloadNumber);
+      // const finalIndex = Math.floor(photos.length / this.state.reloadNumber);
+      while (photos.length) {
+        const page = photos.slice(0, this.state.reloadNumber);
         photos.splice(0, this.state.reloadNumber);
-      } else {
-        const tmp = photos.slice(0, this.state.reloadNumber);
-        photos.splice(0, this.state.reloadNumber);
-        Array.prototype.push.apply(showingPhotos, tmp);
+        photoPages.push(page);
       }
-      this.setState({ showingPhotos, photos, loading: false });
+
+      const showingPhotos = photoPages[this.state.index];
+      this.setState({ photoPages, showingPhotos });
     }
   }
 
-  // onPressPhoto = (photo) => {
-  //   this.props.navigation.navigate({
-  //     routeName: 'PhotoDetail',
-  //     params: {
-  //       photo,
-  //     },
-  //     key: 'PhotoDetail' + photo.id,
-  //   });
-  // }
+  setIndex = async (num) => {
+    let nextIndex = this.state.index + num;
+    if (nextIndex >= this.state.photoPages.length) {
+      nextIndex = this.state.photoPages.length - 1;
+    } else if (nextIndex < 0) {
+      nextIndex = 0;
+    }
+    const nextPhotos = this.state.photoPages[nextIndex];
+    return { nextPhotos, nextIndex };
+  }
 
   sortDesc = (array) => {
     array.sort((a, b) => (a.data.createdAt - b.data.createdAt));
@@ -113,26 +114,6 @@ class TeamFeed extends React.Component {
 
   keyExtractor = (item, index) => index.toString();
 
-  // renderItem = ({ item }) => (
-  //   <TouchableOpacity
-  //     onPress={() => {
-  //       this.props.navigation.navigate({
-  //         routeName: 'PhotoDetail',
-  //         params: {
-  //           photo: item,
-  //         },
-  //         key: 'PhotoDetail' + item.id,
-  //       });
-  //     }}
-  //   >
-  //     <Image
-  //       style={styles.photoItem}
-  //       source={{ uri: item.data.downloadURL }}
-  //       resizeMode="cover"
-  //     />
-  //   </TouchableOpacity>
-  // );
-
   renderItem = ({ item }) => (
     <PhotoCollectionItem
       navigation={this.props.navigation}
@@ -140,6 +121,43 @@ class TeamFeed extends React.Component {
       photoStyle={styles.photoItem}
     />
   );
+
+  // eslint-disable-next-line
+  onPressNext = () => {
+    if (this.state.index < this.state.photoPages.length - 1) {
+      this.setState({ showingPhotos: [] }); // photosに一旦空の配列を入れるとリフレッシュ時にバグらない
+      this.setIndex(1).then(({ nextPhotos, nextIndex }) => {
+        this.setState({ showingPhotos: nextPhotos, index: nextIndex });
+      });
+    }
+  }
+  // eslint-disable-next-line
+  onPressFastNext = () => {
+    if (this.state.index < this.state.photoPages.length - 1) {
+      this.setState({ showingPhotos: [] }); // photosに一旦空の配列を入れるとリフレッシュ時にバグらない
+      this.setIndex(5).then(({ nextPhotos, nextIndex }) => {
+        this.setState({ showingPhotos: nextPhotos, index: nextIndex });
+      });
+    }
+  }
+
+  onPressBack = () => {
+    if (this.state.index) {
+      this.setState({ showingPhotos: [] }); // photosに一旦空の配列を入れるとリフレッシュ時にバグらない
+      this.setIndex(-1).then(({ nextPhotos, nextIndex }) => {
+        this.setState({ showingPhotos: nextPhotos, index: nextIndex });
+      });
+    }
+  }
+
+  onPressFastBack = () => {
+    if (this.state.index) {
+      this.setState({ showingPhotos: [] }); // photosに一旦空の配列を入れるとリフレッシュ時にバグらない
+      this.setIndex(-5).then(({ nextPhotos, nextIndex }) => {
+        this.setState({ showingPhotos: nextPhotos, index: nextIndex });
+      });
+    }
+  }
 
   render() {
     if (!this.state.showingPhotos) {
@@ -189,6 +207,11 @@ class TeamFeed extends React.Component {
           navigation={this.props.navigation}
           headerTitle={this.state.headerTitle}
         />
+        <View style={[styles.index]}>
+          <Text style={[styles.indexText]}>
+            {`${this.state.index + 1} / ${this.state.photoPages.length}`}
+          </Text>
+        </View>
         <FlatList
           navigation={this.props.navigation}
           data={this.state.showingPhotos}
@@ -197,15 +220,21 @@ class TeamFeed extends React.Component {
           // horizontal={true}
           keyExtractor={this.keyExtractor}
           columnWrapperStyle={styles.column}
-          onEndReachedThreshold={0.8}
-          onEndReached={this.addPhotos}
           removeClippedSubviews={Platform.OS === 'android'}
-          maxToRenderPerBatch={3}
-          // extraData={this.state}
+          extraData={this.state}
         />
         <View style={styles.whitelineLeft} />
         <View style={styles.whitelineRight} />
         <View style={styles.whitelineCenter} />
+        <PhotoRollFooter
+          style={styles.footer}
+          onPressBack={this.onPressBack}
+          onPressFastBack={this.onPressFastBack}
+          onPressNext={this.onPressNext}
+          onPressFastNext={this.onPressFastNext}
+          index={this.state.index}
+          pageLength={this.state.photoPages.length}
+        />
       </View>
     );
   }
@@ -215,6 +244,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  footer: {
+    zIndex: 50,
+  },
+  index: {
+    padding: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 90,
   },
   alert: {
     flex: 1,
@@ -237,6 +275,7 @@ const styles = StyleSheet.create({
     left: (Dimensions.get('window').width / 4),
     width: 1,
     backgroundColor: '#fff',
+    zIndex: 80,
   },
   whitelineRight: {
     position: 'absolute',
@@ -244,6 +283,7 @@ const styles = StyleSheet.create({
     right: (Dimensions.get('window').width / 4),
     width: 1,
     backgroundColor: '#fff',
+    zIndex: 80,
   },
   whitelineCenter: {
     position: 'absolute',
@@ -251,6 +291,7 @@ const styles = StyleSheet.create({
     left: (Dimensions.get('window').width / 2),
     width: 1,
     backgroundColor: '#fff',
+    zIndex: 80,
   },
 });
 

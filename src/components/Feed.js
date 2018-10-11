@@ -65,7 +65,7 @@ class Feed extends React.Component {
         this.fetchRecent(100);
       }
 
-      this.fetchPopular(30);
+      this.fetchPopular(20);
     });
   }
 
@@ -182,17 +182,22 @@ class Feed extends React.Component {
   fetchPopular = async (maxResults) => {
     const db = firebase.firestore();
 
+    const currentTimestamp = Date.now();
+    const day = 1000 * 60 * 60 * 24;
+    const searchTime = currentTimestamp - (day * 14);
+
     const photosRef = db.collection('photos')
-      .orderBy('likesSum', 'desc')
-      .limit(maxResults);
+      .where('createdAt', '>=', searchTime)
+      // .orderBy('likesSum', 'desc')
+      // .limit(maxResults);
 
     const photos = [];
     photosRef.get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          const { userDeleted, unlisted } = doc.data();
+          const { userDeleted, unlisted, likesSum } = doc.data();
           const isBlocked = doc.data().blockedBy && doc.data().blockedBy[this.state.logInUid];
-          if (!(unlisted || userDeleted || isBlocked)) {
+          if (likesSum && !(unlisted || userDeleted || isBlocked)) {
             photos.push({
               id: doc.id,
               data: doc.data(),
@@ -201,9 +206,14 @@ class Feed extends React.Component {
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-        const popularPhotos = this.shuffle(photos);
+        // console.log('popular', photos.length);
+
+        const popularPhotos = this.sortLikes(photos).slice(0, maxResults);
+        // console.log('most popular', popularPhotos[0]);
+        // console.log('least popular', popularPhotos[10]);
+        const shuffledPopularPhotos = this.shuffle(popularPhotos);
         const { photoCollectionList } = this.state;
-        photoCollectionList.push(popularPhotos);
+        photoCollectionList.push(shuffledPopularPhotos);
         this.setState({ photoCollectionList });
 
         // this.setState({ generalPhotos, recentPhotos, lastVisible });
@@ -294,6 +304,12 @@ class Feed extends React.Component {
     return array;
   }
 
+  sortLikes = (array) => {
+    array.sort((a, b) => (a.data.likesSum - b.data.likesSum));
+    array.reverse();
+    return array;
+  }
+
   shuffle = (array) => {
     let currentIndex = array.length;
     let temporaryValue;
@@ -343,7 +359,7 @@ class Feed extends React.Component {
           onEndReached={this.addPhotos}
           extraData={this.state}
           removeClippedSubviews={Platform.OS === 'android'}
-          legacyImplementation
+          // legacyImplementation
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
