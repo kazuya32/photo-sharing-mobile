@@ -25,11 +25,11 @@ class PhotoDetail extends React.Component {
     try {
       const logInUid = await AsyncStorage.getItem('uid');
       // const photoURL = await AsyncStorage.getItem('photoURL');
-      // const isAthlete = await AsyncStorage.getItem('isAthlete');
+      const isAthlete = await AsyncStorage.getItem('isAthlete');
 
       // if (photoURL !== null && isAthlete !== null) {
-      // const value = (isAthlete === 'true');
-      this.setState({ logInUid });
+      const value = (isAthlete === 'true');
+      this.setState({ logInUid, athleteLogIn: value });
       // }
     } catch (error) {
     //
@@ -62,6 +62,7 @@ class PhotoDetail extends React.Component {
   render() {
     const { photo } = this.props.navigation.state.params;
     const hasAccess = photo.data.accesses && photo.data.accesses[this.state.logInUid];
+    const myPhoto = photo.data.uid === this.state.logInUid;
     // eslint-disable-next-line
     const isPending = photo.data.pendingRequests && photo.data.pendingRequests[this.state.logInUid];
 
@@ -87,7 +88,7 @@ class PhotoDetail extends React.Component {
             ]}
             isPending={isPending}
             textStyle={styles.btnTitle}
-            show={!photo.data.private && !(hasAccess || photo.data.uid === this.state.logInUid)}
+            show={this.state.athleteLogIn && !photo.data.private && !(hasAccess || myPhoto)}
           />
         </ScrollView>
       </View>

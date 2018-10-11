@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     borderBottomWidth: 0.3,
     borderBottomColor: '#808080',
-    zIndex: 10,
+    zIndex: 150,
   },
   title: {
   },

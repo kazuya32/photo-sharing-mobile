@@ -50,17 +50,17 @@ class Search extends React.Component {
         />
         <SelectItem
           onPress={this.onPressAthlete}
-          title="公式アスリート"
+          title="アスリート"
           itemColor="black"
         />
         <SelectItem
           onPress={this.onPressTeam}
-          title="Jリーグチーム"
+          title="チーム"
           itemColor="black"
         />
         <SelectItem
           onPress={this.onPressMatch}
-          title="公式マッチ"
+          title="マッチ"
           itemColor="black"
         />
         <SelectItem
