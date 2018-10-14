@@ -26,6 +26,10 @@ class Feed extends React.Component {
     this.fetchData();
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state !== nextState;
+  }
+
   // eslint-disable-next-line
   fetchData = async () => {
     try {
@@ -90,8 +94,7 @@ class Feed extends React.Component {
         // this.setState({ photos: this.sortDesc(photos) });
         if (photos.length) {
           const taggedPhotos = this.sortDesc(photos);
-          const { photoCollectionList } = this.state;
-          photoCollectionList.push(taggedPhotos);
+          const photoCollectionList = [...this.state.photoCollectionList, taggedPhotos];
           this.setState({ photoCollectionList });
         }
 
@@ -129,8 +132,7 @@ class Feed extends React.Component {
           const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
           const teamPhotos = this.sortDesc(photos);
-          const { photoCollectionList } = this.state;
-          photoCollectionList.push(teamPhotos);
+          const photoCollectionList = [...this.state.photoCollectionList, teamPhotos];
           this.setState({ photoCollectionList });
           this.addPhotos();
         }
@@ -168,8 +170,7 @@ class Feed extends React.Component {
         // const recentPhotos = photos.slice(0, recentNumber);
         // photos.splice(0, recentNumber);
         // const generalPhotos = this.shuffle(photos);
-        const { photoCollectionList } = this.state;
-        photoCollectionList.push(photos);
+        const photoCollectionList = [...this.state.photoCollectionList, photos];
         this.setState({ photoCollectionList });
 
         // this.setState({ generalPhotos, recentPhotos, lastVisible });
@@ -206,14 +207,9 @@ class Feed extends React.Component {
         });
         const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-        // console.log('popular', photos.length);
-
         const popularPhotos = this.sortLikes(photos).slice(0, maxResults);
-        // console.log('most popular', popularPhotos[0]);
-        // console.log('least popular', popularPhotos[10]);
         const shuffledPopularPhotos = this.shuffle(popularPhotos);
-        const { photoCollectionList } = this.state;
-        photoCollectionList.push(shuffledPopularPhotos);
+        const photoCollectionList = [...this.state.photoCollectionList, shuffledPopularPhotos];
         this.setState({ photoCollectionList });
 
         // this.setState({ generalPhotos, recentPhotos, lastVisible });
@@ -226,10 +222,11 @@ class Feed extends React.Component {
   addPhotos = () => {
     const {
       isReloading,
-      showingPhotos,
-      photoCollectionList,
-      showedPhotos,
     } = this.state;
+
+    const showingPhotos = [...this.state.showingPhotos];
+    const photoCollectionList = [...this.state.photoCollectionList];
+    const showedPhotos = [...this.state.showedPhotos];
 
     if (photoCollectionList.length && !isReloading) {
       this.setState({ isReloading: true });

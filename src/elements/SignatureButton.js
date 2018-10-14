@@ -4,17 +4,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import designLanguage from '../../designLanguage.json';
 
-class UploadButton extends React.Component {
-  render() {
-    const { onPress, style } = this.props;
+const UploadButton = (props) => {
+  const { onPress, style } = props;
 
-    return (
-      <TouchableHighlight onPress={onPress} style={[styles.container, style]} underlayColor="transparent">
-        <Icon name="grease-pencil" size={24} style={styles.button} />
-      </TouchableHighlight>
-    );
-  }
-}
+  return (
+    <TouchableHighlight onPress={onPress} style={[styles.container, style]} underlayColor="transparent">
+      <Icon name="grease-pencil" size={24} style={styles.button} />
+    </TouchableHighlight>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

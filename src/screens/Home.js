@@ -28,7 +28,7 @@ class Home extends React.Component {
   componentWillMount() {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        console.log('We are authenticated now!');
+        // console.log('We are authenticated now!');
         const { // eslint-disable-next-line
           displayName,    // eslint-disable-next-line
           email, // eslint-disable-next-line
@@ -83,6 +83,10 @@ class Home extends React.Component {
 
   componentDidMount() {
     // this.fetchData();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state !== nextState;
   }
 
   // eslint-disable-next-line
@@ -197,6 +201,7 @@ class Home extends React.Component {
       // base64: true,
       exif: true,
     });
+    // eslint-disable-next-line
     console.log(result);
 
     if (result.cancelled) {
@@ -228,6 +233,8 @@ class Home extends React.Component {
         </View>
       );
     }
+
+    // const headerTitle = 'FLEGO';
 
     return (
       <View style={styles.container}>

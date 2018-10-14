@@ -10,7 +10,7 @@ import {
 import { FileSystem } from 'expo';
 import firebase from 'firebase';
 
-class MatchItem extends React.Component {
+class MatchItem extends React.PureComponent {
   state = {}
 
   componentDidMount() {

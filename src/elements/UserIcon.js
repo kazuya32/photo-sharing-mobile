@@ -12,7 +12,7 @@ import { FileSystem } from 'expo';
 import designLanguage from '../../designLanguage.json';
 import IconBadge from '../elements/IconBadge.js';
 
-class UserIcon extends React.Component {
+class UserIcon extends React.PureComponent {
   state = {}
 
   // componentDidMount() {

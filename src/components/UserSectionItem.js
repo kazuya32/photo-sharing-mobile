@@ -8,7 +8,7 @@ import {
 
 import UserIcon from '../elements/UserIcon.js';
 
-class UserSectionItem extends React.Component {
+class UserSectionItem extends React.PureComponent {
   state = {
   }
 
