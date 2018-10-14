@@ -35,12 +35,19 @@ class TeamFeed extends React.Component {
     this.fetchPhotos();
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state !== nextState;
+  }
+
   getTeam = (teamId) => {
     const db = firebase.firestore();
     const Ref = db.collection('teams').doc(teamId);
     Ref.get().then((doc) => {
       const team = { id: doc.id, data: doc.data() };
-      this.setState({ team, headerTitle: team.data.name });
+      this.setState({
+        // team,
+        headerTitle: team.data.name,
+      });
     });
   }
 
@@ -69,8 +76,8 @@ class TeamFeed extends React.Component {
             photos.push(photo);
           }
         });
-        const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        this.setState({ photos: this.sortDesc(photos), lastVisible });
+        // const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        // this.setState({ photos: this.sortDesc(photos), lastVisible });
         if (photos.length) {
           this.devidePhotos(photos);
         } else {

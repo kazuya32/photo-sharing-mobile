@@ -33,6 +33,10 @@ class MatchFeed extends React.Component {
     this.fetchMatchPhotos();
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state !== nextState;
+  }
+
   // eslint-disable-next-line
   fetchMatchTitle = () => {
     const { match } = this.props.navigation.state.params;
@@ -61,8 +65,8 @@ class MatchFeed extends React.Component {
             });
           }
         });
-        const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        this.setState({ photos: this.sortDesc(photos), lastVisible });
+        // const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        // this.setState({ photos: this.sortDesc(photos), lastVisible });
 
         if (photos.length) {
           this.devidePhotos(photos);

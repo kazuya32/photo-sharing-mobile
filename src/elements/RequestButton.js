@@ -8,48 +8,46 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import ButtonBadge from '../elements/ButtonBadge.js';
 
-class RequestButton extends React.Component {
-  render() {
-    const {
-      onPress,
-      style,
-      badgeNumber,
-    } = this.props;
+const RequestButton = (props) => {
+  const {
+    onPress,
+    style,
+    badgeNumber,
+  } = props;
 
-    let num = badgeNumber;
-    if (num > 99) { num = 99; }
+  let num = badgeNumber;
+  if (num > 99) { num = 99; }
 
-    return (
-      <View
+  return (
+    <View
+      style={[
+        style,
+      ]}
+    >
+      <TouchableHighlight
         style={[
-          style,
+          styles.menuButton,
+          badgeNumber && styles.hasRequest,
         ]}
+        onPress={onPress}
+        underlayColor="transparent"
       >
-        <TouchableHighlight
+        <Icon
+          name="card-giftcard"
+          size={24}
           style={[
-            styles.menuButton,
-            badgeNumber && styles.hasRequest,
+            styles.menuButtonTitle,
+            badgeNumber && styles.hasRequestTitle,
           ]}
-          onPress={onPress}
-          underlayColor="transparent"
-        >
-          <Icon
-            name="card-giftcard"
-            size={24}
-            style={[
-              styles.menuButtonTitle,
-              badgeNumber && styles.hasRequestTitle,
-            ]}
-          />
-        </TouchableHighlight>
-        <ButtonBadge
-          style={[styles.badge]}
-          badgeNumber={num}
         />
-      </View>
-    );
-  }
-}
+      </TouchableHighlight>
+      <ButtonBadge
+        style={[styles.badge]}
+        badgeNumber={num}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   hasRequest: {

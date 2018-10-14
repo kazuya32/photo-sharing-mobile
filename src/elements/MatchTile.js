@@ -19,6 +19,11 @@ class MatchTile extends React.Component {
       this.fetchMatch(matchId);
     }
   }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state !== nextState;
+  }
+  
   // eslint-disable-next-line
   fetchMatch = (matchId) => {
     let match;

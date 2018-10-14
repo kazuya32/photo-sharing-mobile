@@ -3,19 +3,17 @@ import { StyleSheet, TouchableHighlight } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-class UploadButton extends React.Component {
-  render() {
-    const { onPress, show } = this.props;
+const UploadButton = (props) => {
+  const { onPress, show } = props;
 
-    if (!show) { return null; }
+  if (!show) { return null; }
 
-    return (
-      <TouchableHighlight onPress={onPress} style={styles.container} underlayColor="transparent">
-        <Icon name="plus" size={40} style={styles.button} />
-      </TouchableHighlight>
-    );
-  }
-}
+  return (
+    <TouchableHighlight onPress={onPress} style={styles.container} underlayColor="transparent">
+      <Icon name="plus" size={40} style={styles.button} />
+    </TouchableHighlight>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

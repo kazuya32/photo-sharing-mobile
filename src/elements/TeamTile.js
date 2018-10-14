@@ -19,6 +19,11 @@ class TeamTile extends React.Component {
       this.fetchTeam(teamId);
     }
   }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state !== nextState;
+  }
+  
   // eslint-disable-next-line
   fetchTeam = (teamId) => {
     let team;

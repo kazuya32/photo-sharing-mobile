@@ -27,6 +27,10 @@ class PhotoCollection extends React.Component {
     if (this.props.uid) { this.fetchPhotos(this.props.uid); }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state !== nextState;
+  }
+
   // eslint-disable-next-line
   fetchLogInUid = async () => {
     try {
@@ -101,12 +105,12 @@ class PhotoCollection extends React.Component {
   }
 
   addPhotos = () => {
-    const { photos } = this.state;
+    const photos = [...this.state.photos];
 
     if (!this.state.loading && photos.length) {
       this.setState({ loading: true });
 
-      let { showingPhotos } = this.state;
+      let showingPhotos = this.state.showingPhotos ? [...this.state.showingPhotos] : [];
       if (!showingPhotos) {
         showingPhotos = photos.slice(0, this.state.reloadNumber);
         photos.splice(0, this.state.reloadNumber);

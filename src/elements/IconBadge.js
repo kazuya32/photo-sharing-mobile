@@ -8,60 +8,58 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import designLanguage from '../../designLanguage.json';
 
-class IconBadge extends React.Component {
-  render() {
-    // const isAndroid = Platform.OS === 'android';
-    // if (isAndroid) { return null; }
+const IconBadge = (props) => {
+  // const isAndroid = Platform.OS === 'android';
+  // if (isAndroid) { return null; }
 
-    const {
-      style,
-      badgeNumber,
-      notify,
-    } = this.props;
+  const {
+    style,
+    badgeNumber,
+    notify,
+  } = props;
 
-    if (notify) {
-      return (
-        <View
-          style={[
-            styles.badge,
-            { backgroundColor: 'transparent', borderWidth: 0 },
-            style,
-          ]}
-        >
-          <Icon
-            style={[
-              styles.notification,
-            ]}
-            name="alert-box"
-            size={18}
-          />
-        </View>
-      );
-    }
-
-    if (!badgeNumber) { return null; }
-
-    let num = badgeNumber;
-    if (num > 99) { num = 99; }
-
+  if (notify) {
     return (
       <View
         style={[
           styles.badge,
+          { backgroundColor: 'transparent', borderWidth: 0 },
           style,
         ]}
       >
-        <Text
+        <Icon
           style={[
-            styles.badgeTitle,
+            styles.notification,
           ]}
-        >
-          {num}
-        </Text>
+          name="alert-box"
+          size={18}
+        />
       </View>
     );
   }
-}
+
+  if (!badgeNumber) { return null; }
+
+  let num = badgeNumber;
+  if (num > 99) { num = 99; }
+
+  return (
+    <View
+      style={[
+        styles.badge,
+        style,
+      ]}
+    >
+      <Text
+        style={[
+          styles.badgeTitle,
+        ]}
+      >
+        {num}
+      </Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   badge: {
