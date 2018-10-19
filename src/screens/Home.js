@@ -4,7 +4,6 @@ import {
   View,
   Alert,
   AsyncStorage,
-  ActivityIndicator,
   Platform,
 } from 'react-native';
 import {
@@ -15,7 +14,7 @@ import {
 } from 'expo';
 import firebase from 'firebase';
 
-import designLanguage from '../../designLanguage.json';
+// import designLanguage from '../../designLanguage.json';
 import Feed from '../components/Feed.js';
 import Header from '../components/Header.js';
 import UploadButton from '../elements/UploadButton.js';
@@ -30,13 +29,13 @@ class Home extends React.Component {
       if (user) {
         // console.log('We are authenticated now!');
         const { // eslint-disable-next-line
-          displayName,    // eslint-disable-next-line
-          email, // eslint-disable-next-line
-          emailVerified, // eslint-disable-next-line
-          photoURL, // eslint-disable-next-line
-          isAnonymous,
+          // displayName,    // eslint-disable-next-line
+          // email, // eslint-disable-next-line
+          // emailVerified, // eslint-disable-next-line
+          // photoURL, // eslint-disable-next-line
+          // isAnonymous,
           uid, // eslint-disable-next-line
-          providerData,
+          // providerData,
         } = user;
 
 
@@ -45,8 +44,7 @@ class Home extends React.Component {
 
         try {
           await AsyncStorage.setItem('uid', uid);
-          this.setState({ uid });
-          this.fetchData();
+          this.fetchData(uid);
         } catch (error) {
           // eslint-disable-next-line
           console.log('failed to saving AsyncStorage');
@@ -55,7 +53,6 @@ class Home extends React.Component {
       } else {
         // eslint-disable-next-line
         console.log('not login');
-        this.setState({ uid: null });
         unsubscribe();
         this.props.navigation.navigate({ routeName: 'LoginStack' });
       }
@@ -90,7 +87,7 @@ class Home extends React.Component {
   }
 
   // eslint-disable-next-line
-  registerForPushNotificationsAsync = async () => {
+  registerForPushNotificationsAsync = async (uid) => {
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
     let finalStatus = existingStatus;
 
@@ -104,14 +101,14 @@ class Home extends React.Component {
     }
 
     const token = await Notifications.getExpoPushTokenAsync();
-    this.updatePushToken(token);
+    this.updatePushToken({ uid, token });
   }
 
   // eslint-disable-next-line
-  updatePushToken = (token) => {
-    if (this.state.uid) {
+  updatePushToken = ({ uid, token }) => {
+    if (uid) {
       const db = firebase.firestore();
-      const userRef = db.collection('users').doc(this.state.uid);
+      const userRef = db.collection('users').doc(uid);
       userRef.get().then((doc) => {
         if (doc.exists) {
           userRef.update({
@@ -127,15 +124,15 @@ class Home extends React.Component {
   }
 
   // eslint-disable-next-line
-  fetchData = async () => {
-    this.registerForPushNotificationsAsync();
-    this.fetchLogInUser();
+  fetchData = async (uid) => {
+    this.registerForPushNotificationsAsync(uid);
+    this.fetchLogInUser(uid);
   }
 
-  fetchLogInUser = () => {
-    if (this.state.uid) {
+  fetchLogInUser = (uid) => {
+    if (uid) {
       const db = firebase.firestore();
-      const userRef = db.collection('users').doc(this.state.uid);
+      const userRef = db.collection('users').doc(uid);
       userRef.get().then((doc) => {
         if (doc.exists) {
           const logInUser = {
@@ -146,7 +143,6 @@ class Home extends React.Component {
           this.sendAnalytics(logInUser);
 
           this.storeLogInUser(logInUser);
-          this.setState({ logInUser });
         } else {
           firebase.auth().signOut();
           // this.props.navigation.navigate({ routeName: 'LoginStack' });
@@ -168,11 +164,17 @@ class Home extends React.Component {
 
   storeLogInUser = async (logInUser) => {
     try {
+      const { photoURL, isAthlete } = logInUser.data;
+      const isAthleteString = isAthlete.toString();
       // await AsyncStorage.setItem('uid', logInUser.id);
-      await AsyncStorage.setItem('photoURL', logInUser.data.photoURL);
+      if (photoURL) {
+        await AsyncStorage.setItem('photoURL', photoURL);
+      }
       // await AsyncStorage.setItem('name', logInUser.data.name);
       // await AsyncStorage.setItem('desc', logInUser.data.desc);
-      await AsyncStorage.setItem('isAthlete', logInUser.data.isAthlete.toString());
+      if (isAthleteString) {
+        await AsyncStorage.setItem('isAthlete', isAthleteString);
+      }
     } catch (error) {
       // Error saving data
     }
@@ -214,7 +216,7 @@ class Home extends React.Component {
         routeName: 'PhotoUploader',
         params: {
           image: result,
-          logInUser: this.state.logInUser,
+          // logInUser: this.state.logInUser,
           key,
         },
         key,
@@ -224,15 +226,15 @@ class Home extends React.Component {
 
 
   render() {
-    if (!this.state.uid) {
-      return (
-        <View style={styles.container}>
-          <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-            <ActivityIndicator color={designLanguage.colorPrimary} />
-          </View>
-        </View>
-      );
-    }
+    // if (!this.state.uid) {
+    //   return (
+    //     <View style={styles.container}>
+    //       <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
+    //         <ActivityIndicator color={designLanguage.colorPrimary} />
+    //       </View>
+    //     </View>
+    //   );
+    // }
 
     // const headerTitle = 'FLEGO';
 
@@ -244,10 +246,10 @@ class Home extends React.Component {
           navigation={this.props.navigation}
         />
         <Feed
-          onPressUser={this.onPressUser}
-          onPressPhoto={this.onPressPhoto}
-          onPressMatch={this.onPressMatch}
-          onPressTeam={this.onPressTeam}
+          // onPressUser={this.onPressUser}
+          // onPressPhoto={this.onPressPhoto}
+          // onPressMatch={this.onPressMatch}
+          // onPressTeam={this.onPressTeam}
           navigation={this.props.navigation}
         />
         <UploadButton onPress={this.onPressUpload} show />

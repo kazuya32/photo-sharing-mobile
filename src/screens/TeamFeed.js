@@ -175,7 +175,7 @@ class TeamFeed extends React.Component {
             headerTitle={this.state.headerTitle}
           />
           <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-            <ActivityIndicator color={designLanguage.colorPrimary} />
+            <ActivityIndicator color={designLanguage.colorPrimary} size="large" />
           </View>
         </View>
       );

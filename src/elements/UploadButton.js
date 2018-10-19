@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, TouchableHighlight } from 'react-native';
-
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import designLanguage from '../../designLanguage.json';
 
 const UploadButton = (props) => {
   const { onPress, show } = props;
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     zIndex: 100,
-    backgroundColor: '#DB4D5E',
+    backgroundColor: designLanguage.colorPrimary,
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',

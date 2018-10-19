@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
 import UserIcon from '../elements/UserIcon.js';
 import FollowButton from '../elements/FollowButton.js';
 
@@ -106,7 +107,7 @@ class UserTile extends React.Component {
     if (!this.state.user) {
       return (
         <View style={{ flex: 1, height:30, alignSelf: 'center' }}>
-          <ActivityIndicator />
+          <ActivityIndicator color={designLanguage.colorPrimary} />
         </View>
       );
     }

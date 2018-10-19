@@ -4,7 +4,7 @@ import Expo, { Constants, Segment } from 'expo';
 import firebase from 'firebase';
 
 import TermOfService from '../components/TermOfService.js';
-import BackgroundImage from '../../assets/splash-simple-color400.png';
+import BackgroundImage from '../../assets/FLEGO_SPLASH.png';
 import ENV from '../../env.json';
 import EmailLoginButton from '../elements/EmailLoginButton';
 import FacebookLoginButton from '../elements/FacebookLoginButton';

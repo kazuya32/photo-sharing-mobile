@@ -129,7 +129,7 @@ class Feed extends React.Component {
         });
 
         if (photos.length) {
-          const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+          // const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
           const teamPhotos = this.sortDesc(photos);
           const photoCollectionList = [...this.state.photoCollectionList, teamPhotos];
@@ -165,7 +165,7 @@ class Feed extends React.Component {
             });
           }
         });
-        const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        // const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
         // const recentPhotos = photos.slice(0, recentNumber);
         // photos.splice(0, recentNumber);
@@ -188,7 +188,7 @@ class Feed extends React.Component {
     const searchTime = currentTimestamp - (day * 14);
 
     const photosRef = db.collection('photos')
-      .where('createdAt', '>=', searchTime)
+      .where('createdAt', '>=', searchTime);
       // .orderBy('likesSum', 'desc')
       // .limit(maxResults);
 
@@ -205,7 +205,7 @@ class Feed extends React.Component {
             });
           }
         });
-        const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        // const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
         const popularPhotos = this.sortLikes(photos).slice(0, maxResults);
         const shuffledPopularPhotos = this.shuffle(popularPhotos);
@@ -340,7 +340,7 @@ class Feed extends React.Component {
       return (
         <View style={styles.container}>
           <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-            <ActivityIndicator color={designLanguage.colorPrimary} />
+            <ActivityIndicator color={designLanguage.colorPrimary} size="large" />
           </View>
         </View>
       );
@@ -352,7 +352,7 @@ class Feed extends React.Component {
           data={this.state.showingPhotos}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.7}
           onEndReached={this.addPhotos}
           extraData={this.state}
           removeClippedSubviews={Platform.OS === 'android'}
