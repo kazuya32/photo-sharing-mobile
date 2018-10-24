@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, TouchableHighlight, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import designLanguage from '../../designLanguage.json';
+
 const MenuButton = (props) => {
   const {
     onPress,
@@ -15,7 +17,7 @@ const MenuButton = (props) => {
     return null;
   }
 
-  const color = isMyPage ? '#DB4D5E' : '#000000';
+  const color = isMyPage ? designLanguage.color300 : '#000000';
 
   return (
     <TouchableHighlight

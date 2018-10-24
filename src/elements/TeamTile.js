@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
+
 class TeamTile extends React.Component {
   state = {}
 
@@ -23,7 +25,7 @@ class TeamTile extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.state !== nextState;
   }
-  
+
   // eslint-disable-next-line
   fetchTeam = (teamId) => {
     let team;
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   teamTitle: {
-    color: '#DB4D5E',
+    color: designLanguage.color300,
     fontSize: 12,
   },
   teamPrefix: {

@@ -10,6 +10,8 @@ import {
 import { FileSystem } from 'expo';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
+
 class MatchItem extends React.PureComponent {
   state = {}
 

@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
+
 class MatchTile extends React.Component {
   state = {}
 
@@ -23,7 +25,7 @@ class MatchTile extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.state !== nextState;
   }
-  
+
   // eslint-disable-next-line
   fetchMatch = (matchId) => {
     let match;
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
   },
   matchTitle: {
     alignSelf: 'center',
-    color: '#DB4D5E',
+    color: designLanguage.color300,
     // fontSize: 12,
   },
   matchPrefix: {

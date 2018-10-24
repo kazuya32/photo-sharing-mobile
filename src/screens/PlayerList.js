@@ -8,6 +8,7 @@ import {
 import { Segment } from 'expo';
 import firebase from 'firebase';
 
+import designLanguage from '../../designLanguage.json';
 import Header from '../components/Header.js';
 import UserSectionHeader from '../components/UserSectionHeader.js';
 import UserSectionItem from '../components/UserSectionItem.js';
@@ -133,7 +134,7 @@ class PlayerList extends React.Component {
             navigation={this.props.navigation}
           />
           <View style={{ flex: 1, padding: 100, alignSelf: 'center' }}>
-            <ActivityIndicator />
+            <ActivityIndicator color={designLanguage.colorPrimary} />
           </View>
         </View>
       );

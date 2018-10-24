@@ -6,6 +6,8 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
+import designLanguage from '../../designLanguage.json';
+
 class CheckMark extends React.Component {
   render() {
     const {
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
   },
   back: {
     position: 'absolute',
-    color: '#DB4D5E',
+    color: designLanguage.color300,
     alignSelf: 'center',
     textAlignVertical: 'center',
     textAlign: 'center',

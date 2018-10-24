@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import designLanguage from '../../designLanguage.json';
 import ButtonBadge from '../elements/ButtonBadge.js';
 
 const RequestButton = (props) => {
@@ -51,7 +52,7 @@ const RequestButton = (props) => {
 
 const styles = StyleSheet.create({
   hasRequest: {
-    backgroundColor: '#DB4D5E',
+    backgroundColor: designLanguage.color300,
     borderWidth: 2,
   },
   menuButton: {
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     width: 40,
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: '#DB4D5E',
+    borderColor: designLanguage.color300,
     // shadowColor: '#000',
     // shadowOffset: { width: 0, height: 1 },
     // shadowOpacity: 0.2,
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   menuButtonTitle: {
-    color: '#DB4D5E',
+    color: designLanguage.color300,
     alignSelf: 'center',
     // fontSize: 8,
   },

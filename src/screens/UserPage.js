@@ -16,6 +16,7 @@ import {
 import firebase from 'firebase';
 import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view';
 
+import designLanguage from '../../designLanguage.json';
 import Profile from '../components/Profile.js';
 import Header from '../components/Header.js';
 import PhotoCollection from '../components/PhotoCollection.js';
@@ -281,7 +282,7 @@ class UserPage extends React.Component {
           ]}
           tabBarUnderlineStyle={styles.underline}
           tabBarBackgroundColor="#fff"
-          tabBarActiveTextColor="#DB4D5E"
+          tabBarActiveTextColor={designLanguage.color300}
           tabBarInactiveTextColor="black"
           tabBarTextStyle={styles.tabBarText}
           tabStyle={{ paddingBottom: 0 }}
@@ -352,7 +353,7 @@ const styles = StyleSheet.create({
     // borderBottomColor: '#272C35',
   },
   underline: {
-    backgroundColor: '#DB4D5E',
+    backgroundColor: designLanguage.color300,
     borderWidth: 0,
     // height: 0,
     // borderBottomColor: '#DB4D5E',

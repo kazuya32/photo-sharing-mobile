@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { takeSnapshotAsync, Segment } from 'expo';
 
+import designLanguage from '../../designLanguage.json';
 import PhotoHeader from '../components/PhotoHeader.js';
 import PenSelector from '../components/PenSelector.js';
 import ColorPanel from '../components/ColorPanel.js';
@@ -32,7 +33,7 @@ const isAndroid = Platform.OS === 'android';
 class Signature extends Component {
   state = {
     photo: this.props.navigation.state.params && this.props.navigation.state.params.photo,
-    strokeColor: '0xDB4D5E',
+    strokeColor: designLanguage.color300.replace(/#/g, '0x'),
     // strokeColor: '0xffff0000',
     // strokeColor: Math.random() * 0xffffff,
     // strokeWidth: Math.random() * 30 + 10,

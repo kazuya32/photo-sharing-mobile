@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     // alignSelf: 'flex-start',
   },
   button: {
-    backgroundColor: designLanguage.color400,
+    backgroundColor: designLanguage.color300,
     borderRadius: 20,
     paddingTop: 4,
     paddingBottom: 4,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 105,
     height: 28,
-    borderColor: '#DB4D5E',
+    borderColor: designLanguage.color300,
     borderWidth: 1,
   },
   followingButton: {

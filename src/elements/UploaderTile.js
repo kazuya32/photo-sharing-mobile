@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, TouchableHighlight, Text, ActivityIndicator } from 'react-native';
 
+import designLanguage from '../../designLanguage.json';
+
 class UploaderTile extends React.Component {
   render() {
     const {
@@ -19,7 +21,7 @@ class UploaderTile extends React.Component {
       </TouchableHighlight>
     ) : (
       <View style={[styles.indicator]}>
-        <ActivityIndicator color="#DB4D5E" animating={user} />
+        <ActivityIndicator color={designLanguage.color300} animating={user} />
       </View>
     );
 
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
   userBy: {
   },
   userName: {
-    color: '#DB4D5E',
+    color: designLanguage.color300,
     paddingLeft: 8,
     // paddingRight: 8,
   },

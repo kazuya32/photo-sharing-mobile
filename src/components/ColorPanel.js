@@ -5,6 +5,7 @@ import {
   FlatList,
 } from 'react-native';
 
+import designLanguage from '../../designLanguage.json';
 import ColorTile from '../elements/ColorTile.js';
 
 class ColorPanel extends React.Component {
@@ -12,8 +13,8 @@ class ColorPanel extends React.Component {
     colors: [
       '#FFFFFF', // white
       '#F7B42E', // trnspt yellow
-      '#DB4D5E', // flego color
-      '#CE0060', // lyft pink
+      designLanguage.color300, // flego color
+      designLanguage.colorPrimary, // lyft pink
       '#1DE1D5', // tiktok sky blue
       '#0A5EA2', // linkdin blue
       // '#000000', // black
